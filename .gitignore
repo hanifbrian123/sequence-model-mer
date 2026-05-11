@@ -1,0 +1,6 @@
+private/
+.claude/
+__pycache__/
+cache/
+.vscode/
+models/

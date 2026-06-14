@@ -1,0 +1,12 @@
+{
+  "name": "apex_shallowcnn",
+  "shallow": "shallowcnn",
+  "width": 32,
+  "img_size": 64,
+  "crop": 112,
+  "epochs": 80,
+  "lr": 1e-3,
+  "loss": "ce",
+  "label_smoothing": 0.1,
+  "tta": 10
+}

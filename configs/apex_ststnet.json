@@ -1,0 +1,10 @@
+{
+  "name": "apex_ststnet",
+  "shallow": "ststnet",
+  "img_size": 64,
+  "crop": 112,
+  "epochs": 60,
+  "lr": 1e-3,
+  "loss": "focal",
+  "tta": 10
+}

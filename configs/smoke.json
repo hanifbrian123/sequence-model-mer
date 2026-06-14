@@ -1,0 +1,10 @@
+{
+  "name": "smoke",
+  "epochs": 3,
+  "eval_last_k": 1,
+  "batch_size": 8,
+  "backbone": "r2plus1d_18",
+  "cache_dir": "cache/frames128",
+  "index": "cache/index_emotion.csv",
+  "class_names": ["happiness", "disgust", "repression", "surprise", "others"]
+}

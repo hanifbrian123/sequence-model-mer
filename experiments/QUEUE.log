@@ -1,0 +1,30 @@
+[20:46:28] === QUEUE START ===
+[20:46:28] waiting for res160 to finish...
+[23:05:39] res160 done: UF1 = 0.6657 ACC = 0.6341 
+[23:05:39] SMOKE iter_27_snapshot
+[23:18:06] smoke ok iter_27_snapshot
+[23:18:06] FULL iter_27_snapshot
+[01:55:49] DONE iter_27_snapshot: UF1 = 0.6958 UAR = 0.7019 ACC = 0.6707 
+[01:55:49] SMOKE iter_25_bnadapt
+[02:03:46] smoke ok iter_25_bnadapt
+[02:03:46] FULL iter_25_bnadapt
+[03:44:36] DONE iter_25_bnadapt: UF1 = 0.6805 UAR = 0.6979 ACC = 0.6585 
+[03:44:36] waiting for seq-flow cache...
+[03:44:36] seqflow cache ready
+[03:44:36] SMOKE iter_28_seqflow
+[03:47:32] [q2] waiting for main queue to complete...
+[03:52:37] smoke ok iter_28_seqflow
+[03:52:37] FULL iter_28_seqflow
+[05:35:08] DONE iter_28_seqflow: UF1 = 0.5602 UAR = 0.5980 ACC = 0.5244 
+[05:35:08] SMOKE iter_26_erase
+[05:43:11] smoke ok iter_26_erase
+[05:43:11] FULL iter_26_erase
+[07:25:39] DONE iter_26_erase: UF1 = 0.6936 UAR = 0.7077 ACC = 0.6707 
+[07:25:39] CONSOLIDATING...
+[07:35:57] === QUEUE COMPLETE ===
+[07:36:51] [q2] main queue done -> starting stage 2
+[07:36:51] [q2] SMOKE iter_29_noweight
+[07:44:47] [q2] FULL iter_29_noweight
+[09:25:40] [q2] DONE iter_29_noweight: UF1 = 0.7027 UAR = 0.6997 ACC = 0.6748 
+[09:25:41] [q2] FINAL CONSOLIDATION (stage 2)...
+[09:42:42] [q2] === QUEUE2 COMPLETE ===

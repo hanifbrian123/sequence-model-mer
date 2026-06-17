@@ -1,0 +1,7 @@
+[03:47:32] [q2] waiting for main queue to complete...
+[07:36:51] [q2] main queue done -> starting stage 2
+[07:36:51] [q2] SMOKE iter_29_noweight
+[07:44:47] [q2] FULL iter_29_noweight
+[09:25:40] [q2] DONE iter_29_noweight: UF1 = 0.7027 UAR = 0.6997 ACC = 0.6748 
+[09:25:41] [q2] FINAL CONSOLIDATION (stage 2)...
+[09:42:42] [q2] === QUEUE2 COMPLETE ===

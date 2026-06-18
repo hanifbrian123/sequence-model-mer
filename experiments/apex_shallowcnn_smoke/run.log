@@ -1,0 +1,52 @@
+=== APEX apex_shallowcnn_smoke === 2026-07-15T21:35:44.120361 device=cuda
+config:
+{
+  "seed": 42,
+  "img_size": 64,
+  "crop": 112,
+  "base_size": 128,
+  "flow_clip": 3.0,
+  "strain_clip": 0.3,
+  "shallow": "shallowcnn",
+  "in_channels": 3,
+  "dropout": 0.5,
+  "epochs": 80,
+  "lr": 0.001,
+  "weight_decay": 0.001,
+  "batch_size": 32,
+  "class_weighting": true,
+  "label_smoothing": 0.1,
+  "hflip": true,
+  "loss": "ce",
+  "focal_gamma": 2.0,
+  "tta": 10,
+  "eval_last_k": 5,
+  "cache_dir": "cache/flow128",
+  "manifest_name": "manifest.csv",
+  "index": "cache/index_emotion.csv",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "name": "apex_shallowcnn",
+  "width": 32
+}
+fold 1/3 sub01 acc=0.667 | pooled acc=0.667 (21s)
+fold 2/3 sub02 acc=0.538 | pooled acc=0.591 (42s)
+fold 3/3 sub03 acc=0.429 | pooled acc=0.552 (61s)
+
+=== APEX FINAL ===
+UF1 = 0.5040
+UAR = 0.5133
+ACC = 0.5517
+per-class F1: happiness=0.000, disgust=0.615, repression=0.444, surprise=0.889, others=0.571
+happine      0      0      0      1      1
+disgust      0      4      0      0      2
+repress      3      0      2      0      0
+surpris      0      0      0      4      0
+ others      1      3      2      0      6
+
+saved -> D:\AI-Projects\casmeII-new-from-sequence-model\experiments\apex_shallowcnn_smoke  elapsed 61.8s

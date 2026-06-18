@@ -1,0 +1,79 @@
+=== EXPERIMENT smoke_tta_smoke ===
+time: 2026-07-14T05:28:54.188459
+device: cuda (NVIDIA GeForce RTX 3060)
+platform: Windows-10-10.0.26200-SP0 | torch 2.6.0+cu124
+config:
+{
+  "seed": 42,
+  "T": 16,
+  "img_size": 112,
+  "base_size": 128,
+  "input_mode": "rgb",
+  "backbone": "r2plus1d_18",
+  "pretrained": true,
+  "dropout": 0.5,
+  "epochs": 6,
+  "lr": 0.0001,
+  "weight_decay": 0.001,
+  "batch_size": 8,
+  "class_weighting": true,
+  "label_smoothing": 0.1,
+  "hflip": true,
+  "color_jitter": 0.0,
+  "temporal_jitter": true,
+  "amp": true,
+  "eval_last_k": 2,
+  "tta": 8,
+  "cache_dir": "cache/flow128",
+  "index": "cache/index_emotion.csv",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "name": "smoke_tta",
+  "modality": "flow",
+  "temporal_span": "onset_offset",
+  "flow_clip": 3.0
+}
+samples: 246 | classes: 5 ['happiness', 'disgust', 'repression', 'surprise', 'others']
+loading arrays into RAM...
+loaded 246 arrays
+[SMOKE] limiting to 2 folds: [1, 2]
+
+--- Fold 1/2 | test sub01 (9 test, 237 train) ---
+      ep00 train_loss=1.6363 train_acc=0.350 | val_loss=1.6583 val_acc=0.222
+      ep01 train_loss=1.2282 train_acc=0.523 | val_loss=0.9379 val_acc=0.667
+      ep02 train_loss=1.0887 train_acc=0.620 | val_loss=0.7270 val_acc=0.889
+      ep03 train_loss=1.0311 train_acc=0.667 | val_loss=1.0236 val_acc=0.778
+      ep04 train_loss=0.9844 train_acc=0.705 | val_loss=0.9016 val_acc=0.667
+      ep05 train_loss=0.8902 train_acc=0.768 | val_loss=0.9949 val_acc=0.667
+    fold acc=0.556 time=54.7s | running pooled acc=0.556
+
+--- Fold 2/2 | test sub02 (13 test, 233 train) ---
+      ep00 train_loss=1.7463 train_acc=0.348 | val_loss=1.3456 val_acc=0.615
+      ep01 train_loss=1.2639 train_acc=0.519 | val_loss=1.4784 val_acc=0.538
+      ep02 train_loss=1.1155 train_acc=0.618 | val_loss=1.7425 val_acc=0.385
+      ep03 train_loss=1.0253 train_acc=0.657 | val_loss=1.6423 val_acc=0.385
+      ep04 train_loss=0.9648 train_acc=0.712 | val_loss=1.7181 val_acc=0.385
+      ep05 train_loss=0.8752 train_acc=0.790 | val_loss=1.6014 val_acc=0.385
+    fold acc=0.385 time=54.9s | running pooled acc=0.455
+
+=== FINAL (pooled LOSO) ===
+UF1 = 0.4581
+UAR = 0.6200
+ACC = 0.4545
+per-class F1: happiness=0.286, disgust=0.571, repression=0.500, surprise=0.600, others=0.333
+per-class recall: happiness=0.500, disgust=1.000, repression=0.400, surprise=1.000, others=0.200
+confusion matrix (rows=true):
+        happin disgus repres surpri others
+happine      1      0      0      1      0
+disgust      0      2      0      0      0
+repress      2      0      2      1      0
+surpris      0      0      0      3      0
+ others      2      3      1      2      2
+
+saved to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\smoke_tta_smoke
+elapsed 110.7s

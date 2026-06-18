@@ -1,0 +1,48 @@
+{
+  "name": "apex_shallowcnn",
+  "UF1": 0.5454530834133715,
+  "UAR": 0.5679139009139009,
+  "ACC": 0.5203252032520326,
+  "per_class_f1": [
+    0.32,
+    0.5864661654135338,
+    0.40625,
+    0.9411764705882353,
+    0.47337278106508873
+  ],
+  "elapsed_sec": 458.7,
+  "config": {
+    "seed": 42,
+    "img_size": 64,
+    "crop": 112,
+    "base_size": 128,
+    "flow_clip": 3.0,
+    "strain_clip": 0.3,
+    "shallow": "shallowcnn",
+    "in_channels": 3,
+    "dropout": 0.5,
+    "epochs": 80,
+    "lr": 0.001,
+    "weight_decay": 0.001,
+    "batch_size": 32,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "loss": "ce",
+    "focal_gamma": 2.0,
+    "tta": 10,
+    "eval_last_k": 5,
+    "cache_dir": "cache/flow128",
+    "manifest_name": "manifest.csv",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "apex_shallowcnn",
+    "width": 32
+  }
+}

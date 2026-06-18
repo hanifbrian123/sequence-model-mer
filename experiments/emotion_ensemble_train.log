@@ -1,0 +1,116 @@
+=== training r3d (iter_14_r3d) ===
+training final on ALL 246 samples, seeds=[42]
+  [seed 42] ep00 loss=1.6034 acc=0.321
+  [seed 42] ep01 loss=1.1709 acc=0.569
+  [seed 42] ep02 loss=1.0882 acc=0.646
+  [seed 42] ep03 loss=0.9697 acc=0.711
+  [seed 42] ep04 loss=0.9165 acc=0.764
+  [seed 42] ep05 loss=0.8153 acc=0.813
+  [seed 42] ep06 loss=0.7993 acc=0.825
+  [seed 42] ep07 loss=0.7592 acc=0.837
+  [seed 42] ep08 loss=0.7359 acc=0.882
+  [seed 42] ep09 loss=0.7309 acc=0.870
+  [seed 42] ep10 loss=0.7141 acc=0.915
+  [seed 42] ep11 loss=0.6783 acc=0.911
+  [seed 42] ep12 loss=0.7190 acc=0.919
+  [seed 42] ep13 loss=0.6670 acc=0.943
+  [seed 42] ep14 loss=0.6973 acc=0.935
+  [seed 42] ep15 loss=0.6620 acc=0.935
+  [seed 42] ep16 loss=0.6435 acc=0.963
+  [seed 42] ep17 loss=0.6392 acc=0.951
+  [seed 42] ep18 loss=0.6074 acc=0.967
+  [seed 42] ep19 loss=0.6033 acc=0.984
+  [seed 42] ep20 loss=0.6486 acc=0.955
+  [seed 42] ep21 loss=0.6374 acc=0.951
+  [seed 42] ep22 loss=0.6199 acc=0.992
+  [seed 42] ep23 loss=0.6256 acc=0.972
+  [seed 42] ep24 loss=0.6178 acc=0.963
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/r3d\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/r3d\deploy.json
+=== training mc3 (iter_17_mc3) ===
+training final on ALL 246 samples, seeds=[42]
+  [seed 42] ep00 loss=1.6549 acc=0.240
+  [seed 42] ep01 loss=1.2753 acc=0.512
+  [seed 42] ep02 loss=1.1977 acc=0.549
+  [seed 42] ep03 loss=1.1336 acc=0.671
+  [seed 42] ep04 loss=1.0179 acc=0.715
+  [seed 42] ep05 loss=0.9100 acc=0.768
+  [seed 42] ep06 loss=0.8646 acc=0.797
+  [seed 42] ep07 loss=0.8901 acc=0.772
+  [seed 42] ep08 loss=0.8560 acc=0.821
+  [seed 42] ep09 loss=0.7652 acc=0.886
+  [seed 42] ep10 loss=0.7995 acc=0.846
+  [seed 42] ep11 loss=0.7961 acc=0.846
+  [seed 42] ep12 loss=0.6946 acc=0.943
+  [seed 42] ep13 loss=0.6755 acc=0.943
+  [seed 42] ep14 loss=0.7452 acc=0.907
+  [seed 42] ep15 loss=0.7224 acc=0.898
+  [seed 42] ep16 loss=0.6742 acc=0.915
+  [seed 42] ep17 loss=0.6848 acc=0.911
+  [seed 42] ep18 loss=0.7171 acc=0.911
+  [seed 42] ep19 loss=0.6612 acc=0.955
+  [seed 42] ep20 loss=0.6499 acc=0.939
+  [seed 42] ep21 loss=0.6435 acc=0.963
+  [seed 42] ep22 loss=0.6880 acc=0.947
+  [seed 42] ep23 loss=0.6470 acc=0.951
+  [seed 42] ep24 loss=0.6609 acc=0.967
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/mc3\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/mc3\deploy.json
+=== training focal (iter_18_focal) ===
+training final on ALL 246 samples, seeds=[42]
+  [seed 42] ep00 loss=1.4867 acc=0.333
+  [seed 42] ep01 loss=0.9348 acc=0.585
+  [seed 42] ep02 loss=0.7710 acc=0.638
+  [seed 42] ep03 loss=0.6524 acc=0.707
+  [seed 42] ep04 loss=0.5405 acc=0.785
+  [seed 42] ep05 loss=0.4326 acc=0.833
+  [seed 42] ep06 loss=0.3848 acc=0.837
+  [seed 42] ep07 loss=0.3131 acc=0.846
+  [seed 42] ep08 loss=0.2458 acc=0.907
+  [seed 42] ep09 loss=0.2946 acc=0.870
+  [seed 42] ep10 loss=0.2323 acc=0.931
+  [seed 42] ep11 loss=0.1551 acc=0.947
+  [seed 42] ep12 loss=0.1927 acc=0.935
+  [seed 42] ep13 loss=0.1583 acc=0.955
+  [seed 42] ep14 loss=0.1413 acc=0.959
+  [seed 42] ep15 loss=0.1369 acc=0.967
+  [seed 42] ep16 loss=0.1132 acc=0.959
+  [seed 42] ep17 loss=0.1163 acc=0.967
+  [seed 42] ep18 loss=0.0907 acc=0.972
+  [seed 42] ep19 loss=0.0665 acc=0.988
+  [seed 42] ep20 loss=0.1109 acc=0.967
+  [seed 42] ep21 loss=0.1071 acc=0.972
+  [seed 42] ep22 loss=0.0794 acc=0.992
+  [seed 42] ep23 loss=0.0919 acc=0.972
+  [seed 42] ep24 loss=0.0917 acc=0.963
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/focal\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/focal\deploy.json
+=== training r2p1d4ch (iter_13_4ch) ===
+training final on ALL 246 samples, seeds=[42]
+  [seed 42] ep00 loss=1.5940 acc=0.386
+  [seed 42] ep01 loss=1.2262 acc=0.553
+  [seed 42] ep02 loss=1.1691 acc=0.610
+  [seed 42] ep03 loss=1.0371 acc=0.699
+  [seed 42] ep04 loss=0.8719 acc=0.776
+  [seed 42] ep05 loss=0.9270 acc=0.797
+  [seed 42] ep06 loss=0.8790 acc=0.829
+  [seed 42] ep07 loss=0.8098 acc=0.833
+  [seed 42] ep08 loss=0.7508 acc=0.890
+  [seed 42] ep09 loss=0.6704 acc=0.919
+  [seed 42] ep10 loss=0.6852 acc=0.939
+  [seed 42] ep11 loss=0.6645 acc=0.931
+  [seed 42] ep12 loss=0.6731 acc=0.959
+  [seed 42] ep13 loss=0.6979 acc=0.935
+  [seed 42] ep14 loss=0.6889 acc=0.927
+  [seed 42] ep15 loss=0.6399 acc=0.959
+  [seed 42] ep16 loss=0.6309 acc=0.967
+  [seed 42] ep17 loss=0.6320 acc=0.963
+  [seed 42] ep18 loss=0.6661 acc=0.947
+  [seed 42] ep19 loss=0.6279 acc=0.972
+  [seed 42] ep20 loss=0.6192 acc=0.976
+  [seed 42] ep21 loss=0.6166 acc=0.959
+  [seed 42] ep22 loss=0.6350 acc=0.976
+  [seed 42] ep23 loss=0.6664 acc=0.951
+  [seed 42] ep24 loss=0.6288 acc=0.976
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/r2p1d4ch\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/emotion_ensemble/r2p1d4ch\deploy.json

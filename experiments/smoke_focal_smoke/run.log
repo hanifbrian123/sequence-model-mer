@@ -1,0 +1,77 @@
+=== EXPERIMENT smoke_focal_smoke ===
+time: 2026-07-15T19:46:51.055551
+device: cuda (NVIDIA GeForce RTX 3060)
+platform: Windows-10-10.0.26200-SP0 | torch 2.6.0+cu124
+config:
+{
+  "seed": 42,
+  "T": 16,
+  "img_size": 128,
+  "base_size": 144,
+  "input_mode": "rgb",
+  "backbone": "r3d_18",
+  "pretrained": true,
+  "dropout": 0.5,
+  "epochs": 4,
+  "lr": 0.0001,
+  "weight_decay": 0.001,
+  "batch_size": 6,
+  "class_weighting": true,
+  "label_smoothing": 0.0,
+  "hflip": true,
+  "color_jitter": 0.0,
+  "temporal_jitter": true,
+  "amp": true,
+  "eval_last_k": 1,
+  "tta": 5,
+  "cache_dir": "cache/flow144",
+  "index": "cache/index_emotion.csv",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "name": "smoke_focal",
+  "modality": "flow",
+  "temporal_span": "onset_offset",
+  "flow_clip": 3.0,
+  "loss": "focal",
+  "focal_gamma": 2.0
+}
+samples: 246 | classes: 5 ['happiness', 'disgust', 'repression', 'surprise', 'others']
+loading arrays into RAM...
+loaded 246 arrays
+[SMOKE] limiting to 2 folds: [1, 2]
+
+--- Fold 1/2 | test sub01 (9 test, 237 train) ---
+      ep00 train_loss=0.9274 train_acc=0.376 | val_loss=1.1180 val_acc=0.444
+      ep01 train_loss=0.5546 train_acc=0.570 | val_loss=0.9825 val_acc=0.444
+      ep02 train_loss=0.4065 train_acc=0.629 | val_loss=0.7694 val_acc=0.667
+      ep03 train_loss=0.3678 train_acc=0.696 | val_loss=0.7438 val_acc=0.889
+    fold acc=0.667 time=41.9s | running pooled acc=0.667
+
+--- Fold 2/2 | test sub02 (13 test, 233 train) ---
+      ep00 train_loss=0.9199 train_acc=0.326 | val_loss=1.3887 val_acc=0.385
+      ep01 train_loss=0.4675 train_acc=0.579 | val_loss=1.2086 val_acc=0.538
+      ep02 train_loss=0.3811 train_acc=0.665 | val_loss=1.1814 val_acc=0.538
+      ep03 train_loss=0.3045 train_acc=0.691 | val_loss=1.2213 val_acc=0.538
+    fold acc=0.462 time=40.3s | running pooled acc=0.545
+
+=== FINAL (pooled LOSO) ===
+UF1 = 0.5414
+UAR = 0.6000
+ACC = 0.5455
+per-class F1: happiness=0.250, disgust=0.400, repression=0.667, surprise=0.857, others=0.533
+per-class recall: happiness=0.500, disgust=0.500, repression=0.600, surprise=1.000, others=0.400
+confusion matrix (rows=true):
+        happin disgus repres surpri others
+happine      1      0      0      1      0
+disgust      0      1      0      0      1
+repress      2      0      3      0      0
+surpris      0      0      0      3      0
+ others      3      2      1      0      4
+
+saved to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\smoke_focal_smoke
+elapsed 83.3s

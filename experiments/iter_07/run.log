@@ -1,0 +1,142 @@
+=== ENSEMBLE iter_07 seeds=[42, 123, 2024] ===
+time 2026-07-14T05:31:20.777881 device cuda
+config:
+{
+  "seed": 42,
+  "T": 16,
+  "img_size": 112,
+  "base_size": 128,
+  "input_mode": "rgb",
+  "backbone": "r2plus1d_18",
+  "pretrained": true,
+  "dropout": 0.5,
+  "epochs": 25,
+  "lr": 0.0001,
+  "weight_decay": 0.001,
+  "batch_size": 8,
+  "class_weighting": true,
+  "label_smoothing": 0.1,
+  "hflip": true,
+  "color_jitter": 0.0,
+  "temporal_jitter": true,
+  "amp": true,
+  "eval_last_k": 3,
+  "tta": 5,
+  "cache_dir": "cache/flow128",
+  "index": "cache/index_emotion.csv",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "name": "iter_07_flow_ensemble_tta",
+  "modality": "flow",
+  "temporal_span": "onset_offset",
+  "flow_clip": 3.0
+}
+loaded arrays; samples=246
+
+--- SEED 42 ---
+  [seed 42] fold 1/26 sub01 acc=0.778 (221s)
+  [seed 42] fold 2/26 sub02 acc=0.538 (221s)
+  [seed 42] fold 3/26 sub03 acc=0.714 (220s)
+  [seed 42] fold 4/26 sub04 acc=0.800 (222s)
+  [seed 42] fold 5/26 sub05 acc=0.474 (217s)
+  [seed 42] fold 6/26 sub06 acc=0.800 (222s)
+  [seed 42] fold 7/26 sub07 acc=0.556 (221s)
+  [seed 42] fold 8/26 sub08 acc=0.667 (223s)
+  [seed 42] fold 9/26 sub09 acc=0.769 (220s)
+  [seed 42] fold 10/26 sub10 acc=0.923 (221s)
+  [seed 42] fold 11/26 sub11 acc=0.800 (222s)
+  [seed 42] fold 12/26 sub12 acc=0.917 (222s)
+  [seed 42] fold 13/26 sub13 acc=0.750 (221s)
+  [seed 42] fold 14/26 sub14 acc=0.750 (225s)
+  [seed 42] fold 15/26 sub15 acc=0.667 (223s)
+  [seed 42] fold 16/26 sub16 acc=0.250 (223s)
+  [seed 42] fold 17/26 sub17 acc=0.500 (213s)
+  [seed 42] fold 18/26 sub18 acc=1.000 (223s)
+  [seed 42] fold 19/26 sub19 acc=0.733 (219s)
+  [seed 42] fold 20/26 sub20 acc=0.727 (221s)
+  [seed 42] fold 21/26 sub21 acc=0.500 (223s)
+  [seed 42] fold 22/26 sub22 acc=1.000 (224s)
+  [seed 42] fold 23/26 sub23 acc=1.000 (220s)
+  [seed 42] fold 24/26 sub24 acc=0.571 (221s)
+  [seed 42] fold 25/26 sub25 acc=0.571 (222s)
+  [seed 42] fold 26/26 sub26 acc=0.312 (219s)
+  seed 42: UF1=0.6898 UAR=0.7044 ACC=0.6626
+
+--- SEED 123 ---
+  [seed 123] fold 1/26 sub01 acc=0.889 (222s)
+  [seed 123] fold 2/26 sub02 acc=0.538 (221s)
+  [seed 123] fold 3/26 sub03 acc=0.286 (229s)
+  [seed 123] fold 4/26 sub04 acc=1.000 (237s)
+  [seed 123] fold 5/26 sub05 acc=0.579 (230s)
+  [seed 123] fold 6/26 sub06 acc=0.800 (238s)
+  [seed 123] fold 7/26 sub07 acc=0.444 (237s)
+  [seed 123] fold 8/26 sub08 acc=0.333 (231s)
+  [seed 123] fold 9/26 sub09 acc=0.846 (234s)
+  [seed 123] fold 10/26 sub10 acc=0.923 (228s)
+  [seed 123] fold 11/26 sub11 acc=0.900 (231s)
+  [seed 123] fold 12/26 sub12 acc=0.917 (229s)
+  [seed 123] fold 13/26 sub13 acc=0.875 (233s)
+  [seed 123] fold 14/26 sub14 acc=0.750 (244s)
+  [seed 123] fold 15/26 sub15 acc=1.000 (247s)
+  [seed 123] fold 16/26 sub16 acc=0.250 (249s)
+  [seed 123] fold 17/26 sub17 acc=0.676 (229s)
+  [seed 123] fold 18/26 sub18 acc=0.667 (257s)
+  [seed 123] fold 19/26 sub19 acc=0.667 (249s)
+  [seed 123] fold 20/26 sub20 acc=0.545 (246s)
+  [seed 123] fold 21/26 sub21 acc=0.500 (229s)
+  [seed 123] fold 22/26 sub22 acc=1.000 (230s)
+  [seed 123] fold 23/26 sub23 acc=1.000 (226s)
+  [seed 123] fold 24/26 sub24 acc=0.571 (227s)
+  [seed 123] fold 25/26 sub25 acc=0.714 (228s)
+  [seed 123] fold 26/26 sub26 acc=0.312 (222s)
+  seed 123: UF1=0.7212 UAR=0.7386 ACC=0.6870
+
+--- SEED 2024 ---
+  [seed 2024] fold 1/26 sub01 acc=1.000 (222s)
+  [seed 2024] fold 2/26 sub02 acc=0.462 (220s)
+  [seed 2024] fold 3/26 sub03 acc=0.429 (222s)
+  [seed 2024] fold 4/26 sub04 acc=1.000 (223s)
+  [seed 2024] fold 5/26 sub05 acc=0.474 (219s)
+  [seed 2024] fold 6/26 sub06 acc=0.800 (223s)
+  [seed 2024] fold 7/26 sub07 acc=0.556 (222s)
+  [seed 2024] fold 8/26 sub08 acc=0.333 (224s)
+  [seed 2024] fold 9/26 sub09 acc=0.615 (221s)
+  [seed 2024] fold 10/26 sub10 acc=0.846 (222s)
+  [seed 2024] fold 11/26 sub11 acc=0.800 (222s)
+  [seed 2024] fold 12/26 sub12 acc=0.833 (221s)
+  [seed 2024] fold 13/26 sub13 acc=0.875 (221s)
+  [seed 2024] fold 14/26 sub14 acc=0.750 (223s)
+  [seed 2024] fold 15/26 sub15 acc=1.000 (223s)
+  [seed 2024] fold 16/26 sub16 acc=0.750 (224s)
+  [seed 2024] fold 17/26 sub17 acc=0.618 (214s)
+  [seed 2024] fold 18/26 sub18 acc=1.000 (223s)
+  [seed 2024] fold 19/26 sub19 acc=0.733 (219s)
+  [seed 2024] fold 20/26 sub20 acc=0.545 (221s)
+  [seed 2024] fold 21/26 sub21 acc=0.500 (224s)
+  [seed 2024] fold 22/26 sub22 acc=1.000 (224s)
+  [seed 2024] fold 23/26 sub23 acc=0.750 (220s)
+  [seed 2024] fold 24/26 sub24 acc=0.714 (222s)
+  [seed 2024] fold 25/26 sub25 acc=0.429 (222s)
+  [seed 2024] fold 26/26 sub26 acc=0.250 (219s)
+  seed 2024: UF1=0.6639 UAR=0.6852 ACC=0.6504
+
+=== ENSEMBLE FINAL (pooled LOSO, avg over seeds) ===
+UF1 = 0.6951
+UAR = 0.7160
+ACC = 0.6667
+per-class F1: happiness=0.649, disgust=0.643, repression=0.632, surprise=0.923, others=0.629
+confusion matrix (rows=true):
+        happin disgus repres surpri others
+happine     24      0      0      1      7
+disgust      3     37      1      0     22
+repress      4      0     18      0      5
+surpris      0      0      1     24      0
+ others     11     15     10      2     61
+
+saved to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\iter_07
+elapsed 17595.0s

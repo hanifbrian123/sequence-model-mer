@@ -1,0 +1,69 @@
+{
+  "name": "iter_12_strain",
+  "time": "2026-07-15T02:00:38.367231",
+  "elapsed_sec": 7979.4,
+  "n_folds": 26,
+  "num_classes": 5,
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "UF1": 0.6917779208543856,
+  "UAR": 0.6922735690235691,
+  "ACC": 0.6707317073170732,
+  "n": 246,
+  "per_class_f1": [
+    0.6666666666666666,
+    0.6140350877192983,
+    0.6153846153846154,
+    0.9056603773584906,
+    0.6571428571428571
+  ],
+  "per_class_recall": [
+    0.65625,
+    0.5555555555555556,
+    0.5925925925925926,
+    0.96,
+    0.696969696969697
+  ],
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r2plus1d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_14_flow_strain_res128",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "flow_third": "strain",
+    "strain_clip": 0.3
+  }
+}

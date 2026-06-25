@@ -1,0 +1,67 @@
+{
+  "name": "iter_14_r3d_s123",
+  "time": "2026-07-15T23:41:00.692305",
+  "elapsed_sec": 5996.7,
+  "n_folds": 26,
+  "num_classes": 5,
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "UF1": 0.6717796465610956,
+  "UAR": 0.6849439634439634,
+  "ACC": 0.6463414634146342,
+  "n": 246,
+  "per_class_f1": [
+    0.6376811594202898,
+    0.6101694915254238,
+    0.6071428571428571,
+    0.8846153846153846,
+    0.6192893401015228
+  ],
+  "per_class_recall": [
+    0.6875,
+    0.5714285714285714,
+    0.6296296296296297,
+    0.92,
+    0.6161616161616161
+  ],
+  "config": {
+    "seed": 123,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_14_r3d_s123",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0
+  }
+}

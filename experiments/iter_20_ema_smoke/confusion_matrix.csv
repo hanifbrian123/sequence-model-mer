@@ -1,0 +1,6 @@
+,happiness,disgust,repression,surprise,others
+happiness,1,0,0,1,0
+disgust,0,1,0,0,1
+repression,2,0,3,0,0
+surprise,0,0,0,3,0
+others,2,1,1,1,5

@@ -1,0 +1,120 @@
+=== EXPERIMENT iter_26_erase_qsmoke ===
+time: 2026-07-17T05:35:16.178683
+device: cuda (NVIDIA GeForce RTX 3060)
+platform: Windows-10-10.0.26200-SP0 | torch 2.6.0+cu124
+config:
+{
+  "seed": 42,
+  "T": 16,
+  "img_size": 128,
+  "base_size": 144,
+  "input_mode": "rgb",
+  "backbone": "r3d_18",
+  "pretrained": true,
+  "dropout": 0.5,
+  "epochs": 25,
+  "lr": 0.0001,
+  "weight_decay": 0.001,
+  "batch_size": 6,
+  "class_weighting": true,
+  "label_smoothing": 0.1,
+  "hflip": true,
+  "color_jitter": 0.0,
+  "temporal_jitter": true,
+  "amp": true,
+  "eval_last_k": 3,
+  "tta": 5,
+  "cache_dir": "cache/flow144",
+  "index": "cache/index_emotion.csv",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "name": "iter_26_r3d_erase",
+  "modality": "flow",
+  "temporal_span": "onset_offset",
+  "flow_clip": 3.0,
+  "ema": 0.998,
+  "ema_start_epoch": 5,
+  "random_erase": 0.25
+}
+samples: 246 | classes: 5 ['happiness', 'disgust', 'repression', 'surprise', 'others']
+loading arrays into RAM...
+loaded 246 arrays
+[SMOKE] limiting to 2 folds: [1, 2]
+
+--- Fold 1/2 | test sub01 (9 test, 237 train) ---
+      ep00 train_loss=1.6132 train_acc=0.346 | val_loss=1.1907 val_acc=0.556
+      ep01 train_loss=1.2557 train_acc=0.540 | val_loss=0.8661 val_acc=0.667
+      ep02 train_loss=1.0958 train_acc=0.671 | val_loss=0.8110 val_acc=0.556
+      ep03 train_loss=1.0559 train_acc=0.650 | val_loss=0.8890 val_acc=0.667
+      ep04 train_loss=0.9858 train_acc=0.751 | val_loss=0.7689 val_acc=0.778
+      ep05 train_loss=0.8734 train_acc=0.776 | val_loss=0.6253 val_acc=0.889
+      ep06 train_loss=0.8509 train_acc=0.802 | val_loss=0.7937 val_acc=0.778
+      ep07 train_loss=0.8283 train_acc=0.852 | val_loss=0.6808 val_acc=0.778
+      ep08 train_loss=0.8635 train_acc=0.772 | val_loss=0.9446 val_acc=0.667
+      ep09 train_loss=0.7767 train_acc=0.882 | val_loss=1.0645 val_acc=0.556
+      ep10 train_loss=0.7815 train_acc=0.865 | val_loss=0.8180 val_acc=0.778
+      ep11 train_loss=0.7142 train_acc=0.907 | val_loss=0.8110 val_acc=0.667
+      ep12 train_loss=0.7300 train_acc=0.907 | val_loss=0.8102 val_acc=0.667
+      ep13 train_loss=0.6585 train_acc=0.920 | val_loss=0.8143 val_acc=0.667
+      ep14 train_loss=0.6566 train_acc=0.937 | val_loss=0.7500 val_acc=0.778
+      ep15 train_loss=0.6697 train_acc=0.924 | val_loss=0.6821 val_acc=0.778
+      ep16 train_loss=0.6800 train_acc=0.941 | val_loss=0.7763 val_acc=0.667
+      ep17 train_loss=0.6485 train_acc=0.962 | val_loss=0.8270 val_acc=0.667
+      ep18 train_loss=0.6601 train_acc=0.920 | val_loss=0.7866 val_acc=0.667
+      ep19 train_loss=0.6460 train_acc=0.937 | val_loss=0.8258 val_acc=0.667
+      ep20 train_loss=0.6558 train_acc=0.928 | val_loss=0.8519 val_acc=0.667
+      ep21 train_loss=0.6301 train_acc=0.962 | val_loss=0.8585 val_acc=0.778
+      ep22 train_loss=0.6220 train_acc=0.949 | val_loss=0.7815 val_acc=0.778
+      ep23 train_loss=0.6504 train_acc=0.941 | val_loss=0.8603 val_acc=0.667
+      ep24 train_loss=0.6255 train_acc=0.970 | val_loss=0.8609 val_acc=0.667
+    fold acc=0.667 time=237.3s | running pooled acc=0.667
+
+--- Fold 2/2 | test sub02 (13 test, 233 train) ---
+      ep00 train_loss=1.6612 train_acc=0.348 | val_loss=1.0269 val_acc=0.615
+      ep01 train_loss=1.1524 train_acc=0.562 | val_loss=1.8118 val_acc=0.385
+      ep02 train_loss=1.1196 train_acc=0.614 | val_loss=1.1906 val_acc=0.538
+      ep03 train_loss=1.0454 train_acc=0.708 | val_loss=1.6579 val_acc=0.385
+      ep04 train_loss=0.9437 train_acc=0.721 | val_loss=2.3298 val_acc=0.308
+      ep05 train_loss=0.9229 train_acc=0.734 | val_loss=1.8942 val_acc=0.231
+      ep06 train_loss=0.8941 train_acc=0.785 | val_loss=1.3466 val_acc=0.615
+      ep07 train_loss=0.8165 train_acc=0.824 | val_loss=0.9407 val_acc=0.692
+      ep08 train_loss=0.8197 train_acc=0.837 | val_loss=1.3394 val_acc=0.462
+      ep09 train_loss=0.7779 train_acc=0.871 | val_loss=1.3060 val_acc=0.385
+      ep10 train_loss=0.8396 train_acc=0.863 | val_loss=1.4607 val_acc=0.462
+      ep11 train_loss=0.7715 train_acc=0.845 | val_loss=1.0725 val_acc=0.385
+      ep12 train_loss=0.7274 train_acc=0.910 | val_loss=0.9055 val_acc=0.538
+      ep13 train_loss=0.6995 train_acc=0.931 | val_loss=0.9341 val_acc=0.615
+      ep14 train_loss=0.6959 train_acc=0.940 | val_loss=0.9150 val_acc=0.769
+      ep15 train_loss=0.6782 train_acc=0.940 | val_loss=1.0272 val_acc=0.538
+      ep16 train_loss=0.6764 train_acc=0.966 | val_loss=1.0140 val_acc=0.692
+      ep17 train_loss=0.6593 train_acc=0.953 | val_loss=0.8820 val_acc=0.692
+      ep18 train_loss=0.6660 train_acc=0.966 | val_loss=0.8855 val_acc=0.769
+      ep19 train_loss=0.6331 train_acc=0.974 | val_loss=0.9708 val_acc=0.769
+      ep20 train_loss=0.6819 train_acc=0.948 | val_loss=0.8629 val_acc=0.769
+      ep21 train_loss=0.6669 train_acc=0.944 | val_loss=0.8747 val_acc=0.692
+      ep22 train_loss=0.6770 train_acc=0.957 | val_loss=0.9950 val_acc=0.615
+      ep23 train_loss=0.6445 train_acc=0.974 | val_loss=0.9230 val_acc=0.615
+      ep24 train_loss=0.7123 train_acc=0.936 | val_loss=0.9433 val_acc=0.615
+    fold acc=0.538 time=235.3s | running pooled acc=0.591
+
+=== FINAL (pooled LOSO) ===
+UF1 = 0.5669
+UAR = 0.6200
+ACC = 0.5909
+per-class F1: happiness=0.286, disgust=0.400, repression=0.667, surprise=0.857, others=0.625
+per-class recall: happiness=0.500, disgust=0.500, repression=0.600, surprise=1.000, others=0.500
+confusion matrix (rows=true):
+        happin disgus repres surpri others
+happine      1      0      0      1      0
+disgust      0      1      0      0      1
+repress      2      0      3      0      0
+surpris      0      0      0      3      0
+ others      2      2      1      0      5
+
+saved to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\iter_26_erase_qsmoke
+elapsed 473.8s

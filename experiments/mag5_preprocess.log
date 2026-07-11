@@ -1,0 +1,10 @@
+mag cached 25/246 elapsed=590s
+mag cached 50/246 elapsed=1140s
+mag cached 75/246 elapsed=1550s
+mag cached 100/246 elapsed=2290s
+mag cached 125/246 elapsed=2843s
+mag cached 150/246 elapsed=3548s
+mag cached 175/246 elapsed=4129s
+mag cached 200/246 elapsed=4505s
+mag cached 225/246 elapsed=5163s
+DONE mag cached=246 errors=0 alpha=5.0 blur=1.0 base=128 elapsed=5756s

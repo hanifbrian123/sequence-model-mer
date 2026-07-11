@@ -1,0 +1,72 @@
+{
+  "name": "obj6_r3d",
+  "time": "2026-07-16T03:50:39.243841",
+  "elapsed_sec": 6001.1,
+  "n_folds": 26,
+  "num_classes": 6,
+  "class_names": [
+    "obj1",
+    "obj2",
+    "obj3",
+    "obj4",
+    "obj5",
+    "obj7"
+  ],
+  "UF1": 0.5573989432095058,
+  "UAR": 0.5598616037746472,
+  "ACC": 0.6771653543307087,
+  "n": 254,
+  "per_class_f1": [
+    0.4528301886792453,
+    0.45161290322580644,
+    0.8792270531400966,
+    0.46511627906976744,
+    0.4444444444444444,
+    0.6511627906976745
+  ],
+  "per_class_recall": [
+    0.48,
+    0.4666666666666667,
+    0.9191919191919192,
+    0.38461538461538464,
+    0.5,
+    0.6086956521739131
+  ],
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_objective.csv",
+    "class_names": [
+      "obj1",
+      "obj2",
+      "obj3",
+      "obj4",
+      "obj5",
+      "obj7"
+    ],
+    "name": "obj6_r3d_res128",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "manifest_name": "manifest_obj6.csv"
+  }
+}

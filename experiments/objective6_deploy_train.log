@@ -1,0 +1,140 @@
+training final on ALL 254 samples, seeds=[42]
+  [seed 42] ep00 loss=1.9358 acc=0.236
+  [seed 42] ep01 loss=1.5269 acc=0.500
+  [seed 42] ep02 loss=1.3704 acc=0.591
+  [seed 42] ep03 loss=1.2884 acc=0.713
+  [seed 42] ep04 loss=1.2177 acc=0.705
+  [seed 42] ep05 loss=1.1520 acc=0.772
+  [seed 42] ep06 loss=1.0636 acc=0.783
+  [seed 42] ep07 loss=1.0696 acc=0.760
+  [seed 42] ep08 loss=1.0604 acc=0.776
+  [seed 42] ep09 loss=1.0600 acc=0.803
+  [seed 42] ep10 loss=0.9707 acc=0.843
+  [seed 42] ep11 loss=0.9131 acc=0.886
+  [seed 42] ep12 loss=0.9198 acc=0.878
+  [seed 42] ep13 loss=0.8570 acc=0.917
+  [seed 42] ep14 loss=0.8270 acc=0.937
+  [seed 42] ep15 loss=0.8152 acc=0.941
+  [seed 42] ep16 loss=0.8003 acc=0.921
+  [seed 42] ep17 loss=0.8324 acc=0.933
+  [seed 42] ep18 loss=0.7696 acc=0.957
+  [seed 42] ep19 loss=0.7915 acc=0.965
+  [seed 42] ep20 loss=0.8281 acc=0.933
+  [seed 42] ep21 loss=0.8113 acc=0.921
+  [seed 42] ep22 loss=0.7679 acc=0.976
+  [seed 42] ep23 loss=0.8164 acc=0.961
+  [seed 42] ep24 loss=0.7628 acc=0.969
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_single\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_single\deploy.json
+training final on ALL 254 samples, seeds=[42]
+  [seed 42] ep00 loss=1.9358 acc=0.236
+  [seed 42] ep01 loss=1.5269 acc=0.500
+  [seed 42] ep02 loss=1.3704 acc=0.591
+  [seed 42] ep03 loss=1.2884 acc=0.713
+  [seed 42] ep04 loss=1.2177 acc=0.705
+  [seed 42] ep05 loss=1.1520 acc=0.772
+  [seed 42] ep06 loss=1.0636 acc=0.783
+  [seed 42] ep07 loss=1.0696 acc=0.760
+  [seed 42] ep08 loss=1.0604 acc=0.776
+  [seed 42] ep09 loss=1.0600 acc=0.803
+  [seed 42] ep10 loss=0.9707 acc=0.843
+  [seed 42] ep11 loss=0.9131 acc=0.886
+  [seed 42] ep12 loss=0.9198 acc=0.878
+  [seed 42] ep13 loss=0.8570 acc=0.917
+  [seed 42] ep14 loss=0.8270 acc=0.937
+  [seed 42] ep15 loss=0.8152 acc=0.941
+  [seed 42] ep16 loss=0.8003 acc=0.921
+  [seed 42] ep17 loss=0.8324 acc=0.933
+  [seed 42] ep18 loss=0.7696 acc=0.957
+  [seed 42] ep19 loss=0.7915 acc=0.965
+  [seed 42] ep20 loss=0.8281 acc=0.933
+  [seed 42] ep21 loss=0.8113 acc=0.921
+  [seed 42] ep22 loss=0.7679 acc=0.976
+  [seed 42] ep23 loss=0.8164 acc=0.961
+  [seed 42] ep24 loss=0.7628 acc=0.969
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/r3d\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/r3d\deploy.json
+training final on ALL 254 samples, seeds=[42]
+  [seed 42] ep00 loss=1.9611 acc=0.343
+  [seed 42] ep01 loss=1.6016 acc=0.528
+  [seed 42] ep02 loss=1.5022 acc=0.571
+  [seed 42] ep03 loss=1.3833 acc=0.579
+  [seed 42] ep04 loss=1.3096 acc=0.634
+  [seed 42] ep05 loss=1.2602 acc=0.693
+  [seed 42] ep06 loss=1.2265 acc=0.697
+  [seed 42] ep07 loss=1.1980 acc=0.732
+  [seed 42] ep08 loss=1.1240 acc=0.760
+  [seed 42] ep09 loss=1.0264 acc=0.823
+  [seed 42] ep10 loss=1.0377 acc=0.791
+  [seed 42] ep11 loss=1.0408 acc=0.811
+  [seed 42] ep12 loss=0.9865 acc=0.846
+  [seed 42] ep13 loss=0.9488 acc=0.882
+  [seed 42] ep14 loss=0.9317 acc=0.874
+  [seed 42] ep15 loss=0.9351 acc=0.850
+  [seed 42] ep16 loss=0.8892 acc=0.913
+  [seed 42] ep17 loss=0.8563 acc=0.913
+  [seed 42] ep18 loss=0.8349 acc=0.882
+  [seed 42] ep19 loss=0.8776 acc=0.890
+  [seed 42] ep20 loss=0.8145 acc=0.909
+  [seed 42] ep21 loss=0.8249 acc=0.921
+  [seed 42] ep22 loss=0.8344 acc=0.921
+  [seed 42] ep23 loss=0.8304 acc=0.949
+  [seed 42] ep24 loss=0.8106 acc=0.937
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/mc3\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/mc3\deploy.json
+training final on ALL 254 samples, seeds=[42]
+  [seed 42] ep00 loss=1.7796 acc=0.236
+  [seed 42] ep01 loss=1.2204 acc=0.563
+  [seed 42] ep02 loss=0.9758 acc=0.642
+  [seed 42] ep03 loss=0.8484 acc=0.705
+  [seed 42] ep04 loss=0.7644 acc=0.752
+  [seed 42] ep05 loss=0.7300 acc=0.720
+  [seed 42] ep06 loss=0.5822 acc=0.795
+  [seed 42] ep07 loss=0.5631 acc=0.815
+  [seed 42] ep08 loss=0.5307 acc=0.783
+  [seed 42] ep09 loss=0.4752 acc=0.843
+  [seed 42] ep10 loss=0.3585 acc=0.882
+  [seed 42] ep11 loss=0.2926 acc=0.917
+  [seed 42] ep12 loss=0.3198 acc=0.886
+  [seed 42] ep13 loss=0.2077 acc=0.929
+  [seed 42] ep14 loss=0.2207 acc=0.949
+  [seed 42] ep15 loss=0.2504 acc=0.941
+  [seed 42] ep16 loss=0.1669 acc=0.961
+  [seed 42] ep17 loss=0.1711 acc=0.949
+  [seed 42] ep18 loss=0.1623 acc=0.949
+  [seed 42] ep19 loss=0.1472 acc=0.984
+  [seed 42] ep20 loss=0.2080 acc=0.929
+  [seed 42] ep21 loss=0.1637 acc=0.945
+  [seed 42] ep22 loss=0.1308 acc=0.984
+  [seed 42] ep23 loss=0.1506 acc=0.976
+  [seed 42] ep24 loss=0.1090 acc=0.965
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/focal\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/focal\deploy.json
+training final on ALL 254 samples, seeds=[42]
+  [seed 42] ep00 loss=1.9186 acc=0.283
+  [seed 42] ep01 loss=1.5720 acc=0.543
+  [seed 42] ep02 loss=1.5013 acc=0.524
+  [seed 42] ep03 loss=1.2773 acc=0.626
+  [seed 42] ep04 loss=1.2860 acc=0.681
+  [seed 42] ep05 loss=1.1744 acc=0.760
+  [seed 42] ep06 loss=1.1169 acc=0.713
+  [seed 42] ep07 loss=1.0864 acc=0.756
+  [seed 42] ep08 loss=1.0899 acc=0.752
+  [seed 42] ep09 loss=1.0186 acc=0.811
+  [seed 42] ep10 loss=0.9504 acc=0.823
+  [seed 42] ep11 loss=0.9194 acc=0.878
+  [seed 42] ep12 loss=0.8896 acc=0.866
+  [seed 42] ep13 loss=0.8506 acc=0.921
+  [seed 42] ep14 loss=0.8656 acc=0.925
+  [seed 42] ep15 loss=0.8155 acc=0.913
+  [seed 42] ep16 loss=0.8032 acc=0.961
+  [seed 42] ep17 loss=0.8139 acc=0.941
+  [seed 42] ep18 loss=0.7842 acc=0.957
+  [seed 42] ep19 loss=0.7948 acc=0.933
+  [seed 42] ep20 loss=0.7915 acc=0.949
+  [seed 42] ep21 loss=0.7542 acc=0.980
+  [seed 42] ep22 loss=0.7643 acc=0.961
+  [seed 42] ep23 loss=0.7568 acc=0.988
+  [seed 42] ep24 loss=0.7557 acc=0.965
+saved D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/r2p1d4ch\final_seed42.pt
+wrote D:\AI-Projects\casmeII-new-from-sequence-model\models/objective6_ensemble/r2p1d4ch\deploy.json

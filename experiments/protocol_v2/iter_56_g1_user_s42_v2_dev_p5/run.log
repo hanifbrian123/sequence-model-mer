@@ -1,0 +1,24 @@
+=== PROTOCOL V2 iter_56_g1_user_s42_v2_dev_p5 ===
+time: 2026-07-23T21:31:20.394657 | role: dev
+device: cuda (NVIDIA GeForce RTX 3060)
+platform: Windows-10-10.0.26200-SP0 | torch 2.6.0+cu124
+loading 255 cached arrays
+fixed split loaded: 21 development subjects, 5 sealed audit subjects
+fold 1/4: 16 train subjects / 5 validation subjects; 151 train / 45 validation samples
+      ep00 train_loss=1.4242 train_acc=0.364 | val_loss=1.2154 val_acc=0.489
+      ep01 train_loss=1.1862 train_acc=0.563 | val_loss=1.1897 val_acc=0.400
+      ep02 train_loss=1.0785 train_acc=0.616 | val_loss=0.9858 val_acc=0.533
+      ep03 train_loss=0.9981 train_acc=0.629 | val_loss=1.2183 val_acc=0.533
+      ep04 train_loss=0.8247 train_acc=0.821 | val_loss=1.0232 val_acc=0.511
+      ep05 train_loss=0.7954 train_acc=0.788 | val_loss=1.1426 val_acc=0.644
+      ep06 train_loss=0.8327 train_acc=0.841 | val_loss=1.0626 val_acc=0.578
+      ep07 train_loss=0.7670 train_acc=0.841 | val_loss=1.0671 val_acc=0.578
+      ep08 train_loss=0.7846 train_acc=0.868 | val_loss=0.9727 val_acc=0.644
+      ep09 train_loss=0.7389 train_acc=0.881 | val_loss=1.0039 val_acc=0.644
+      ep10 train_loss=0.6872 train_acc=0.914 | val_loss=1.0007 val_acc=0.644
+      ep11 train_loss=0.6692 train_acc=0.907 | val_loss=0.8887 val_acc=0.644
+      ep12 train_loss=0.6946 train_acc=0.914 | val_loss=1.0258 val_acc=0.600
+      ep13 train_loss=0.6840 train_acc=0.914 | val_loss=0.8150 val_acc=0.711
+      ep14 train_loss=0.6851 train_acc=0.907 | val_loss=0.9335 val_acc=0.667
+      ep15 train_loss=0.6388 train_acc=0.960 | val_loss=1.1033 val_acc=0.578
+      ep16 train_loss=0.6219 train_acc=0.987 | val_loss=0.9047 val_acc=0.689

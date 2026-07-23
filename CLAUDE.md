@@ -22,17 +22,19 @@ Akurasi maksimal untuk **inference offline dari video upload** (bukan realtime).
 Latency bukan lagi batasan — keputusan ini diambil setelah terbukti TV-L1 butuh
 ~2,1 detik per window, tidak mungkin per-frame.
 
-## Status: session sebelumnya terputus karena usage limit
+## Status per 23 Juli 2026 — pemulihan session Codex selesai
 
-Session Codex berhenti **22 Juli 2026, 13:07 WIB** (`usage_limit_exceeded`).
+Session Codex berhenti 22 Juli 2026 (`usage_limit_exceeded`). Ternyata **yang mati
+hanya session-nya, bukan pekerjaannya** — proses background terus jalan:
 
-- Edit kode terakhir (`src/inference_utils.py`, 13:00:37) **selesai sukses** —
-  tidak ada file yang rusak setengah jalan.
-- Yang terputus: **training `iter_47_r3d_auto_apex_s42` sedang di fold 3/4**,
-  berjalan di background cell. Proses itu hampir pasti sudah mati.
-  Cek `experiments/protocol_v2/iter_47_r3d_auto_apex_s42_v2_dev_p5/run.log`
-  untuk melihat sampai fold/epoch berapa yang sempat tersimpan.
-- Preprocessing cache HQ+ECC juga berjalan paralel (posisi terakhir ~110/246).
+- `iter_47_r3d_auto_apex_s42` **selesai penuh 4 fold** (`complete: true`, 20:20:38),
+  bukan terputus di fold 3/4. Pooled UF1 0,6707.
+- Cache HQ+ECC **selesai 246/246**, 0 error, 0 gagal stabilisasi (~8,8 jam).
+- Audit integritas: 33 `probs.npz` semua utuh tanpa NaN, 12 checkpoint semua
+  loadable, tidak ada file setengah jadi. 23 regression test hijau.
+
+Catatan: transkrip Codex memakai UTC, jam mesin memakai WIB (UTC+7). "13:07"
+di transkrip = 20:07 WIB — itu sebabnya kelihatan seperti terputus.
 
 ## Protokol eksperimen (protocol v2) — jangan diubah tanpa persetujuan
 
@@ -72,9 +74,23 @@ Ada 12+ regression test yang menjaga ini. Jalankan test dulu sebelum mengubah
 | Sequential flow (t→t+1) | 0,3684 | 0,4215 | 0,3698 | **ditolak** |
 | EMA 0,998 | 0,6725 | — | — | **ditolak** (efek < 0,005) |
 | Onset→apex single (seed 42) | 0,6995 | — | 0,6927 | point naik, gate gagal (P=69,3%) |
-| **Fusion temporal 50:50 full+apex (seed 42)** | **0,7104** | **0,7345** | **0,7083** | **CHAMPION** (P=83,9%) |
+| Fusion temporal 50:50 full+apex (seed 42) | 0,7104 | 0,7345 | 0,7083 | champion **oracle** (P=83,9%) — lihat peringatan di bawah |
 | Ensemble 2-seed apex (42+123) | 0,7356 | — | — | point tertinggi, gate gagal (P=0,761) |
-| Automatic-apex (`iter_47`) | fold 1: 0,7148 | — | — | **terputus di fold 3/4** |
+| Automatic-apex label-free (`iter_47`) | 0,6707 | 0,7008 | 0,6719 | selesai 4 fold |
+| Energy cap 65% (`47b`) | 0,6574 | 0,6891 | 0,6563 | **ditolak** |
+| Multi-hipotesis 6 view (`48`) | 0,6654 | 0,7070 | 0,6563 | **ditolak** |
+| Multi-hipotesis 15 view (`48b`) | 0,6781 | 0,7091 | 0,6719 | **ditolak** — lihat catatan fusi |
+| Oracle reuse dari snapshot (`47c`) | 0,6995 | 0,7088 | 0,6927 | kontrol: reproduksi `iter_43` persis |
+| **Fusion deployable 50:50 full+auto-apex** | **0,7021** | **0,7418** | **0,6979** | **CHAMPION yang bisa dipakai di app** |
+
+### ⚠️ Champion 0,7104 tidak bisa direproduksi saat inference
+
+Leaf `iter_43` dievaluasi memakai **apex beranotasi** dari dataset — tidak ada di
+video upload. Penggantinya yang label-free (`fusions/deployable_50full_50auto47`)
+memberi **0,7021**, lolos gate atas baseline (ΔUF1 +0,0205, P=0,832) dan tidak
+bisa dibedakan dari champion oracle (−0,0084, P=0,308).
+
+**Angka jujur untuk dilaporkan adalah 0,7021, bukan 0,7104.**
 
 Replikasi seed untuk efek temporal onset→apex > full-span:
 seed 42 ✓, seed 123 (0,7119 vs 0,6163) ✓, seed 2024 (0,7210 vs 0,6895) ✓.
@@ -82,6 +98,11 @@ Menambahkan seed ketiga ke ensemble apex justru **menurunkan** skor titik.
 
 ## Cabang yang sudah ditutup — jangan diulang
 
+- **Seluruh keluarga stabilisasi gerakan.** Dua pendekatan independen sama-sama
+  jatuh ~0,09 UF1: kompensasi translasi global (`iter_40`, 0,5987) dan
+  HQ TV-L1 + ECC euclidean (`iter_41`, 0,5906) di atas `cache/flow144_hq_stab`
+  yang sudah jadi. Baseline 0,6816. Gerakan kepala yang dibuang tampaknya justru
+  membawa sinyal kelas. **Jangan habiskan GPU lagi di sumbu ini.**
 - Kompensasi translasi global pada flow (single maupun fusion 10/20/30%).
 - Resolusi input 160 sebagai default (memperbesar variance pada data kecil).
 - Consecutive/sequential TV-L1 sebagai expert (fusion 5% pun menurunkan champion).
@@ -101,24 +122,99 @@ Menambahkan seed ketiga ke ensemble apex justru **menurunkan** skor titik.
   Sudah diverifikasi: trajectory training identik, hanya validation yang berubah.
 - Variasi antar-fold sangat besar (UF1 0,47–0,78 pada baseline yang sama).
   Satu angka fold tunggal tidak berarti apa-apa di project ini.
+- **Skor leaf tidak memprediksi nilainya dalam fusi.** `48b` menang sendirian atas
+  `iter_47` (0,6781 vs 0,6707) tapi fusinya justru jatuh (0,6789 vs 0,7021,
+  ΔUF1 −0,0232, P=0,057). TTA multi-crop + multi-fase membuatnya berkorelasi
+  dengan model full-span, jadi tidak menambah sinyal komplementer.
+  **Jangan pernah memilih anggota fusi dari skor solonya.**
+- **Folder `Cropped` dipotong di ujung, bukan dijarangkan.** Diverifikasi dengan
+  menghitung nama file pada 246 sampel: setiap folder berisi persis
+  `offset − onset + 1` file, penomoran sepenuhnya berurutan (histogram jarak
+  antar frame = `{1: 16477}`, tidak ada satu pun frame terlewat). Jadi resolusi
+  waktu tetap penuh 200 fps — tapi model **belum pernah melihat satu frame pun
+  di luar jendela ekspresi berlabel**.
+- **`CASME2-RAW` tidak ada di komputer ini** (dikonfirmasi user). Tanpa itu tidak
+  ada ground truth untuk spotting, tidak ada wajah non-crop untuk menguji
+  alignment, dan tidak ada bahan membuat video uji yang realistis.
 
-## Config yang sudah dibuat tapi BELUM dijalankan
+## Robustness untuk video upload — sudah diukur 23 Juli 2026
 
-- `iter_47b_r3d_auto_apex_cap65_s42.json` — energy cap 65%
-- `iter_47c_r3d_oracle_apex_reuse_s42.json` — kontrol oracle apex dari snapshot
-- `iter_48_r3d_multihyp_apex_s42.json`, `iter_48b_r3d_multihyp15_apex_s42.json`
-  — multi-hypothesis 3 endpoint × 5 view TTA
-- `iter_49_r3d_face_roi_s42.json` — soft face-ellipse ROI mask pada flow
+Semua dari snapshot `iter_47`, tanpa training ulang.
 
-## Rencana yang belum selesai
+**Error jendela onset tidak berbahaya.** Lewat `eval_start_fraction`:
 
-1. Selesaikan/ulang `iter_47` automatic-apex 4 fold; verifikasi bahwa
-   re-evaluation oracle dari snapshot mereproduksi hasil onset→apex lama.
-2. Re-evaluate snapshot yang sama untuk: energy-cap 55%, cap 65% (`47b`),
-   oracle reuse (`47c`), multi-hypothesis 15 view (`48b`).
-3. Jalankan cabang ROI (`iter_49`) terpisah agar tidak tercampur efek temporal.
-4. Eksperimen HQ+ECC setelah cache preprocessing selesai.
-5. Kunci champion final → audit split sekali → laporan reproducible.
+| onset terlambat | 0% | 10% | 20% | 30% |
+|---|---|---|---|---|
+| UF1 | 0,6707 | 0,6837 | 0,6680 | 0,6757 |
+
+Tidak ada keruntuhan sistematis. Keterbatasan jujur: hanya menguji onset yang
+**terlambat**; cache tidak menyimpan frame sebelum onset, jadi onset yang
+**kedahuluan** dan error offset belum terukur.
+
+**FPS bukan ancaman besar — dugaan awal saya (30 fps merusak model) keliru.**
+`src/eval_fps_robustness.py`:
+
+| fps | 200 | 120 | 60 | 30 |
+|---|---|---|---|---|
+| leaf auto-apex (`iter_47`) | 0,6707 | 0,6866 | 0,7113 | 0,6537 |
+| gate leaf vs 200 fps | — | P=0,923 | P=0,965 | P=0,246 |
+| **fusion deployable** | **0,7021** | 0,6729 | 0,6881 | **0,6953** |
+| gate fusion vs 200 fps | — | **P=0,016 (lebih buruk)** | P=0,241 | **P=0,372 (tidak beda)** |
+
+**Kesimpulan untuk app: video HP 30 fps layak dipakai.** Di level sistem, 30 fps
+hanya −0,0068 UF1 dengan ACC identik (0,6979), dan gate menyatakan tidak berbeda
+dari 200 fps. App **tidak perlu** mensyaratkan rekaman high-speed.
+
+⚠️ **Jangan baca baris leaf sebagai peningkatan.** Kenaikan +0,04 pada leaf
+**tidak menular ke fusi** — di fusi semua fps rendah justru di bawah 200 fps.
+Pengulangan pelajaran `48b`: perbaikan satu leaf ≠ perbaikan sistem.
+
+Dugaan mekanisme ketahanan: flow onset-referenced itu **kumulatif** (`arr[t]` =
+TV-L1 dari onset ke frame t), jadi kurvanya mulus terhadap waktu dan tahan
+penjarangan — berbeda dari flow sequential (t→t+1) yang memang sudah ditolak.
+Faktor yang belum dimodelkan: motion blur dan rolling shutter pada rekaman
+30 fps sungguhan.
+
+## Masalah terbesar yang belum tersentuh: semua angka mengasumsikan jendela sempurna
+
+`cache/flow144` dibangun dari `[onset, offset]`, jadi **setiap model protocol v2
+selalu menerima jendela ekspresi yang sudah dipotong tepat**. Di video upload,
+onset maupun offset sama-sama tidak diketahui.
+
+Masalah apex sudah ditutup dengan estimator label-free. Masalah **batas jendela
+belum**. Artinya label "deployable" pada 0,7021 pun masih optimistis.
+
+Bisa diukur murah lewat `eval_rand_start` + `eval_start_fraction`
+([dataset.py:133](src/dataset.py:133)) — keduanya `EVAL_ONLY_KEYS`, jadi cukup
+re-evaluasi dari snapshot tanpa training. Keterbatasan jujur: hanya bisa meniru
+onset yang **ketinggalan** (mulai terlalu lambat), karena cache tidak menyimpan
+frame sebelum onset.
+
+Risiko kedua yang belum diukur: **FPS**. CASME II 200 fps; video HP ~30 fps.
+Ekspresi 0,2 detik = 41 frame di 200 fps, tapi hanya ~6 frame di 30 fps,
+sedangkan model butuh T=16. Kata "fps" tidak muncul di mana pun dalam repo.
+
+## Rencana
+
+**Fase 1 — selesai 23 Juli 2026.** Cabang apex label-free ditutup; champion
+deployable 0,7021 terkunci angkanya.
+
+**Fase 2 — robustness untuk video upload (prioritas utama).**
+
+1. Uji degradasi FPS (200 → 120 / 60 / 30) dari snapshot yang ada.
+2. Uji error jendela onset lewat `eval_start_fraction`.
+3. Pembaca video + normalisasi FPS + deteksi/pelurusan wajah, lalu **uji
+   kesetaraan**: hasil lewat jalur app harus sama dengan jalur training.
+4. Spotting — **terblokir**, butuh `CASME2-RAW` yang tidak ada di mesin ini.
+5. Skor "tidak ada ekspresi" (reject option) supaya app tidak asal menebak.
+
+**Fase 3 — akurasi.** HQ+ECC (`iter_41`, cache sudah siap), ROI (`iter_49`),
+replikasi seed label-free (`iter_50`/`iter_51`). Antreannya di `run_queue_v2.sh`.
+
+**Fase 4 —** kunci champion → audit split sekali → laporan reproducible.
+
+Ekspektasi jujur: Fase 2 kemungkinan besar **menurunkan** 0,7021, dan itu sehat —
+0,7021 adalah angka kondisi ideal.
 
 ## Cara kerja yang saya harapkan
 

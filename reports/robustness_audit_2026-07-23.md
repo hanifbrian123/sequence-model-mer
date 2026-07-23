@@ -133,6 +133,57 @@ Catatan integritas: seed 2024 seragam lebih baik dari seed 42 (fusi 0,7238 vs
 
 ---
 
+## Kandidat terkuat sekarang: ensemble 3-seed apex label-free (gagal gate, tipis)
+
+Leaf apex label-free dilatih ulang di tiga seed (`iter_47`/`50`/`51`):
+
+| leaf | s42 | s123 | s2024 | rentang | sd |
+|---|---|---|---|---|---|
+| full-span | 0,6816 | 0,6163 | 0,6895 | 0,0732 | 0,0402 |
+| apex label-free | 0,6707 | 0,7082 | 0,6925 | 0,0375 | 0,0188 |
+
+| kandidat (semua deployable) | UF1 | UAR | ACC | gate vs 0,7021 |
+|---|---|---|---|---|
+| Champion sekarang (full s42 + auto s42) | 0,7021 | 0,7418 | 0,6979 | — |
+| **Ensemble 3-seed apex, tanpa full-span** | **0,7241** | **0,7583** | **0,7188** | ΔUF1 +0,0220, **P=0,771 → gagal** |
+| full 3-seed + auto 3-seed | 0,6921 | 0,7238 | 0,6979 | −0,0100, gagal |
+| full s42 + auto 3-seed | 0,7052 | 0,7427 | 0,7031 | +0,0031, gagal |
+
+Dua hal yang menonjol:
+
+1. **Skor titik tertinggi dari semua yang pernah deployable — 0,7241, di atas
+   champion oracle 0,7104** — dan ia **tidak memakai leaf full-span sama sekali**.
+   Arsitekturnya juga lebih sederhana: satu resep, satu temporal span.
+2. Menambahkan leaf full-span ke dalamnya justru **menurunkannya** (0,7241 →
+   0,6921). Pelajaran yang sama untuk keempat kalinya.
+
+Gate-nya gagal di P=0,771 terhadap syarat 0,80 — pola identik dengan penolakan
+historis "ensemble 2-seed apex, P=0,761".
+
+### Dua seed tambahan membongkarnya
+
+Alih-alih menggeser bobot sampai lolos, saya latih dua seed lagi (7 dan 2025) dan
+menyatakan di muka bahwa gate 5-seed dijalankan **sekali** dan diterima apa adanya.
+
+| seed | 42 | 123 | 2024 | 7 | 2025 |
+|---|---|---|---|---|---|
+| UF1 leaf | 0,6707 | 0,7082 | 0,6925 | 0,6761 | 0,6610 |
+
+mean 0,6817 · sd 0,0187 · rentang 0,0472
+
+| ensemble | UF1 | gate vs champion |
+|---|---|---|
+| 3 seed (42/123/2024) | 0,7241 | +0,0220, P=0,771 → gagal |
+| **5 seed** | **0,6936** | **−0,0085, P=0,413 → gagal** |
+
+**Angka 0,7241 itu keberuntungan pemilihan seed.** Seed 123 dan 2024 kebetulan
+dua terbaik dari lima; begitu dua seed rata-rata ditambahkan, skornya turun ke
+0,6936 — di bawah champion.
+
+Ini alasan konkret kenapa aturan "tutup cabang yang gagal gate" itu benar. Kalau
+ensemble 3-seed dipromosikan karena skor titiknya tertinggi, yang terkunci adalah
+noise. Menambah seed berbiaya 32 menit GPU dan menyelamatkan keputusan itu.
+
 ## Status champion
 
 **Tidak berubah: `fusions/deployable_50full_50auto47`, UF1 0,7021 / UAR 0,7418 /

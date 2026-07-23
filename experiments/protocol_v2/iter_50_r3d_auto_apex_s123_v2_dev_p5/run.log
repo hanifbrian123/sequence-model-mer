@@ -92,3 +92,37 @@ fold 3/4: 15 train subjects / 6 validation subjects; 143 train / 49 validation s
       ep23 train_loss=0.6960 train_acc=0.944 | val_loss=0.9677 val_acc=0.592
       saved re-evaluation checkpoint fold3_ep23.pt
       ep24 train_loss=0.6752 train_acc=0.951 | val_loss=0.9854 val_acc=0.551
+      saved re-evaluation checkpoint fold3_ep24.pt
+fold result: UF1=0.6364 UAR=0.7591 ACC=0.6327
+fold 4/4: 16 train subjects / 5 validation subjects; 144 train / 48 validation samples
+      ep00 train_loss=1.6989 train_acc=0.243 | val_loss=1.3922 val_acc=0.438
+      ep01 train_loss=1.3139 train_acc=0.493 | val_loss=1.0481 val_acc=0.438
+      ep02 train_loss=1.1580 train_acc=0.535 | val_loss=0.8532 val_acc=0.729
+      ep03 train_loss=1.1019 train_acc=0.660 | val_loss=0.7583 val_acc=0.646
+      ep04 train_loss=0.9522 train_acc=0.729 | val_loss=0.7139 val_acc=0.708
+      ep05 train_loss=0.9587 train_acc=0.778 | val_loss=0.6154 val_acc=0.812
+      ep06 train_loss=0.9266 train_acc=0.764 | val_loss=0.7329 val_acc=0.771
+      ep07 train_loss=0.8743 train_acc=0.792 | val_loss=0.6302 val_acc=0.812
+      ep08 train_loss=0.7959 train_acc=0.847 | val_loss=0.6123 val_acc=0.854
+      ep09 train_loss=0.8076 train_acc=0.854 | val_loss=0.7293 val_acc=0.771
+      ep10 train_loss=0.8071 train_acc=0.882 | val_loss=0.6366 val_acc=0.854
+      ep11 train_loss=0.7313 train_acc=0.924 | val_loss=0.7242 val_acc=0.792
+      ep12 train_loss=0.7473 train_acc=0.889 | val_loss=0.6203 val_acc=0.771
+      ep13 train_loss=0.7521 train_acc=0.931 | val_loss=0.6253 val_acc=0.750
+      ep14 train_loss=0.7494 train_acc=0.931 | val_loss=0.5481 val_acc=0.833
+      ep15 train_loss=0.7110 train_acc=0.917 | val_loss=0.5932 val_acc=0.854
+      ep16 train_loss=0.6675 train_acc=0.965 | val_loss=0.5880 val_acc=0.833
+      ep17 train_loss=0.6928 train_acc=0.938 | val_loss=0.6487 val_acc=0.833
+      ep18 train_loss=0.7053 train_acc=0.944 | val_loss=0.5694 val_acc=0.854
+      ep19 train_loss=0.7241 train_acc=0.958 | val_loss=0.5362 val_acc=0.854
+      ep20 train_loss=0.6573 train_acc=0.951 | val_loss=0.5407 val_acc=0.854
+      ep21 train_loss=0.7087 train_acc=0.958 | val_loss=0.5400 val_acc=0.812
+      ep22 train_loss=0.7004 train_acc=0.951 | val_loss=0.5706 val_acc=0.875
+      saved re-evaluation checkpoint fold4_ep22.pt
+      ep23 train_loss=0.6700 train_acc=0.951 | val_loss=0.5554 val_acc=0.854
+      saved re-evaluation checkpoint fold4_ep23.pt
+      ep24 train_loss=0.7047 train_acc=0.931 | val_loss=0.5889 val_acc=0.833
+      saved re-evaluation checkpoint fold4_ep24.pt
+fold result: UF1=0.8631 UAR=0.9038 ACC=0.8542
+FINAL dev: UF1=0.7082 UAR=0.7524 ACC=0.7031
+saved reproducible artifacts to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\protocol_v2\iter_50_r3d_auto_apex_s123_v2_dev_p5 in 960.1s

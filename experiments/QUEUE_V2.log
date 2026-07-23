@@ -6,3 +6,7 @@
 [18:26:22] START iter_49_r3d_face_roi_s42 (tag=p5)
 [18:44:39] DONE  iter_49_r3d_face_roi_s42: FINAL dev: UF1=0.6370 UAR=0.6567 ACC=0.6406
 [18:44:39] START iter_50_r3d_auto_apex_s123 (tag=p5)
+[19:00:50] DONE  iter_50_r3d_auto_apex_s123: FINAL dev: UF1=0.7082 UAR=0.7524 ACC=0.7031
+[19:00:50] START iter_51_r3d_auto_apex_s2024 (tag=p5)
+[19:16:11] DONE  iter_51_r3d_auto_apex_s2024: FINAL dev: UF1=0.6925 UAR=0.7180 ACC=0.7083
+[19:16:11] === QUEUE V2 COMPLETE ===

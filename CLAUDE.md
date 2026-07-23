@@ -109,6 +109,14 @@ Menambahkan seed ketiga ke ensemble apex justru **menurunkan** skor titik.
 - EMA weight averaging.
 - Grid search bobot fusion lebih halus — sengaja dihindari agar tidak overfit
   development split.
+- **Seed ensembling** (sudah gagal tiga kali: 3-seed apex oracle, multi-seed
+  full-span dalam fusi, dan 5-seed apex label-free). Leaf apex label-free lima
+  seed: 0,6707 / 0,7082 / 0,6925 / 0,6761 / 0,6610 (sd 0,0187). Ensemble 3-seed
+  mencetak 0,7241 tapi itu **keberuntungan pemilihan seed** — 5-seed turun ke
+  0,6936, di bawah champion. Jangan promosikan ensemble dari skor titik.
+- **HQ TV-L1 + ECC** (`iter_41`, 0,5906) dan **face-ellipse ROI** (`iter_49`,
+  0,6370), keduanya jauh di bawah baseline 0,6816.
+- **Apex smoothing** radius 2/4/6/10 (`iter_53`), semuanya ≤ radius 0.
 
 ## Temuan penting lain
 

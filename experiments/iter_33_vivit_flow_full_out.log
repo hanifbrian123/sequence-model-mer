@@ -1,0 +1,907 @@
+=== EXPERIMENT iter_33_vivit_flow ===
+time: 2026-07-19T17:46:43.956406
+device: cuda (NVIDIA GeForce RTX 3060)
+platform: Windows-10-10.0.26200-SP0 | torch 2.6.0+cu124
+config:
+{
+  "seed": 42,
+  "T": 32,
+  "img_size": 128,
+  "base_size": 144,
+  "input_mode": "rgb",
+  "backbone": "vivit",
+  "pretrained": true,
+  "dropout": 0.2,
+  "epochs": 24,
+  "lr": 6e-05,
+  "weight_decay": 0.02,
+  "batch_size": 8,
+  "class_weighting": true,
+  "label_smoothing": 0.0,
+  "hflip": true,
+  "color_jitter": 0.0,
+  "temporal_jitter": true,
+  "amp": true,
+  "eval_last_k": 3,
+  "tta": 5,
+  "cache_dir": "cache/flow144",
+  "index": "cache/index_emotion.csv",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "name": "iter_33_vivit_flow",
+  "resize_to": 224,
+  "modality": "flow",
+  "temporal_span": "onset_offset",
+  "flow_clip": 3.0,
+  "flow_third": "mag",
+  "grad_checkpoint": true,
+  "head_lr": 0.003,
+  "llrd_decay": 0.85,
+  "warmup_epochs": 3,
+  "freeze_epochs": 2,
+  "grad_accum": 1,
+  "loss": "focal",
+  "focal_gamma": 1.5,
+  "random_erase": 0.1
+}
+samples: 246 | classes: 5 ['happiness', 'disgust', 'repression', 'surprise', 'others']
+loading arrays into RAM...
+loaded 246 arrays
+
+--- Fold 1/26 | test sub01 (9 test, 237 train) ---
+      ep00 train_loss=1.1860 train_acc=0.321 | val_loss=1.4117 val_acc=0.667
+      ep01 train_loss=1.0976 train_acc=0.266 | val_loss=1.3686 val_acc=0.556
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9930 train_acc=0.384 | val_loss=1.6409 val_acc=0.000
+      ep03 train_loss=0.9150 train_acc=0.435 | val_loss=0.9458 val_acc=0.444
+      ep04 train_loss=0.6730 train_acc=0.557 | val_loss=0.8111 val_acc=0.667
+      ep05 train_loss=0.4767 train_acc=0.612 | val_loss=0.7651 val_acc=0.667
+      ep06 train_loss=0.3565 train_acc=0.671 | val_loss=0.5873 val_acc=0.778
+      ep07 train_loss=0.2866 train_acc=0.709 | val_loss=0.6464 val_acc=0.667
+      ep08 train_loss=0.3147 train_acc=0.700 | val_loss=0.6173 val_acc=0.667
+      ep09 train_loss=0.2980 train_acc=0.738 | val_loss=0.4591 val_acc=0.889
+      ep10 train_loss=0.2065 train_acc=0.738 | val_loss=0.6353 val_acc=0.778
+      ep11 train_loss=0.1494 train_acc=0.819 | val_loss=0.5384 val_acc=0.667
+      ep12 train_loss=0.1386 train_acc=0.810 | val_loss=0.4869 val_acc=1.000
+      ep13 train_loss=0.1167 train_acc=0.861 | val_loss=0.3805 val_acc=1.000
+      ep14 train_loss=0.1204 train_acc=0.852 | val_loss=0.3795 val_acc=0.889
+      ep15 train_loss=0.0843 train_acc=0.882 | val_loss=0.3760 val_acc=1.000
+      ep16 train_loss=0.0651 train_acc=0.899 | val_loss=0.3030 val_acc=1.000
+      ep17 train_loss=0.0542 train_acc=0.924 | val_loss=0.2676 val_acc=0.889
+      ep18 train_loss=0.0548 train_acc=0.924 | val_loss=0.2557 val_acc=1.000
+      ep19 train_loss=0.0433 train_acc=0.916 | val_loss=0.2486 val_acc=1.000
+      ep20 train_loss=0.0537 train_acc=0.911 | val_loss=0.2416 val_acc=1.000
+      ep21 train_loss=0.0476 train_acc=0.916 | val_loss=0.2416 val_acc=1.000
+      ep22 train_loss=0.0452 train_acc=0.932 | val_loss=0.2444 val_acc=1.000
+      ep23 train_loss=0.0473 train_acc=0.937 | val_loss=0.2435 val_acc=1.000
+    fold acc=0.889 time=2479.4s | running pooled acc=0.889
+
+--- Fold 2/26 | test sub02 (13 test, 233 train) ---
+      ep00 train_loss=1.2036 train_acc=0.326 | val_loss=1.6411 val_acc=0.231
+      ep01 train_loss=1.1267 train_acc=0.288 | val_loss=1.6142 val_acc=0.231
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.8739 train_acc=0.391 | val_loss=1.4199 val_acc=0.462
+      ep03 train_loss=0.7648 train_acc=0.511 | val_loss=1.6689 val_acc=0.538
+      ep04 train_loss=0.6178 train_acc=0.571 | val_loss=1.4477 val_acc=0.462
+      ep05 train_loss=0.5095 train_acc=0.618 | val_loss=1.7555 val_acc=0.462
+      ep06 train_loss=0.4051 train_acc=0.652 | val_loss=1.3493 val_acc=0.538
+      ep07 train_loss=0.3962 train_acc=0.648 | val_loss=1.0894 val_acc=0.692
+      ep08 train_loss=0.1989 train_acc=0.785 | val_loss=1.0773 val_acc=0.538
+      ep09 train_loss=0.2089 train_acc=0.742 | val_loss=1.0944 val_acc=0.538
+      ep10 train_loss=0.2345 train_acc=0.730 | val_loss=1.2763 val_acc=0.538
+      ep11 train_loss=0.1605 train_acc=0.773 | val_loss=1.0819 val_acc=0.615
+      ep12 train_loss=0.1106 train_acc=0.845 | val_loss=1.3042 val_acc=0.462
+      ep13 train_loss=0.1003 train_acc=0.833 | val_loss=1.4135 val_acc=0.385
+      ep14 train_loss=0.1235 train_acc=0.845 | val_loss=1.4252 val_acc=0.538
+      ep15 train_loss=0.0967 train_acc=0.893 | val_loss=1.3863 val_acc=0.462
+      ep16 train_loss=0.0778 train_acc=0.897 | val_loss=1.4216 val_acc=0.538
+      ep17 train_loss=0.0641 train_acc=0.918 | val_loss=1.5155 val_acc=0.462
+      ep18 train_loss=0.0625 train_acc=0.923 | val_loss=1.4839 val_acc=0.538
+      ep19 train_loss=0.0510 train_acc=0.918 | val_loss=1.4972 val_acc=0.538
+      ep20 train_loss=0.0461 train_acc=0.936 | val_loss=1.4422 val_acc=0.538
+      ep21 train_loss=0.0549 train_acc=0.914 | val_loss=1.3927 val_acc=0.538
+      ep22 train_loss=0.0537 train_acc=0.901 | val_loss=1.3806 val_acc=0.538
+      ep23 train_loss=0.0472 train_acc=0.936 | val_loss=1.3771 val_acc=0.538
+    fold acc=0.538 time=2457.1s | running pooled acc=0.682
+
+--- Fold 3/26 | test sub03 (7 test, 239 train) ---
+      ep00 train_loss=1.2147 train_acc=0.272 | val_loss=1.6290 val_acc=0.143
+      ep01 train_loss=1.0753 train_acc=0.272 | val_loss=1.5828 val_acc=0.286
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9575 train_acc=0.406 | val_loss=1.6286 val_acc=0.143
+      ep03 train_loss=0.8205 train_acc=0.448 | val_loss=1.2626 val_acc=0.286
+      ep04 train_loss=0.5245 train_acc=0.590 | val_loss=1.0786 val_acc=0.286
+      ep05 train_loss=0.5126 train_acc=0.586 | val_loss=1.1960 val_acc=0.286
+      ep06 train_loss=0.3674 train_acc=0.640 | val_loss=0.7821 val_acc=0.571
+      ep07 train_loss=0.2372 train_acc=0.728 | val_loss=0.7988 val_acc=0.286
+      ep08 train_loss=0.2463 train_acc=0.753 | val_loss=0.7654 val_acc=0.571
+      ep09 train_loss=0.1708 train_acc=0.774 | val_loss=0.9345 val_acc=0.286
+      ep10 train_loss=0.1536 train_acc=0.837 | val_loss=1.4878 val_acc=0.286
+      ep11 train_loss=0.1588 train_acc=0.808 | val_loss=1.5468 val_acc=0.429
+      ep12 train_loss=0.1037 train_acc=0.862 | val_loss=1.3827 val_acc=0.429
+      ep13 train_loss=0.1321 train_acc=0.870 | val_loss=1.1553 val_acc=0.286
+      ep14 train_loss=0.0827 train_acc=0.891 | val_loss=1.5973 val_acc=0.429
+      ep15 train_loss=0.0761 train_acc=0.891 | val_loss=1.6062 val_acc=0.429
+      ep16 train_loss=0.0411 train_acc=0.962 | val_loss=1.5500 val_acc=0.429
+      ep17 train_loss=0.0649 train_acc=0.925 | val_loss=1.5246 val_acc=0.429
+      ep18 train_loss=0.0450 train_acc=0.941 | val_loss=1.4222 val_acc=0.429
+      ep19 train_loss=0.0351 train_acc=0.937 | val_loss=1.5133 val_acc=0.429
+      ep20 train_loss=0.0435 train_acc=0.941 | val_loss=1.4493 val_acc=0.429
+      ep21 train_loss=0.0328 train_acc=0.941 | val_loss=1.4371 val_acc=0.429
+      ep22 train_loss=0.0351 train_acc=0.946 | val_loss=1.4238 val_acc=0.429
+      ep23 train_loss=0.0217 train_acc=0.971 | val_loss=1.4299 val_acc=0.429
+    fold acc=0.429 time=2485.6s | running pooled acc=0.621
+
+--- Fold 4/26 | test sub04 (5 test, 241 train) ---
+      ep00 train_loss=1.2009 train_acc=0.320 | val_loss=1.4925 val_acc=0.200
+      ep01 train_loss=1.1193 train_acc=0.253 | val_loss=1.4758 val_acc=0.400
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=1.0059 train_acc=0.344 | val_loss=1.3561 val_acc=0.400
+      ep03 train_loss=0.6967 train_acc=0.506 | val_loss=1.6482 val_acc=0.200
+      ep04 train_loss=0.5901 train_acc=0.544 | val_loss=1.6196 val_acc=0.400
+      ep05 train_loss=0.4443 train_acc=0.643 | val_loss=1.2519 val_acc=0.400
+      ep06 train_loss=0.3246 train_acc=0.685 | val_loss=0.8471 val_acc=0.800
+      ep07 train_loss=0.3270 train_acc=0.710 | val_loss=1.4184 val_acc=0.400
+      ep08 train_loss=0.3426 train_acc=0.739 | val_loss=1.1248 val_acc=0.400
+      ep09 train_loss=0.2921 train_acc=0.755 | val_loss=1.0972 val_acc=0.600
+      ep10 train_loss=0.1595 train_acc=0.817 | val_loss=1.2106 val_acc=0.600
+      ep11 train_loss=0.1113 train_acc=0.846 | val_loss=1.3836 val_acc=0.600
+      ep12 train_loss=0.2240 train_acc=0.805 | val_loss=1.2847 val_acc=0.600
+      ep13 train_loss=0.1257 train_acc=0.863 | val_loss=1.2632 val_acc=0.600
+      ep14 train_loss=0.1451 train_acc=0.892 | val_loss=1.2916 val_acc=0.600
+      ep15 train_loss=0.0766 train_acc=0.888 | val_loss=1.2011 val_acc=0.600
+      ep16 train_loss=0.0701 train_acc=0.900 | val_loss=1.1538 val_acc=0.800
+      ep17 train_loss=0.0614 train_acc=0.905 | val_loss=1.0055 val_acc=0.800
+      ep18 train_loss=0.0545 train_acc=0.913 | val_loss=1.0480 val_acc=0.600
+      ep19 train_loss=0.0593 train_acc=0.938 | val_loss=1.0069 val_acc=0.600
+      ep20 train_loss=0.0570 train_acc=0.917 | val_loss=1.0019 val_acc=0.800
+      ep21 train_loss=0.0362 train_acc=0.963 | val_loss=1.0164 val_acc=0.600
+      ep22 train_loss=0.0395 train_acc=0.946 | val_loss=1.0133 val_acc=0.600
+      ep23 train_loss=0.0388 train_acc=0.959 | val_loss=1.0150 val_acc=0.600
+    fold acc=0.600 time=2495.5s | running pooled acc=0.618
+
+--- Fold 5/26 | test sub05 (19 test, 227 train) ---
+      ep00 train_loss=1.2461 train_acc=0.264 | val_loss=1.3328 val_acc=0.632
+      ep01 train_loss=1.0898 train_acc=0.233 | val_loss=1.4684 val_acc=0.421
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9547 train_acc=0.401 | val_loss=1.8020 val_acc=0.211
+      ep03 train_loss=0.7431 train_acc=0.498 | val_loss=1.0436 val_acc=0.526
+      ep04 train_loss=0.6857 train_acc=0.546 | val_loss=1.4231 val_acc=0.421
+      ep05 train_loss=0.3594 train_acc=0.670 | val_loss=2.0446 val_acc=0.316
+      ep06 train_loss=0.3535 train_acc=0.656 | val_loss=1.6398 val_acc=0.421
+      ep07 train_loss=0.2821 train_acc=0.736 | val_loss=1.6202 val_acc=0.368
+      ep08 train_loss=0.2239 train_acc=0.740 | val_loss=1.4883 val_acc=0.474
+      ep09 train_loss=0.1931 train_acc=0.758 | val_loss=1.3969 val_acc=0.526
+      ep10 train_loss=0.1525 train_acc=0.784 | val_loss=1.5420 val_acc=0.421
+      ep11 train_loss=0.1808 train_acc=0.815 | val_loss=1.8014 val_acc=0.421
+      ep12 train_loss=0.1685 train_acc=0.837 | val_loss=1.9234 val_acc=0.316
+      ep13 train_loss=0.1048 train_acc=0.872 | val_loss=2.0424 val_acc=0.368
+      ep14 train_loss=0.1066 train_acc=0.868 | val_loss=1.9448 val_acc=0.474
+      ep15 train_loss=0.0750 train_acc=0.894 | val_loss=1.7621 val_acc=0.368
+      ep16 train_loss=0.0558 train_acc=0.916 | val_loss=1.8033 val_acc=0.368
+      ep17 train_loss=0.0559 train_acc=0.930 | val_loss=1.7737 val_acc=0.421
+      ep18 train_loss=0.0426 train_acc=0.952 | val_loss=1.8422 val_acc=0.421
+      ep19 train_loss=0.0386 train_acc=0.952 | val_loss=1.8512 val_acc=0.421
+      ep20 train_loss=0.0594 train_acc=0.912 | val_loss=2.0107 val_acc=0.368
+      ep21 train_loss=0.0399 train_acc=0.947 | val_loss=1.9971 val_acc=0.368
+      ep22 train_loss=0.0428 train_acc=0.934 | val_loss=1.9825 val_acc=0.368
+      ep23 train_loss=0.0335 train_acc=0.938 | val_loss=1.9837 val_acc=0.368
+    fold acc=0.421 time=2420.0s | running pooled acc=0.547
+
+--- Fold 6/26 | test sub06 (5 test, 241 train) ---
+      ep00 train_loss=1.1962 train_acc=0.336 | val_loss=1.5877 val_acc=0.400
+      ep01 train_loss=1.1212 train_acc=0.249 | val_loss=1.7113 val_acc=0.200
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9626 train_acc=0.386 | val_loss=1.7408 val_acc=0.400
+      ep03 train_loss=0.6641 train_acc=0.510 | val_loss=1.8178 val_acc=0.400
+      ep04 train_loss=0.5788 train_acc=0.577 | val_loss=1.3138 val_acc=0.400
+      ep05 train_loss=0.4130 train_acc=0.635 | val_loss=1.5586 val_acc=0.600
+      ep06 train_loss=0.3940 train_acc=0.660 | val_loss=1.4989 val_acc=0.400
+      ep07 train_loss=0.3070 train_acc=0.705 | val_loss=1.7307 val_acc=0.800
+      ep08 train_loss=0.2459 train_acc=0.780 | val_loss=2.3213 val_acc=0.600
+      ep09 train_loss=0.3655 train_acc=0.705 | val_loss=1.7693 val_acc=0.600
+      ep10 train_loss=0.1804 train_acc=0.801 | val_loss=1.7235 val_acc=0.400
+      ep11 train_loss=0.1191 train_acc=0.867 | val_loss=1.9308 val_acc=0.400
+      ep12 train_loss=0.1229 train_acc=0.842 | val_loss=1.6554 val_acc=0.600
+      ep13 train_loss=0.1002 train_acc=0.888 | val_loss=1.9147 val_acc=0.400
+      ep14 train_loss=0.1176 train_acc=0.880 | val_loss=1.8098 val_acc=0.400
+      ep15 train_loss=0.0659 train_acc=0.896 | val_loss=1.6136 val_acc=0.200
+      ep16 train_loss=0.0576 train_acc=0.913 | val_loss=1.6710 val_acc=0.600
+      ep17 train_loss=0.0449 train_acc=0.950 | val_loss=1.6115 val_acc=0.600
+      ep18 train_loss=0.0481 train_acc=0.929 | val_loss=1.7485 val_acc=0.400
+      ep19 train_loss=0.0344 train_acc=0.959 | val_loss=1.6953 val_acc=0.600
+      ep20 train_loss=0.0449 train_acc=0.938 | val_loss=1.6274 val_acc=0.600
+      ep21 train_loss=0.0321 train_acc=0.959 | val_loss=1.6282 val_acc=0.600
+      ep22 train_loss=0.0372 train_acc=0.934 | val_loss=1.6470 val_acc=0.600
+      ep23 train_loss=0.0472 train_acc=0.946 | val_loss=1.6476 val_acc=0.600
+    fold acc=0.600 time=2500.6s | running pooled acc=0.552
+
+--- Fold 7/26 | test sub07 (9 test, 237 train) ---
+      ep00 train_loss=1.1906 train_acc=0.316 | val_loss=1.5501 val_acc=0.222
+      ep01 train_loss=1.0852 train_acc=0.295 | val_loss=1.3090 val_acc=0.333
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=1.0903 train_acc=0.376 | val_loss=1.6251 val_acc=0.444
+      ep03 train_loss=0.9555 train_acc=0.405 | val_loss=2.1152 val_acc=0.111
+      ep04 train_loss=0.5543 train_acc=0.599 | val_loss=1.2153 val_acc=0.444
+      ep05 train_loss=0.7225 train_acc=0.532 | val_loss=1.3980 val_acc=0.444
+      ep06 train_loss=0.4061 train_acc=0.650 | val_loss=1.2281 val_acc=0.222
+      ep07 train_loss=0.2918 train_acc=0.696 | val_loss=1.0068 val_acc=0.556
+      ep08 train_loss=0.2143 train_acc=0.755 | val_loss=1.0302 val_acc=0.667
+      ep09 train_loss=0.1900 train_acc=0.802 | val_loss=1.4294 val_acc=0.222
+      ep10 train_loss=0.1834 train_acc=0.781 | val_loss=1.2237 val_acc=0.556
+      ep11 train_loss=0.1620 train_acc=0.840 | val_loss=1.2549 val_acc=0.333
+      ep12 train_loss=0.1194 train_acc=0.882 | val_loss=1.4660 val_acc=0.444
+      ep13 train_loss=0.0953 train_acc=0.890 | val_loss=1.3630 val_acc=0.111
+      ep14 train_loss=0.1015 train_acc=0.865 | val_loss=1.3763 val_acc=0.111
+      ep15 train_loss=0.0655 train_acc=0.903 | val_loss=1.4846 val_acc=0.556
+      ep16 train_loss=0.0695 train_acc=0.907 | val_loss=1.7447 val_acc=0.333
+      ep17 train_loss=0.0825 train_acc=0.899 | val_loss=1.7325 val_acc=0.444
+      ep18 train_loss=0.0557 train_acc=0.949 | val_loss=1.7605 val_acc=0.444
+      ep19 train_loss=0.0547 train_acc=0.928 | val_loss=1.8324 val_acc=0.222
+      ep20 train_loss=0.0377 train_acc=0.932 | val_loss=1.6513 val_acc=0.444
+      ep21 train_loss=0.0487 train_acc=0.941 | val_loss=1.6759 val_acc=0.444
+      ep22 train_loss=0.0433 train_acc=0.924 | val_loss=1.6832 val_acc=0.444
+      ep23 train_loss=0.0384 train_acc=0.954 | val_loss=1.6836 val_acc=0.444
+    fold acc=0.444 time=2472.0s | running pooled acc=0.537
+
+--- Fold 8/26 | test sub08 (3 test, 243 train) ---
+      ep00 train_loss=1.1895 train_acc=0.284 | val_loss=1.5746 val_acc=0.667
+      ep01 train_loss=1.1340 train_acc=0.247 | val_loss=1.3639 val_acc=0.333
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9708 train_acc=0.370 | val_loss=1.8466 val_acc=0.000
+      ep03 train_loss=0.9344 train_acc=0.420 | val_loss=1.2980 val_acc=0.333
+      ep04 train_loss=0.5366 train_acc=0.634 | val_loss=0.8358 val_acc=0.667
+      ep05 train_loss=0.4277 train_acc=0.621 | val_loss=0.9990 val_acc=0.333
+      ep06 train_loss=0.3599 train_acc=0.675 | val_loss=1.3708 val_acc=0.333
+      ep07 train_loss=0.3861 train_acc=0.683 | val_loss=1.3026 val_acc=0.333
+      ep08 train_loss=0.2487 train_acc=0.704 | val_loss=1.6122 val_acc=0.333
+      ep09 train_loss=0.2181 train_acc=0.786 | val_loss=0.7847 val_acc=0.333
+      ep10 train_loss=0.1852 train_acc=0.737 | val_loss=1.1162 val_acc=0.333
+      ep11 train_loss=0.2368 train_acc=0.802 | val_loss=0.7836 val_acc=0.333
+      ep12 train_loss=0.0985 train_acc=0.852 | val_loss=1.1138 val_acc=0.333
+      ep13 train_loss=0.1244 train_acc=0.852 | val_loss=0.8213 val_acc=0.333
+      ep14 train_loss=0.1031 train_acc=0.877 | val_loss=1.4134 val_acc=0.333
+      ep15 train_loss=0.0810 train_acc=0.889 | val_loss=1.7096 val_acc=0.333
+      ep16 train_loss=0.0537 train_acc=0.934 | val_loss=1.3196 val_acc=0.333
+      ep17 train_loss=0.0543 train_acc=0.918 | val_loss=1.2567 val_acc=0.667
+      ep18 train_loss=0.0471 train_acc=0.930 | val_loss=1.2206 val_acc=0.333
+      ep19 train_loss=0.0434 train_acc=0.922 | val_loss=1.3609 val_acc=0.333
+      ep20 train_loss=0.0469 train_acc=0.918 | val_loss=1.2917 val_acc=0.333
+      ep21 train_loss=0.0410 train_acc=0.942 | val_loss=1.3395 val_acc=0.333
+      ep22 train_loss=0.0533 train_acc=0.914 | val_loss=1.3582 val_acc=0.333
+      ep23 train_loss=0.0357 train_acc=0.951 | val_loss=1.3585 val_acc=0.333
+    fold acc=0.333 time=2506.3s | running pooled acc=0.529
+
+--- Fold 9/26 | test sub09 (13 test, 233 train) ---
+      ep00 train_loss=1.2141 train_acc=0.326 | val_loss=1.8059 val_acc=0.231
+      ep01 train_loss=1.1519 train_acc=0.210 | val_loss=1.8914 val_acc=0.000
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9845 train_acc=0.408 | val_loss=1.0971 val_acc=0.538
+      ep03 train_loss=0.7651 train_acc=0.502 | val_loss=1.6741 val_acc=0.231
+      ep04 train_loss=0.5595 train_acc=0.605 | val_loss=1.9021 val_acc=0.154
+      ep05 train_loss=0.5056 train_acc=0.614 | val_loss=1.4616 val_acc=0.385
+      ep06 train_loss=0.3574 train_acc=0.670 | val_loss=1.2312 val_acc=0.615
+      ep07 train_loss=0.4364 train_acc=0.652 | val_loss=1.1145 val_acc=0.538
+      ep08 train_loss=0.2605 train_acc=0.721 | val_loss=1.0860 val_acc=0.538
+      ep09 train_loss=0.2568 train_acc=0.730 | val_loss=1.0756 val_acc=0.462
+      ep10 train_loss=0.2193 train_acc=0.725 | val_loss=1.6942 val_acc=0.308
+      ep11 train_loss=0.1756 train_acc=0.777 | val_loss=1.3595 val_acc=0.308
+      ep12 train_loss=0.1901 train_acc=0.790 | val_loss=1.6076 val_acc=0.231
+      ep13 train_loss=0.0960 train_acc=0.850 | val_loss=1.2180 val_acc=0.385
+      ep14 train_loss=0.1215 train_acc=0.871 | val_loss=1.4041 val_acc=0.462
+      ep15 train_loss=0.0876 train_acc=0.876 | val_loss=1.0923 val_acc=0.462
+      ep16 train_loss=0.0757 train_acc=0.897 | val_loss=1.2578 val_acc=0.385
+      ep17 train_loss=0.0599 train_acc=0.918 | val_loss=1.3715 val_acc=0.385
+      ep18 train_loss=0.0532 train_acc=0.914 | val_loss=1.4312 val_acc=0.462
+      ep19 train_loss=0.0547 train_acc=0.927 | val_loss=1.4551 val_acc=0.385
+      ep20 train_loss=0.0427 train_acc=0.948 | val_loss=1.4164 val_acc=0.385
+      ep21 train_loss=0.0620 train_acc=0.931 | val_loss=1.3973 val_acc=0.385
+      ep22 train_loss=0.0528 train_acc=0.923 | val_loss=1.4227 val_acc=0.385
+      ep23 train_loss=0.0476 train_acc=0.931 | val_loss=1.4206 val_acc=0.385
+    fold acc=0.462 time=2450.8s | running pooled acc=0.518
+
+--- Fold 10/26 | test sub10 (13 test, 233 train) ---
+      ep00 train_loss=1.2156 train_acc=0.309 | val_loss=1.3959 val_acc=0.462
+      ep01 train_loss=1.1661 train_acc=0.232 | val_loss=1.4360 val_acc=0.077
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9020 train_acc=0.421 | val_loss=1.2959 val_acc=0.231
+      ep03 train_loss=0.7268 train_acc=0.506 | val_loss=1.0803 val_acc=0.231
+      ep04 train_loss=0.4852 train_acc=0.635 | val_loss=0.9126 val_acc=0.462
+      ep05 train_loss=0.5857 train_acc=0.588 | val_loss=0.8881 val_acc=0.769
+      ep06 train_loss=0.4018 train_acc=0.661 | val_loss=0.8661 val_acc=0.385
+      ep07 train_loss=0.5829 train_acc=0.609 | val_loss=1.1554 val_acc=0.308
+      ep08 train_loss=0.3102 train_acc=0.717 | val_loss=0.5686 val_acc=0.923
+      ep09 train_loss=0.2589 train_acc=0.734 | val_loss=0.4222 val_acc=0.923
+      ep10 train_loss=0.2168 train_acc=0.742 | val_loss=0.7929 val_acc=0.385
+      ep11 train_loss=0.1609 train_acc=0.794 | val_loss=0.7661 val_acc=0.769
+      ep12 train_loss=0.1752 train_acc=0.820 | val_loss=0.7410 val_acc=0.846
+      ep13 train_loss=0.1101 train_acc=0.858 | val_loss=0.5708 val_acc=0.923
+      ep14 train_loss=0.1171 train_acc=0.858 | val_loss=0.4517 val_acc=0.923
+      ep15 train_loss=0.0873 train_acc=0.880 | val_loss=0.4910 val_acc=0.923
+      ep16 train_loss=0.0919 train_acc=0.893 | val_loss=0.5716 val_acc=0.846
+      ep17 train_loss=0.0686 train_acc=0.906 | val_loss=0.6943 val_acc=0.615
+      ep18 train_loss=0.0558 train_acc=0.918 | val_loss=0.5355 val_acc=0.923
+      ep19 train_loss=0.0635 train_acc=0.910 | val_loss=0.6399 val_acc=0.692
+      ep20 train_loss=0.0505 train_acc=0.936 | val_loss=0.6103 val_acc=0.692
+      ep21 train_loss=0.0592 train_acc=0.936 | val_loss=0.6040 val_acc=0.692
+      ep22 train_loss=0.0524 train_acc=0.906 | val_loss=0.6207 val_acc=0.692
+      ep23 train_loss=0.0515 train_acc=0.936 | val_loss=0.6172 val_acc=0.692
+    fold acc=0.769 time=2451.3s | running pooled acc=0.552
+
+--- Fold 11/26 | test sub11 (10 test, 236 train) ---
+      ep00 train_loss=1.1987 train_acc=0.352 | val_loss=1.4545 val_acc=0.400
+      ep01 train_loss=1.1218 train_acc=0.246 | val_loss=1.5200 val_acc=0.300
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9924 train_acc=0.407 | val_loss=1.2335 val_acc=0.400
+      ep03 train_loss=0.6190 train_acc=0.559 | val_loss=1.0869 val_acc=0.500
+      ep04 train_loss=0.5344 train_acc=0.576 | val_loss=0.7542 val_acc=0.600
+      ep05 train_loss=0.4568 train_acc=0.610 | val_loss=1.0024 val_acc=0.300
+      ep06 train_loss=0.4269 train_acc=0.644 | val_loss=0.9493 val_acc=0.400
+      ep07 train_loss=0.3236 train_acc=0.737 | val_loss=0.9441 val_acc=0.500
+      ep08 train_loss=0.2626 train_acc=0.737 | val_loss=1.0055 val_acc=0.400
+      ep09 train_loss=0.1806 train_acc=0.767 | val_loss=0.9391 val_acc=0.600
+      ep10 train_loss=0.1838 train_acc=0.805 | val_loss=1.0492 val_acc=0.500
+      ep11 train_loss=0.1842 train_acc=0.822 | val_loss=0.7612 val_acc=0.400
+      ep12 train_loss=0.1700 train_acc=0.809 | val_loss=0.9268 val_acc=0.600
+      ep13 train_loss=0.0981 train_acc=0.856 | val_loss=0.8176 val_acc=0.500
+      ep14 train_loss=0.1128 train_acc=0.847 | val_loss=0.7115 val_acc=0.500
+      ep15 train_loss=0.0971 train_acc=0.890 | val_loss=0.7290 val_acc=0.800
+      ep16 train_loss=0.0702 train_acc=0.898 | val_loss=0.7522 val_acc=0.600
+      ep17 train_loss=0.0522 train_acc=0.911 | val_loss=0.8639 val_acc=0.600
+      ep18 train_loss=0.0427 train_acc=0.936 | val_loss=0.7554 val_acc=0.600
+      ep19 train_loss=0.0501 train_acc=0.932 | val_loss=0.8310 val_acc=0.600
+      ep20 train_loss=0.0464 train_acc=0.936 | val_loss=0.8502 val_acc=0.600
+      ep21 train_loss=0.0391 train_acc=0.941 | val_loss=0.8055 val_acc=0.600
+      ep22 train_loss=0.0346 train_acc=0.962 | val_loss=0.7909 val_acc=0.600
+      ep23 train_loss=0.0416 train_acc=0.945 | val_loss=0.7968 val_acc=0.600
+    fold acc=0.600 time=2464.0s | running pooled acc=0.557
+
+--- Fold 12/26 | test sub12 (12 test, 234 train) ---
+      ep00 train_loss=1.1955 train_acc=0.346 | val_loss=1.6957 val_acc=0.083
+      ep01 train_loss=1.1345 train_acc=0.235 | val_loss=1.4794 val_acc=0.333
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9096 train_acc=0.359 | val_loss=0.9031 val_acc=0.667
+      ep03 train_loss=0.7178 train_acc=0.487 | val_loss=0.9362 val_acc=0.417
+      ep04 train_loss=0.7115 train_acc=0.479 | val_loss=1.1124 val_acc=0.583
+      ep05 train_loss=0.4998 train_acc=0.637 | val_loss=0.7443 val_acc=0.583
+      ep06 train_loss=0.4068 train_acc=0.684 | val_loss=0.8730 val_acc=0.500
+      ep07 train_loss=0.2876 train_acc=0.709 | val_loss=0.7117 val_acc=0.750
+      ep08 train_loss=0.2696 train_acc=0.718 | val_loss=0.8641 val_acc=0.583
+      ep09 train_loss=0.2008 train_acc=0.791 | val_loss=0.9301 val_acc=0.417
+      ep10 train_loss=0.1738 train_acc=0.791 | val_loss=0.9318 val_acc=0.667
+      ep11 train_loss=0.1678 train_acc=0.833 | val_loss=0.9746 val_acc=0.333
+      ep12 train_loss=0.1517 train_acc=0.795 | val_loss=0.7343 val_acc=0.667
+      ep13 train_loss=0.1238 train_acc=0.868 | val_loss=1.2564 val_acc=0.333
+      ep14 train_loss=0.1256 train_acc=0.829 | val_loss=1.3096 val_acc=0.417
+      ep15 train_loss=0.0934 train_acc=0.842 | val_loss=0.9120 val_acc=0.583
+      ep16 train_loss=0.0669 train_acc=0.893 | val_loss=1.1445 val_acc=0.500
+      ep17 train_loss=0.0652 train_acc=0.893 | val_loss=1.0291 val_acc=0.500
+      ep18 train_loss=0.0526 train_acc=0.906 | val_loss=1.1673 val_acc=0.500
+      ep19 train_loss=0.0397 train_acc=0.949 | val_loss=1.0846 val_acc=0.500
+      ep20 train_loss=0.0596 train_acc=0.927 | val_loss=1.0502 val_acc=0.500
+      ep21 train_loss=0.0378 train_acc=0.957 | val_loss=1.1302 val_acc=0.500
+      ep22 train_loss=0.0457 train_acc=0.919 | val_loss=1.1133 val_acc=0.500
+      ep23 train_loss=0.0591 train_acc=0.915 | val_loss=1.1125 val_acc=0.500
+    fold acc=0.500 time=2452.0s | running pooled acc=0.551
+
+--- Fold 13/26 | test sub13 (8 test, 238 train) ---
+      ep00 train_loss=1.1874 train_acc=0.336 | val_loss=1.3545 val_acc=0.500
+      ep01 train_loss=1.1162 train_acc=0.265 | val_loss=1.4469 val_acc=0.250
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9338 train_acc=0.399 | val_loss=0.9866 val_acc=0.625
+      ep03 train_loss=0.7744 train_acc=0.542 | val_loss=1.2373 val_acc=0.500
+      ep04 train_loss=0.5148 train_acc=0.592 | val_loss=1.3817 val_acc=0.500
+      ep05 train_loss=0.4772 train_acc=0.597 | val_loss=1.0520 val_acc=0.375
+      ep06 train_loss=0.3342 train_acc=0.660 | val_loss=1.1667 val_acc=0.375
+      ep07 train_loss=0.3362 train_acc=0.685 | val_loss=0.8046 val_acc=0.500
+      ep08 train_loss=0.2336 train_acc=0.782 | val_loss=0.8231 val_acc=0.375
+      ep09 train_loss=0.2038 train_acc=0.790 | val_loss=0.8386 val_acc=0.750
+      ep10 train_loss=0.1780 train_acc=0.803 | val_loss=0.6655 val_acc=0.750
+      ep11 train_loss=0.1214 train_acc=0.870 | val_loss=0.7463 val_acc=0.750
+      ep12 train_loss=0.1600 train_acc=0.861 | val_loss=0.8752 val_acc=0.500
+      ep13 train_loss=0.1208 train_acc=0.840 | val_loss=0.7044 val_acc=0.750
+      ep14 train_loss=0.0805 train_acc=0.878 | val_loss=0.6112 val_acc=0.750
+      ep15 train_loss=0.0780 train_acc=0.861 | val_loss=0.6275 val_acc=0.750
+      ep16 train_loss=0.0682 train_acc=0.916 | val_loss=0.6127 val_acc=0.750
+      ep17 train_loss=0.0522 train_acc=0.916 | val_loss=0.6128 val_acc=0.750
+      ep18 train_loss=0.0649 train_acc=0.908 | val_loss=0.5662 val_acc=0.750
+      ep19 train_loss=0.0505 train_acc=0.941 | val_loss=0.5531 val_acc=0.750
+      ep20 train_loss=0.0546 train_acc=0.895 | val_loss=0.5668 val_acc=0.750
+      ep21 train_loss=0.0509 train_acc=0.916 | val_loss=0.5480 val_acc=0.750
+      ep22 train_loss=0.0390 train_acc=0.941 | val_loss=0.5647 val_acc=0.750
+      ep23 train_loss=0.0425 train_acc=0.924 | val_loss=0.5602 val_acc=0.750
+    fold acc=0.750 time=2474.1s | running pooled acc=0.563
+
+--- Fold 14/26 | test sub14 (4 test, 242 train) ---
+      ep00 train_loss=1.2043 train_acc=0.318 | val_loss=1.9512 val_acc=0.250
+      ep01 train_loss=1.1282 train_acc=0.273 | val_loss=2.3407 val_acc=0.250
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9613 train_acc=0.417 | val_loss=2.8739 val_acc=0.000
+      ep03 train_loss=0.6912 train_acc=0.521 | val_loss=1.9222 val_acc=0.250
+      ep04 train_loss=0.5577 train_acc=0.587 | val_loss=3.4981 val_acc=0.000
+      ep05 train_loss=0.6241 train_acc=0.558 | val_loss=1.7781 val_acc=0.250
+      ep06 train_loss=0.4898 train_acc=0.579 | val_loss=2.5665 val_acc=0.000
+      ep07 train_loss=0.3406 train_acc=0.690 | val_loss=1.6763 val_acc=0.250
+      ep08 train_loss=0.2926 train_acc=0.723 | val_loss=2.6348 val_acc=0.000
+      ep09 train_loss=0.1956 train_acc=0.756 | val_loss=3.2995 val_acc=0.000
+      ep10 train_loss=0.1700 train_acc=0.789 | val_loss=3.7920 val_acc=0.000
+      ep11 train_loss=0.1230 train_acc=0.843 | val_loss=3.6267 val_acc=0.000
+      ep12 train_loss=0.1395 train_acc=0.826 | val_loss=3.4475 val_acc=0.000
+      ep13 train_loss=0.1255 train_acc=0.839 | val_loss=3.2098 val_acc=0.250
+      ep14 train_loss=0.0997 train_acc=0.893 | val_loss=3.5252 val_acc=0.000
+      ep15 train_loss=0.0653 train_acc=0.893 | val_loss=4.3082 val_acc=0.250
+      ep16 train_loss=0.0451 train_acc=0.934 | val_loss=3.9025 val_acc=0.250
+      ep17 train_loss=0.0506 train_acc=0.913 | val_loss=3.9451 val_acc=0.250
+      ep18 train_loss=0.0786 train_acc=0.905 | val_loss=4.0612 val_acc=0.250
+      ep19 train_loss=0.0480 train_acc=0.905 | val_loss=4.2071 val_acc=0.250
+      ep20 train_loss=0.0544 train_acc=0.921 | val_loss=4.2546 val_acc=0.250
+      ep21 train_loss=0.0440 train_acc=0.938 | val_loss=4.2934 val_acc=0.250
+      ep22 train_loss=0.0424 train_acc=0.926 | val_loss=4.3169 val_acc=0.250
+      ep23 train_loss=0.0322 train_acc=0.942 | val_loss=4.3178 val_acc=0.250
+    fold acc=0.250 time=2495.4s | running pooled acc=0.554
+
+--- Fold 15/26 | test sub15 (3 test, 243 train) ---
+      ep00 train_loss=1.1988 train_acc=0.292 | val_loss=2.0090 val_acc=0.000
+      ep01 train_loss=1.1574 train_acc=0.243 | val_loss=1.6043 val_acc=0.333
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.8784 train_acc=0.391 | val_loss=1.6011 val_acc=0.333
+      ep03 train_loss=0.7515 train_acc=0.473 | val_loss=0.8701 val_acc=0.667
+      ep04 train_loss=0.5153 train_acc=0.593 | val_loss=1.2975 val_acc=0.000
+      ep05 train_loss=0.4057 train_acc=0.642 | val_loss=0.9882 val_acc=0.667
+      ep06 train_loss=0.4497 train_acc=0.638 | val_loss=1.5367 val_acc=0.000
+      ep07 train_loss=0.4460 train_acc=0.658 | val_loss=0.5059 val_acc=0.667
+      ep08 train_loss=0.3032 train_acc=0.700 | val_loss=0.7950 val_acc=0.667
+      ep09 train_loss=0.1795 train_acc=0.811 | val_loss=0.8936 val_acc=0.667
+      ep10 train_loss=0.1532 train_acc=0.790 | val_loss=1.1072 val_acc=0.333
+      ep11 train_loss=0.1819 train_acc=0.819 | val_loss=1.0554 val_acc=0.667
+      ep12 train_loss=0.1210 train_acc=0.835 | val_loss=0.6741 val_acc=1.000
+      ep13 train_loss=0.1240 train_acc=0.823 | val_loss=0.6307 val_acc=0.667
+      ep14 train_loss=0.0893 train_acc=0.881 | val_loss=1.1097 val_acc=0.667
+      ep15 train_loss=0.0689 train_acc=0.897 | val_loss=1.0104 val_acc=0.667
+      ep16 train_loss=0.0595 train_acc=0.901 | val_loss=0.8214 val_acc=0.667
+      ep17 train_loss=0.0648 train_acc=0.901 | val_loss=1.0266 val_acc=0.667
+      ep18 train_loss=0.0450 train_acc=0.914 | val_loss=1.1849 val_acc=0.667
+      ep19 train_loss=0.0600 train_acc=0.918 | val_loss=1.0348 val_acc=0.667
+      ep20 train_loss=0.0455 train_acc=0.909 | val_loss=1.1905 val_acc=0.667
+      ep21 train_loss=0.0378 train_acc=0.938 | val_loss=1.1138 val_acc=0.667
+      ep22 train_loss=0.0444 train_acc=0.938 | val_loss=1.0831 val_acc=0.667
+      ep23 train_loss=0.0346 train_acc=0.955 | val_loss=1.0955 val_acc=0.667
+    fold acc=0.667 time=2498.9s | running pooled acc=0.556
+
+--- Fold 16/26 | test sub16 (4 test, 242 train) ---
+      ep00 train_loss=1.2010 train_acc=0.314 | val_loss=1.8007 val_acc=0.250
+      ep01 train_loss=1.1467 train_acc=0.252 | val_loss=1.9691 val_acc=0.250
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9942 train_acc=0.388 | val_loss=1.9594 val_acc=0.000
+      ep03 train_loss=0.8761 train_acc=0.475 | val_loss=2.0446 val_acc=0.500
+      ep04 train_loss=0.4986 train_acc=0.595 | val_loss=2.3874 val_acc=0.250
+      ep05 train_loss=0.6353 train_acc=0.529 | val_loss=2.6590 val_acc=0.250
+      ep06 train_loss=0.4547 train_acc=0.566 | val_loss=2.8999 val_acc=0.250
+      ep07 train_loss=0.2992 train_acc=0.702 | val_loss=2.2843 val_acc=0.500
+      ep08 train_loss=0.1957 train_acc=0.764 | val_loss=2.4098 val_acc=0.500
+      ep09 train_loss=0.1877 train_acc=0.781 | val_loss=2.8183 val_acc=0.250
+      ep10 train_loss=0.1529 train_acc=0.818 | val_loss=2.7381 val_acc=0.250
+      ep11 train_loss=0.1188 train_acc=0.864 | val_loss=2.4725 val_acc=0.250
+      ep12 train_loss=0.1295 train_acc=0.831 | val_loss=2.6758 val_acc=0.250
+      ep13 train_loss=0.1014 train_acc=0.876 | val_loss=3.1304 val_acc=0.250
+      ep14 train_loss=0.0888 train_acc=0.851 | val_loss=3.7346 val_acc=0.250
+      ep15 train_loss=0.1050 train_acc=0.855 | val_loss=3.3087 val_acc=0.250
+      ep16 train_loss=0.0743 train_acc=0.888 | val_loss=3.6817 val_acc=0.250
+      ep17 train_loss=0.0797 train_acc=0.872 | val_loss=3.4696 val_acc=0.250
+      ep18 train_loss=0.0606 train_acc=0.921 | val_loss=3.3282 val_acc=0.250
+      ep19 train_loss=0.0528 train_acc=0.909 | val_loss=3.4534 val_acc=0.250
+      ep20 train_loss=0.0477 train_acc=0.930 | val_loss=3.6521 val_acc=0.250
+      ep21 train_loss=0.0323 train_acc=0.955 | val_loss=3.6557 val_acc=0.250
+      ep22 train_loss=0.0705 train_acc=0.934 | val_loss=3.6211 val_acc=0.250
+      ep23 train_loss=0.0338 train_acc=0.942 | val_loss=3.6144 val_acc=0.250
+    fold acc=0.250 time=2494.5s | running pooled acc=0.547
+
+--- Fold 17/26 | test sub17 (34 test, 212 train) ---
+      ep00 train_loss=1.1856 train_acc=0.363 | val_loss=1.6898 val_acc=0.088
+      ep01 train_loss=1.1793 train_acc=0.198 | val_loss=1.4072 val_acc=0.412
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=1.0240 train_acc=0.330 | val_loss=1.2789 val_acc=0.324
+      ep03 train_loss=0.7750 train_acc=0.491 | val_loss=1.1867 val_acc=0.529
+      ep04 train_loss=0.5773 train_acc=0.585 | val_loss=1.1083 val_acc=0.529
+      ep05 train_loss=0.5005 train_acc=0.547 | val_loss=1.2001 val_acc=0.500
+      ep06 train_loss=0.4690 train_acc=0.651 | val_loss=0.9879 val_acc=0.471
+      ep07 train_loss=0.4419 train_acc=0.608 | val_loss=1.4296 val_acc=0.353
+      ep08 train_loss=0.2579 train_acc=0.741 | val_loss=1.4459 val_acc=0.265
+      ep09 train_loss=0.1848 train_acc=0.792 | val_loss=1.7248 val_acc=0.206
+      ep10 train_loss=0.1278 train_acc=0.816 | val_loss=1.6490 val_acc=0.265
+      ep11 train_loss=0.1279 train_acc=0.821 | val_loss=2.0624 val_acc=0.235
+      ep12 train_loss=0.1951 train_acc=0.830 | val_loss=1.6881 val_acc=0.324
+      ep13 train_loss=0.1256 train_acc=0.811 | val_loss=1.9255 val_acc=0.294
+      ep14 train_loss=0.0960 train_acc=0.844 | val_loss=2.0166 val_acc=0.206
+      ep15 train_loss=0.0955 train_acc=0.863 | val_loss=2.0285 val_acc=0.294
+      ep16 train_loss=0.0799 train_acc=0.906 | val_loss=1.6061 val_acc=0.382
+      ep17 train_loss=0.0699 train_acc=0.925 | val_loss=1.8358 val_acc=0.294
+      ep18 train_loss=0.0503 train_acc=0.948 | val_loss=1.9260 val_acc=0.324
+      ep19 train_loss=0.0752 train_acc=0.901 | val_loss=1.9330 val_acc=0.294
+      ep20 train_loss=0.0489 train_acc=0.929 | val_loss=1.8982 val_acc=0.294
+      ep21 train_loss=0.0543 train_acc=0.896 | val_loss=1.9381 val_acc=0.294
+      ep22 train_loss=0.0372 train_acc=0.943 | val_loss=1.9707 val_acc=0.294
+      ep23 train_loss=0.0470 train_acc=0.920 | val_loss=1.9669 val_acc=0.294
+    fold acc=0.265 time=2331.0s | running pooled acc=0.491
+
+--- Fold 18/26 | test sub18 (3 test, 243 train) ---
+      ep00 train_loss=1.2133 train_acc=0.317 | val_loss=1.3447 val_acc=0.333
+      ep01 train_loss=1.1750 train_acc=0.247 | val_loss=0.9276 val_acc=0.667
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9349 train_acc=0.432 | val_loss=1.2711 val_acc=0.000
+      ep03 train_loss=0.7234 train_acc=0.477 | val_loss=1.6004 val_acc=0.000
+      ep04 train_loss=0.5818 train_acc=0.580 | val_loss=1.1899 val_acc=0.333
+      ep05 train_loss=0.4772 train_acc=0.601 | val_loss=1.1024 val_acc=0.000
+      ep06 train_loss=0.3473 train_acc=0.650 | val_loss=0.2643 val_acc=1.000
+      ep07 train_loss=0.3550 train_acc=0.716 | val_loss=1.3558 val_acc=0.667
+      ep08 train_loss=0.2534 train_acc=0.712 | val_loss=1.2285 val_acc=0.333
+      ep09 train_loss=0.2579 train_acc=0.728 | val_loss=0.9727 val_acc=0.667
+      ep10 train_loss=0.1829 train_acc=0.807 | val_loss=0.9419 val_acc=0.667
+      ep11 train_loss=0.1278 train_acc=0.831 | val_loss=0.9140 val_acc=0.333
+      ep12 train_loss=0.1268 train_acc=0.852 | val_loss=1.7957 val_acc=0.000
+      ep13 train_loss=0.1031 train_acc=0.877 | val_loss=0.6669 val_acc=0.667
+      ep14 train_loss=0.0730 train_acc=0.909 | val_loss=1.2405 val_acc=0.333
+      ep15 train_loss=0.0531 train_acc=0.938 | val_loss=1.3385 val_acc=0.000
+      ep16 train_loss=0.0693 train_acc=0.905 | val_loss=0.6516 val_acc=0.667
+      ep17 train_loss=0.0676 train_acc=0.905 | val_loss=0.4230 val_acc=1.000
+      ep18 train_loss=0.0487 train_acc=0.930 | val_loss=0.4547 val_acc=0.667
+      ep19 train_loss=0.0454 train_acc=0.922 | val_loss=0.6107 val_acc=0.667
+      ep20 train_loss=0.0429 train_acc=0.963 | val_loss=0.5937 val_acc=0.667
+      ep21 train_loss=0.0332 train_acc=0.947 | val_loss=0.6871 val_acc=0.667
+      ep22 train_loss=0.0443 train_acc=0.955 | val_loss=0.6826 val_acc=0.667
+      ep23 train_loss=0.0255 train_acc=0.951 | val_loss=0.6742 val_acc=0.667
+    fold acc=0.667 time=2495.6s | running pooled acc=0.494
+
+--- Fold 19/26 | test sub19 (15 test, 231 train) ---
+      ep00 train_loss=1.1893 train_acc=0.312 | val_loss=1.6149 val_acc=0.267
+      ep01 train_loss=1.1328 train_acc=0.255 | val_loss=1.5643 val_acc=0.200
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.8912 train_acc=0.420 | val_loss=1.5900 val_acc=0.400
+      ep03 train_loss=0.7942 train_acc=0.519 | val_loss=1.4160 val_acc=0.467
+      ep04 train_loss=0.5618 train_acc=0.558 | val_loss=1.0775 val_acc=0.533
+      ep05 train_loss=0.4643 train_acc=0.632 | val_loss=1.5234 val_acc=0.467
+      ep06 train_loss=0.5593 train_acc=0.593 | val_loss=1.2022 val_acc=0.600
+      ep07 train_loss=0.2819 train_acc=0.697 | val_loss=1.2869 val_acc=0.467
+      ep08 train_loss=0.2489 train_acc=0.714 | val_loss=1.0139 val_acc=0.667
+      ep09 train_loss=0.1961 train_acc=0.775 | val_loss=1.1527 val_acc=0.600
+      ep10 train_loss=0.1150 train_acc=0.827 | val_loss=1.2397 val_acc=0.600
+      ep11 train_loss=0.1347 train_acc=0.835 | val_loss=1.2644 val_acc=0.600
+      ep12 train_loss=0.0946 train_acc=0.870 | val_loss=1.3131 val_acc=0.533
+      ep13 train_loss=0.1012 train_acc=0.874 | val_loss=1.2923 val_acc=0.533
+      ep14 train_loss=0.0704 train_acc=0.922 | val_loss=1.1152 val_acc=0.533
+      ep15 train_loss=0.0592 train_acc=0.913 | val_loss=1.4079 val_acc=0.333
+      ep16 train_loss=0.0561 train_acc=0.926 | val_loss=1.2140 val_acc=0.600
+      ep17 train_loss=0.0632 train_acc=0.926 | val_loss=1.2872 val_acc=0.400
+      ep18 train_loss=0.0443 train_acc=0.939 | val_loss=1.1811 val_acc=0.533
+      ep19 train_loss=0.0465 train_acc=0.944 | val_loss=1.1170 val_acc=0.533
+      ep20 train_loss=0.0451 train_acc=0.935 | val_loss=1.1860 val_acc=0.533
+      ep21 train_loss=0.0388 train_acc=0.913 | val_loss=1.1932 val_acc=0.533
+      ep22 train_loss=0.0423 train_acc=0.935 | val_loss=1.1983 val_acc=0.533
+      ep23 train_loss=0.0466 train_acc=0.939 | val_loss=1.1947 val_acc=0.533
+    fold acc=0.600 time=2430.7s | running pooled acc=0.503
+
+--- Fold 20/26 | test sub20 (11 test, 235 train) ---
+      ep00 train_loss=1.2327 train_acc=0.298 | val_loss=1.4755 val_acc=0.455
+      ep01 train_loss=1.1527 train_acc=0.238 | val_loss=1.2641 val_acc=0.636
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9024 train_acc=0.438 | val_loss=2.0273 val_acc=0.364
+      ep03 train_loss=0.7672 train_acc=0.489 | val_loss=1.4775 val_acc=0.455
+      ep04 train_loss=0.5195 train_acc=0.591 | val_loss=1.5514 val_acc=0.273
+      ep05 train_loss=0.3482 train_acc=0.664 | val_loss=1.7792 val_acc=0.273
+      ep06 train_loss=0.4340 train_acc=0.647 | val_loss=1.6541 val_acc=0.455
+      ep07 train_loss=0.3277 train_acc=0.685 | val_loss=0.8791 val_acc=0.545
+      ep08 train_loss=0.2306 train_acc=0.719 | val_loss=0.9907 val_acc=0.545
+      ep09 train_loss=0.2332 train_acc=0.728 | val_loss=0.8693 val_acc=0.545
+      ep10 train_loss=0.2189 train_acc=0.783 | val_loss=1.2507 val_acc=0.364
+      ep11 train_loss=0.1911 train_acc=0.817 | val_loss=1.6961 val_acc=0.273
+      ep12 train_loss=0.1133 train_acc=0.860 | val_loss=1.6788 val_acc=0.273
+      ep13 train_loss=0.0945 train_acc=0.860 | val_loss=1.0616 val_acc=0.636
+      ep14 train_loss=0.0999 train_acc=0.902 | val_loss=1.0771 val_acc=0.636
+      ep15 train_loss=0.0730 train_acc=0.911 | val_loss=1.0098 val_acc=0.636
+      ep16 train_loss=0.0579 train_acc=0.940 | val_loss=1.2769 val_acc=0.455
+      ep17 train_loss=0.0458 train_acc=0.949 | val_loss=1.2106 val_acc=0.545
+      ep18 train_loss=0.0454 train_acc=0.953 | val_loss=1.2764 val_acc=0.545
+      ep19 train_loss=0.0428 train_acc=0.945 | val_loss=1.2067 val_acc=0.545
+      ep20 train_loss=0.0403 train_acc=0.928 | val_loss=1.1065 val_acc=0.545
+      ep21 train_loss=0.0443 train_acc=0.940 | val_loss=1.1691 val_acc=0.545
+      ep22 train_loss=0.0382 train_acc=0.962 | val_loss=1.1671 val_acc=0.545
+      ep23 train_loss=0.0255 train_acc=0.962 | val_loss=1.1696 val_acc=0.545
+    fold acc=0.636 time=2457.2s | running pooled acc=0.510
+
+--- Fold 21/26 | test sub21 (2 test, 244 train) ---
+      ep00 train_loss=1.2241 train_acc=0.328 | val_loss=1.5035 val_acc=0.500
+      ep01 train_loss=1.1732 train_acc=0.172 | val_loss=1.4325 val_acc=0.500
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=1.0699 train_acc=0.344 | val_loss=1.0766 val_acc=0.000
+      ep03 train_loss=0.8231 train_acc=0.463 | val_loss=1.5578 val_acc=0.500
+      ep04 train_loss=0.4708 train_acc=0.578 | val_loss=0.4502 val_acc=1.000
+      ep05 train_loss=0.4173 train_acc=0.598 | val_loss=1.2933 val_acc=0.500
+      ep06 train_loss=0.3724 train_acc=0.643 | val_loss=1.5574 val_acc=0.000
+      ep07 train_loss=0.2642 train_acc=0.689 | val_loss=1.0541 val_acc=0.500
+      ep08 train_loss=0.1608 train_acc=0.787 | val_loss=1.2325 val_acc=0.500
+      ep09 train_loss=0.1951 train_acc=0.783 | val_loss=2.1990 val_acc=0.500
+      ep10 train_loss=0.2039 train_acc=0.787 | val_loss=1.4485 val_acc=0.500
+      ep11 train_loss=0.1116 train_acc=0.873 | val_loss=1.2577 val_acc=0.500
+      ep12 train_loss=0.1571 train_acc=0.820 | val_loss=1.4497 val_acc=0.500
+      ep13 train_loss=0.0861 train_acc=0.898 | val_loss=1.3447 val_acc=0.500
+      ep14 train_loss=0.0751 train_acc=0.885 | val_loss=1.5796 val_acc=0.500
+      ep15 train_loss=0.0656 train_acc=0.893 | val_loss=1.7732 val_acc=0.500
+      ep16 train_loss=0.0697 train_acc=0.902 | val_loss=1.6888 val_acc=0.500
+      ep17 train_loss=0.0399 train_acc=0.930 | val_loss=1.8044 val_acc=0.500
+      ep18 train_loss=0.0440 train_acc=0.926 | val_loss=1.5991 val_acc=0.500
+      ep19 train_loss=0.0433 train_acc=0.947 | val_loss=1.7997 val_acc=0.500
+      ep20 train_loss=0.0373 train_acc=0.943 | val_loss=1.7682 val_acc=0.500
+      ep21 train_loss=0.0406 train_acc=0.943 | val_loss=1.7960 val_acc=0.500
+      ep22 train_loss=0.0398 train_acc=0.947 | val_loss=1.7435 val_acc=0.500
+      ep23 train_loss=0.0314 train_acc=0.955 | val_loss=1.7355 val_acc=0.500
+    fold acc=0.500 time=2506.2s | running pooled acc=0.510
+
+--- Fold 22/26 | test sub22 (2 test, 244 train) ---
+      ep00 train_loss=1.2320 train_acc=0.324 | val_loss=2.0061 val_acc=0.000
+      ep01 train_loss=1.1837 train_acc=0.156 | val_loss=1.5776 val_acc=0.000
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=1.0910 train_acc=0.344 | val_loss=0.1673 val_acc=1.000
+      ep03 train_loss=0.8302 train_acc=0.447 | val_loss=0.2244 val_acc=1.000
+      ep04 train_loss=0.5374 train_acc=0.570 | val_loss=0.0259 val_acc=1.000
+      ep05 train_loss=0.4410 train_acc=0.652 | val_loss=0.0696 val_acc=1.000
+      ep06 train_loss=0.3524 train_acc=0.656 | val_loss=0.0458 val_acc=1.000
+      ep07 train_loss=0.2793 train_acc=0.713 | val_loss=0.0471 val_acc=1.000
+      ep08 train_loss=0.1958 train_acc=0.766 | val_loss=0.0066 val_acc=1.000
+      ep09 train_loss=0.1682 train_acc=0.816 | val_loss=0.0408 val_acc=1.000
+      ep10 train_loss=0.1944 train_acc=0.758 | val_loss=0.0536 val_acc=1.000
+      ep11 train_loss=0.1292 train_acc=0.844 | val_loss=0.0322 val_acc=1.000
+      ep12 train_loss=0.1094 train_acc=0.840 | val_loss=0.1113 val_acc=1.000
+      ep13 train_loss=0.0965 train_acc=0.873 | val_loss=0.0362 val_acc=1.000
+      ep14 train_loss=0.0688 train_acc=0.902 | val_loss=0.0196 val_acc=1.000
+      ep15 train_loss=0.0936 train_acc=0.869 | val_loss=0.0709 val_acc=1.000
+      ep16 train_loss=0.0589 train_acc=0.914 | val_loss=0.1570 val_acc=1.000
+      ep17 train_loss=0.0556 train_acc=0.939 | val_loss=0.2646 val_acc=1.000
+      ep18 train_loss=0.0557 train_acc=0.951 | val_loss=0.2426 val_acc=1.000
+      ep19 train_loss=0.0401 train_acc=0.926 | val_loss=0.4660 val_acc=1.000
+      ep20 train_loss=0.0342 train_acc=0.934 | val_loss=0.5250 val_acc=1.000
+      ep21 train_loss=0.0310 train_acc=0.951 | val_loss=0.5272 val_acc=1.000
+      ep22 train_loss=0.0373 train_acc=0.934 | val_loss=0.5148 val_acc=1.000
+      ep23 train_loss=0.0413 train_acc=0.934 | val_loss=0.4866 val_acc=1.000
+    fold acc=0.500 time=2507.2s | running pooled acc=0.510
+
+--- Fold 23/26 | test sub23 (12 test, 234 train) ---
+      ep00 train_loss=1.2124 train_acc=0.321 | val_loss=1.6565 val_acc=0.333
+      ep01 train_loss=1.1780 train_acc=0.256 | val_loss=1.3655 val_acc=0.500
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9617 train_acc=0.397 | val_loss=1.2238 val_acc=0.417
+      ep03 train_loss=0.6400 train_acc=0.534 | val_loss=1.8904 val_acc=0.333
+      ep04 train_loss=0.5875 train_acc=0.568 | val_loss=1.1492 val_acc=0.583
+      ep05 train_loss=0.5425 train_acc=0.590 | val_loss=1.2665 val_acc=0.500
+      ep06 train_loss=0.3580 train_acc=0.650 | val_loss=1.0632 val_acc=0.583
+      ep07 train_loss=0.2807 train_acc=0.701 | val_loss=1.1543 val_acc=0.500
+      ep08 train_loss=0.2978 train_acc=0.714 | val_loss=1.3083 val_acc=0.417
+      ep09 train_loss=0.1784 train_acc=0.799 | val_loss=1.3029 val_acc=0.500
+      ep10 train_loss=0.1912 train_acc=0.782 | val_loss=1.6191 val_acc=0.500
+      ep11 train_loss=0.1738 train_acc=0.795 | val_loss=1.7475 val_acc=0.417
+      ep12 train_loss=0.1297 train_acc=0.816 | val_loss=1.6568 val_acc=0.417
+      ep13 train_loss=0.1218 train_acc=0.859 | val_loss=1.4731 val_acc=0.417
+      ep14 train_loss=0.0895 train_acc=0.885 | val_loss=1.7595 val_acc=0.500
+      ep15 train_loss=0.0849 train_acc=0.889 | val_loss=1.6364 val_acc=0.500
+      ep16 train_loss=0.0831 train_acc=0.893 | val_loss=1.5984 val_acc=0.500
+      ep17 train_loss=0.0754 train_acc=0.885 | val_loss=1.6671 val_acc=0.500
+      ep18 train_loss=0.0660 train_acc=0.910 | val_loss=1.4899 val_acc=0.667
+      ep19 train_loss=0.0523 train_acc=0.915 | val_loss=1.7501 val_acc=0.500
+      ep20 train_loss=0.0544 train_acc=0.915 | val_loss=1.8108 val_acc=0.500
+      ep21 train_loss=0.0472 train_acc=0.927 | val_loss=1.8218 val_acc=0.500
+      ep22 train_loss=0.0371 train_acc=0.957 | val_loss=1.8258 val_acc=0.500
+      ep23 train_loss=0.0328 train_acc=0.953 | val_loss=1.8279 val_acc=0.500
+    fold acc=0.583 time=2455.0s | running pooled acc=0.514
+
+--- Fold 24/26 | test sub24 (7 test, 239 train) ---
+      ep00 train_loss=1.1880 train_acc=0.289 | val_loss=1.4566 val_acc=0.571
+      ep01 train_loss=1.1202 train_acc=0.259 | val_loss=1.4236 val_acc=0.571
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9811 train_acc=0.397 | val_loss=1.9444 val_acc=0.286
+      ep03 train_loss=0.6545 train_acc=0.536 | val_loss=1.8458 val_acc=0.143
+      ep04 train_loss=0.5746 train_acc=0.582 | val_loss=1.2045 val_acc=0.429
+      ep05 train_loss=0.4118 train_acc=0.644 | val_loss=1.8921 val_acc=0.286
+      ep06 train_loss=0.4108 train_acc=0.640 | val_loss=1.5388 val_acc=0.429
+      ep07 train_loss=0.2937 train_acc=0.695 | val_loss=1.3115 val_acc=0.429
+      ep08 train_loss=0.2745 train_acc=0.753 | val_loss=1.2661 val_acc=0.571
+      ep09 train_loss=0.1996 train_acc=0.762 | val_loss=1.0019 val_acc=0.714
+      ep10 train_loss=0.1380 train_acc=0.828 | val_loss=1.1830 val_acc=0.571
+      ep11 train_loss=0.1443 train_acc=0.816 | val_loss=1.1045 val_acc=0.286
+      ep12 train_loss=0.0930 train_acc=0.879 | val_loss=1.1309 val_acc=0.286
+      ep13 train_loss=0.0802 train_acc=0.870 | val_loss=1.0354 val_acc=0.571
+      ep14 train_loss=0.0777 train_acc=0.887 | val_loss=1.2119 val_acc=0.571
+      ep15 train_loss=0.0639 train_acc=0.921 | val_loss=1.1224 val_acc=0.571
+      ep16 train_loss=0.0835 train_acc=0.895 | val_loss=1.0955 val_acc=0.571
+      ep17 train_loss=0.0606 train_acc=0.941 | val_loss=0.9984 val_acc=0.571
+      ep18 train_loss=0.0368 train_acc=0.937 | val_loss=0.9919 val_acc=0.571
+      ep19 train_loss=0.0337 train_acc=0.946 | val_loss=0.9764 val_acc=0.571
+      ep20 train_loss=0.0421 train_acc=0.933 | val_loss=1.0072 val_acc=0.571
+      ep21 train_loss=0.0353 train_acc=0.950 | val_loss=1.0141 val_acc=0.571
+      ep22 train_loss=0.0289 train_acc=0.975 | val_loss=1.0160 val_acc=0.571
+      ep23 train_loss=0.0321 train_acc=0.950 | val_loss=1.0178 val_acc=0.571
+    fold acc=0.714 time=2484.6s | running pooled acc=0.520
+
+--- Fold 25/26 | test sub25 (7 test, 239 train) ---
+      ep00 train_loss=1.1943 train_acc=0.285 | val_loss=1.6454 val_acc=0.000
+      ep01 train_loss=1.1173 train_acc=0.289 | val_loss=1.3684 val_acc=0.286
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9552 train_acc=0.377 | val_loss=1.7110 val_acc=0.714
+      ep03 train_loss=0.7542 train_acc=0.452 | val_loss=0.9111 val_acc=0.571
+      ep04 train_loss=0.5653 train_acc=0.582 | val_loss=0.4992 val_acc=1.000
+      ep05 train_loss=0.4312 train_acc=0.603 | val_loss=1.0993 val_acc=0.571
+      ep06 train_loss=0.3571 train_acc=0.653 | val_loss=1.0114 val_acc=0.286
+      ep07 train_loss=0.2862 train_acc=0.711 | val_loss=0.8248 val_acc=0.429
+      ep08 train_loss=0.2684 train_acc=0.707 | val_loss=1.0417 val_acc=0.429
+      ep09 train_loss=0.2482 train_acc=0.720 | val_loss=0.7901 val_acc=0.429
+      ep10 train_loss=0.1587 train_acc=0.820 | val_loss=0.9492 val_acc=0.429
+      ep11 train_loss=0.1315 train_acc=0.854 | val_loss=0.8538 val_acc=0.429
+      ep12 train_loss=0.1567 train_acc=0.854 | val_loss=1.0773 val_acc=0.143
+      ep13 train_loss=0.1023 train_acc=0.854 | val_loss=0.6156 val_acc=0.571
+      ep14 train_loss=0.1070 train_acc=0.874 | val_loss=0.7245 val_acc=0.571
+      ep15 train_loss=0.0734 train_acc=0.908 | val_loss=0.7247 val_acc=0.571
+      ep16 train_loss=0.0764 train_acc=0.895 | val_loss=0.8588 val_acc=0.429
+      ep17 train_loss=0.0598 train_acc=0.912 | val_loss=0.6590 val_acc=0.571
+      ep18 train_loss=0.0459 train_acc=0.921 | val_loss=0.6858 val_acc=0.429
+      ep19 train_loss=0.0705 train_acc=0.904 | val_loss=0.8186 val_acc=0.571
+      ep20 train_loss=0.0715 train_acc=0.929 | val_loss=0.7367 val_acc=0.571
+      ep21 train_loss=0.0417 train_acc=0.933 | val_loss=0.8068 val_acc=0.571
+      ep22 train_loss=0.0501 train_acc=0.954 | val_loss=0.7616 val_acc=0.571
+      ep23 train_loss=0.0338 train_acc=0.954 | val_loss=0.7593 val_acc=0.571
+    fold acc=0.429 time=2487.0s | running pooled acc=0.517
+
+--- Fold 26/26 | test sub26 (16 test, 230 train) ---
+      ep00 train_loss=1.2137 train_acc=0.304 | val_loss=1.5394 val_acc=0.312
+      ep01 train_loss=1.1023 train_acc=0.217 | val_loss=1.4220 val_acc=0.375
+      [unfreeze] backbone unfrozen at epoch 2
+      ep02 train_loss=0.9051 train_acc=0.400 | val_loss=1.4078 val_acc=0.500
+      ep03 train_loss=0.6883 train_acc=0.530 | val_loss=1.3668 val_acc=0.312
+      ep04 train_loss=0.5791 train_acc=0.543 | val_loss=1.3994 val_acc=0.312
+      ep05 train_loss=0.5053 train_acc=0.561 | val_loss=1.3013 val_acc=0.438
+      ep06 train_loss=0.3451 train_acc=0.691 | val_loss=1.7288 val_acc=0.312
+      ep07 train_loss=0.2738 train_acc=0.735 | val_loss=1.4163 val_acc=0.312
+      ep08 train_loss=0.2070 train_acc=0.783 | val_loss=1.1516 val_acc=0.312
+      ep09 train_loss=0.1703 train_acc=0.774 | val_loss=1.3515 val_acc=0.250
+      ep10 train_loss=0.1577 train_acc=0.835 | val_loss=1.4508 val_acc=0.375
+      ep11 train_loss=0.1730 train_acc=0.857 | val_loss=0.8573 val_acc=0.500
+      ep12 train_loss=0.1415 train_acc=0.817 | val_loss=1.9309 val_acc=0.250
+      ep13 train_loss=0.0925 train_acc=0.878 | val_loss=1.4146 val_acc=0.375
+      ep14 train_loss=0.0670 train_acc=0.909 | val_loss=1.6578 val_acc=0.250
+      ep15 train_loss=0.0586 train_acc=0.930 | val_loss=1.7002 val_acc=0.250
+      ep16 train_loss=0.0656 train_acc=0.930 | val_loss=1.6447 val_acc=0.250
+      ep17 train_loss=0.0494 train_acc=0.943 | val_loss=1.5570 val_acc=0.188
+      ep18 train_loss=0.0333 train_acc=0.948 | val_loss=1.8292 val_acc=0.188
+      ep19 train_loss=0.0271 train_acc=0.965 | val_loss=1.5469 val_acc=0.188
+      ep20 train_loss=0.0333 train_acc=0.961 | val_loss=1.5289 val_acc=0.188
+      ep21 train_loss=0.0239 train_acc=0.965 | val_loss=1.7781 val_acc=0.188
+      ep22 train_loss=0.0297 train_acc=0.957 | val_loss=1.7165 val_acc=0.188
+      ep23 train_loss=0.0405 train_acc=0.948 | val_loss=1.7137 val_acc=0.188
+    fold acc=0.250 time=2438.5s | running pooled acc=0.500
+
+=== FINAL (pooled LOSO) ===
+UF1 = 0.4905
+UAR = 0.4947
+ACC = 0.5000
+per-class F1: happiness=0.286, disgust=0.478, repression=0.408, surprise=0.772, others=0.509
+per-class recall: happiness=0.219, disgust=0.429, repression=0.370, surprise=0.880, others=0.576
+confusion matrix (rows=true):
+        happin disgus repres surpri others
+happine      7      0      3      2     20
+disgust      2     27      1      2     31
+repress      1      1     10      1     14
+surpris      0      0      0     22      3
+ others      7     22      8      5     57
+
+saved to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\iter_33_vivit_flow
+elapsed 64195.3s
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+C:\Users\OWNER\miniconda3\envs\facesleuth\Lib\site-packages\torch\utils\checkpoint.py:87: UserWarning: None of the inputs have requires_grad=True. Gradients will be None
+  warnings.warn(
+C:\Users\OWNER\miniconda3\envs\facesleuth\Lib\site-packages\torch\optim\lr_scheduler.py:243: UserWarning: The epoch parameter in `scheduler.step()` was not necessary and is being deprecated where possible. Please use `scheduler.step()` to step the scheduler. During the deprecation, if epoch is different from None, the closed form is used instead of the new chainable form, where available. Please open an issue if you are unable to replicate your use case: https://github.com/pytorch/pytorch/issues/new/choose.
+  warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Some weights of VivitForVideoClassification were not initialized from the model checkpoint at google/vivit-b-16x2-kinetics400 and are newly initialized because the shapes did not match:
+- classifier.weight: found shape torch.Size([400, 768]) in the checkpoint and torch.Size([5, 768]) in the model instantiated
+- classifier.bias: found shape torch.Size([400]) in the checkpoint and torch.Size([5]) in the model instantiated
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.

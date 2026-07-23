@@ -128,3 +128,58 @@ Setelah user minta lanjut "habis-habisan", ~11 lever baru diuji untuk menembus 0
 **Best robust final (fixed-rule):** `deployed-4 + ema` = **UF1 0.7182 / UAR 0.7229 / ACC 0.6951**. Fusi-selektif nested (pool terkurasi) menyentuh ~0.7302/0.6992 tapi POOL-SENSITIVE (turun ke 0.686 kalau member lemah masuk) → estimasi-atas, bukan deployable.
 
 **Kesimpulan:** plafon ~0.72 UF1 / ~0.695 ACC terkonfirmasi dari ~6 sudut. ACC ≥ 0.70 didekati (0.6992) tapi tak tembus robust. Deployable TIDAK diubah (gain EMA dalam pita noise; `train_final.py` belum dukung EMA). Detail: `reports/emotion_report.md §7`, `experiments/CONSOLIDATION.txt`.
+
+---
+
+## H. PUSH v3 — ViViT video-transformer (18–19 Jul 2026, loop otonom multi-hari)
+
+User minta arah baru: **coba ViViT** (`google/vivit-b-16x2-kinetics400`, 88.7M param, 32 frame/224/tubelet[2,16,16]) + optimasi **adaptive-finetuning** (gradual unfreeze + layer-wise LR decay/LLRD + warmup) + **Focal Loss** + **Cosine Annealing**. Tujuan akhir = software inference realtime kamera (GPU). Input dipilih user = **RGB mentah ONSET-FREE** (deploy tanpa spotting onset). ~17 jam/run LOSO (RTX 3060, batch8, grad-checkpoint).
+
+**Temuan onset-gap (dari user):** benchmark LOSO onset-aligned (clip mulai di onset) → semua angka historis optimistik vs realtime. Diukur via `rand_start`/`eval_rand_start` (Track C).
+
+| # | Nama | Perubahan | UF1 | UAR | ACC | Verdict |
+|---|---|---|---|---|---|---|
+| 30 | iter_30_vivit_rgb | ViViT-B, RGB onset-free, adaptive-FT+focal+cosine | 0.2922 | 0.3094 | 0.3577 | ❌ **overfit identitas** — train_acc 0.93 tapi pooled 0.358; surprise F1 kolaps 0.19 (flow≈0.92). RGB appearance ≠ micro-motion subject-independent. ViViT+adaptive-FT TAK menyelamatkan RGB. |
+
+**Diagnosis iter_30:** mengulang kegagalan iter_01 (RGB mentah 0.30) dengan model lebih besar. Fitur Kinetics-RGB menghafal wajah/identitas, bukan gerak halus. Gap train(0.93)→val(0.358) = overfit klasik. per-class F1: happy 0.38 / disgust 0.33 / repress 0.11 / surprise 0.19 / others 0.45. Konfirmasi ulang: **representasi gerak (flow/motion) wajib**, bukan appearance. Kode ViViT + adaptive-FT + resize + LLRD tervalidasi (smoke OK end-to-end); jadi hasil buruk = representasi, bukan bug.
+
+**Lanjut (gated):** iter_33 ViViT-**flow** (modalitas terbukti; uji apakah arsitektur transformer bisa saingi r3d di representasi yang menang; kandidat fusi terbaik) → iter_32 ViViT-**diff** (onset-free motion, jalur deploy) → **fusi** dgn pool r3d/mc3/focal. Best masih **r3d flow 0.7145**.
+
+| 33 | iter_33_vivit_flow | ViViT-B, flow [u,v,mag] (modalitas terbukti) | 0.4905 | 0.4947 | 0.5000 | ❌ jauh < r3d-flow 0.7145. Surprise pulih (F1 0.77) tapi happiness kolaps (0.29). Transformer 88M < CNN 33M di 246 sampel. |
+
+**Fusi (jujur, fixed-add vs r3d+mc3+4ch+focal=0.7177):** + iter_33 → **0.6800 (TURUN)**; tak ada subset ber-iter_33 di top search. + iter_30 juga tak membantu. **ViViT tak berguna solo MAUPUN fusi** (RGB & flow). Konfirmasi tesis proyek: di data kecil, representasi+regularisasi > kapasitas; transformer butuh data jauh lebih banyak (senada Micron-BERT 0.36). **iter_32 ViViT-diff (onset-free) menyusul untuk melengkapi gambar.** Best tetap r3d 0.7145 / ensemble 0.7177.
+
+| 32 | iter_32_vivit_diff | ViViT-B, diff onset-free motion | — | — | — | ⏹️ **DIBATALKAN di fold-1 (acc 0.222)**. Tren ViViT sudah konklusif (RGB 0.36 + flow 0.50 + diff-fold1 0.22 semua ≪ r3d). GPU dialihkan ke eksperimen r3d onset-free (~1.7 jam/run vs ViViT 17.6 jam) yang lebih tinggi EV untuk tujuan deploy realtime user. Keputusan evidence-driven, hemat ~15 jam. |
+
+### H.1 Pasca-ViViT — r3d onset-free (untuk deploy realtime, arsitektur terbukti)
+ViViT ditutup: **transformer under-perform di 246 sampel, solo & fusi.** Pivot ke pertanyaan software user: *seberapa bagus model ONSET-FREE (tanpa spotting) memakai arsitektur juara r3d_18?* r3d ~10× lebih cepat → banyak probe muat. Onset-free reps: `diff` (selisih antar-frame dalam window), `seq-flow` (historis iter_28 = 0.56). Target: model onset-free deployable terbaik + ukur onset-gap (`eval_rand_start`).
+
+| 34 | iter_34_r3d_diff | r3d_18, diff onset-free (img112, T16) | **0.5897** | 0.6077 | **0.5610** | ✅ **onset-free terbaik sejauh ini** > seq-flow 0.56 > semua ViViT. Balanced (surprise F1 0.89). Hanya 1.4 jam. Deployable tanpa spotting onset. |
+
+**iter_34 signifikan:** membuktikan pivot benar — dalam waktu yang dihemat dari batal ViViT-diff, dapat model onset-free lebih baik. Onset-free ranking: **r3d-diff 0.59** > seq-flow 0.56 > ViViT-flow 0.50 > ViViT-rgb 0.36. Trade-off deploy jujur: onset-free 0.59 vs onset-ref 0.71 (r3d-flow). Per-class F1: happy 0.47 / disgust 0.54 / repress 0.53 / surprise 0.89 / others 0.53.
+
+**★ FUSI ONSET-FREE (diff + seq-flow, fixed 2-member): UF1 0.6260 / UAR 0.6476 / ACC 0.5894** — mengalahkan kedua anggota (diff 0.59, seqflow 0.56). Dua representasi gerak onset-free yang dekorelasi → ensemble deployable TANPA spotting onset. **Ini kandidat deliverable onset-free terbaik.** Trade-off deploy jujur: onset-free ensemble 0.626 vs onset-ref r3d-flow 0.7145 (butuh spotting). Untuk software realtime user: 0.626 tanpa beban spotting = pilihan praktis.
+
+| 35 | iter_35_r3d_diff_randstart | r3d diff + rand_start (train window tergeser) | 0.4555 | 0.4856 | 0.4472 | ❌ TURUN dari iter_34 (0.59). **Kuantifikasi onset-gap:** latih pada window tergeser (deploy-realistic) merugikan benchmark onset-aligned ~0.13 UF1. Benchmark memang menguntungkan asumsi onset-alignment. Shift-robust training TAK sepadan; ukur gap lewat eval saja. |
+
+| 36 | iter_36_r3d_diff_res128 | r3d diff onset-free, res128 (img128) | **0.6012** | 0.5928 | 0.5813 | ✅ res128 > img112 (0.59). **Best onset-free single.** |
+
+**★★ FUSI ONSET-FREE TERBAIK — diff128 + seq-flow (fixed 2-member): UF1 0.6574 / UAR 0.6689 / ACC 0.6423.** Naik dari 0.626 (diff112+seqflow). Menambah diff112 tak membantu (korelasi dg diff128). **Ini DELIVERABLE onset-free final** — deployable realtime TANPA spotting onset.
+
+**Trade-off deploy (jujur):**
+| Model | Butuh spotting onset? | UF1 | ACC |
+|---|---|---|---|
+| r3d flow ensemble (juara akurasi) | ✅ ya | 0.7177 | 0.691 |
+| **diff128 + seq-flow (onset-free)** | ❌ tidak | **0.6574** | **0.6423** |
+
+Hanya ~0.06 UF1 untuk melepas syarat spotting onset → sangat layak untuk kamera realtime. Ini hasil konkret dari pivot pasca-ViViT.
+
+| 37 | iter_37_r3d_diff_evalshift | r3d diff, EVAL pada window tergeser (eval_rand_start) | 0.5773 | 0.5884 | 0.5569 | ✅ **ONSET-GAP KECIL** — vs iter_34 onset-aligned 0.5897 hanya turun ~0.012 UF1 (~2%). |
+
+**★ Kesimpulan onset-gap (jawaban untuk kekhawatiran user):** model **diff onset-free bersifat SHIFT-ROBUST** — dilatih onset-aligned, dievaluasi pada window sembarang (non-onset) hanya turun ~2%. Sebab: diff = selisih antar-frame DALAM window (gerak relatif), tak bergantung di mana window mulai. **Resep deploy: latih onset-aligned (terbaik), deploy pada window apa pun (robust).** Ini membuat diff ideal untuk realtime kamera: onset-free + shift-robust + murah (tanpa hitung flow). (Bandingkan iter_35: menggeser window TRAINING merusak 0.46 — jangan; cukup geser eval.)
+
+| 38 | iter_38_mc3_diff_res128 | mc3_18, diff onset-free res128 | **0.6086** | 0.6012 | 0.5935 | ✅ > r3d-diff128 (0.60). Anggota onset-free beragam untuk fusi. |
+
+**Fusi onset-free (dgn mc3-diff):** mc3-diff+seqflow=**0.6582**/ACC0.6341 ≈ diff128+seqflow=0.6574/ACC**0.6423** (SERI). 3-arah (r3d-diff+mc3-diff+seqflow)=0.6408 (TURUN — dua diff-model korelasi, saling meniadakan). **Plafon onset-free ~0.657**: hanya seqflow yang ortogonal terhadap diff; ragam arsitektur pada diff tak menambah (redundant). Deployed tetap diff128 (murah+robust). iter_39 r2plus1d-diff menyusul (diperkirakan konfirmasi pola).
+
+| 39 | iter_39_r2plus1d_diff | r2plus1d_18, diff onset-free res128 | 0.5785 | 0.5738 | 0.5569 | ➖ anggota diff terlemah; korelasi dg r3d/mc3-diff → tak menambah fusi. |

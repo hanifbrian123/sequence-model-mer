@@ -1,0 +1,65 @@
+{
+  "version": 5,
+  "seed": 20260722,
+  "num_classes": 5,
+  "samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "audit_fold": 0,
+  "folds": [
+    {
+      "fold": 0,
+      "subjects": [
+        4,
+        6,
+        8,
+        17,
+        24
+      ]
+    },
+    {
+      "fold": 1,
+      "subjects": [
+        13,
+        19,
+        21,
+        23,
+        25
+      ]
+    },
+    {
+      "fold": 2,
+      "subjects": [
+        1,
+        5,
+        15,
+        16,
+        26
+      ]
+    },
+    {
+      "fold": 3,
+      "subjects": [
+        2,
+        7,
+        11,
+        14,
+        20,
+        22
+      ]
+    },
+    {
+      "fold": 4,
+      "subjects": [
+        3,
+        9,
+        10,
+        12,
+        18
+      ]
+    }
+  ],
+  "policy": {
+    "development": "group CV over every non-audit fold",
+    "audit": "fold 0 is evaluated only after a candidate is locked",
+    "outer_loso": "reserved for one final locked literature benchmark"
+  }
+}

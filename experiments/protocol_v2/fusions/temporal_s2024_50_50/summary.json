@@ -1,0 +1,74 @@
+{
+  "name": "temporal_s2024",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-07-22T19:48:48.862214",
+  "num_classes": 5,
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "config_sha256": "0e421d6ea2cf863b563e601aaed957f8ad11857032ff71800219bc1f25426c77",
+  "fusion_recipe": {
+    "members": [
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_s2024_v2_dev_v2_dev_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_46_r3d_onset_apex_s2024_v2_dev_p5"
+    ],
+    "weights": [
+      0.5,
+      0.5
+    ]
+  },
+  "UF1": 0.7237938425823123,
+  "UAR": 0.7364760579452311,
+  "ACC": 0.7291666666666666,
+  "per_class_f1": [
+    0.7037037037037037,
+    0.7441860465116279,
+    0.5405405405405406,
+    0.9,
+    0.7305389221556886
+  ],
+  "per_class_recall": [
+    0.7916666666666666,
+    0.7441860465116279,
+    0.5882352941176471,
+    0.8571428571428571,
+    0.7011494252873564
+  ],
+  "confusion_matrix": [
+    [
+      19,
+      0,
+      1,
+      1,
+      3
+    ],
+    [
+      0,
+      32,
+      1,
+      0,
+      10
+    ],
+    [
+      2,
+      0,
+      10,
+      0,
+      5
+    ],
+    [
+      0,
+      1,
+      1,
+      18,
+      1
+    ],
+    [
+      9,
+      10,
+      7,
+      0,
+      61
+    ]
+  ],
+  "n": 192
+}

@@ -1,0 +1,67 @@
+{
+  "name": "iter_39_r2plus1d_diff",
+  "time": "2026-07-20T22:47:49.760868",
+  "elapsed_sec": 9047.2,
+  "n_folds": 26,
+  "num_classes": 5,
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "UF1": 0.5784876171047278,
+  "UAR": 0.573785113035113,
+  "ACC": 0.556910569105691,
+  "n": 246,
+  "per_class_f1": [
+    0.39285714285714285,
+    0.5161290322580645,
+    0.4727272727272727,
+    0.96,
+    0.5507246376811594
+  ],
+  "per_class_recall": [
+    0.34375,
+    0.5079365079365079,
+    0.48148148148148145,
+    0.96,
+    0.5757575757575758
+  ],
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 128,
+    "input_mode": "diff",
+    "backbone": "r2plus1d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/frames128",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_39_r2plus1d_diff_res128",
+    "modality": "rgb",
+    "temporal_span": "onset_offset",
+    "random_erase": 0.1
+  }
+}

@@ -4,3 +4,10 @@ __pycache__/
 cache/
 .vscode/
 models/
+AGENTS.md
+
+# Model weights: 132 MB per checkpoint, above GitHub's 100 MB hard limit.
+# Re-evaluation snapshots stay local; the probs.npz artifacts they produce are
+# committed instead, which is what every downstream comparison actually reads.
+*.pt
+experiments/**/fold_checkpoints/

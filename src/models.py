@@ -58,6 +58,64 @@ class TwoStream(nn.Module):
         return self.head(torch.cat([fa, fb], dim=1))
 
 
+class ViViTWrapper(nn.Module):
+    """ViViT-B (Kinetics-pretrained video transformer, HuggingFace) as a sequence
+    backbone. Input (B,C,T,H,W) -> permute to ViViT's (B,T,C,H,W) pixel_values.
+    Exposes gradual-unfreeze + layer-wise-LR-decay (LLRD) helpers for adaptive
+    finetuning on tiny data (246 samples): keep pretrained weights nearly intact
+    (early layers tiny LR / optional freeze), only strongly move the new head."""
+    CKPT = "google/vivit-b-16x2-kinetics400"
+
+    def __init__(self, num_classes, dropout=0.3, pretrained=True, grad_checkpoint=True):
+        super().__init__()
+        from transformers import VivitForVideoClassification, VivitConfig
+        if pretrained:
+            self.net = VivitForVideoClassification.from_pretrained(
+                self.CKPT, num_labels=num_classes, ignore_mismatched_sizes=True,
+                hidden_dropout_prob=dropout, attention_probs_dropout_prob=dropout)
+        else:
+            cfg = VivitConfig(num_labels=num_classes, hidden_dropout_prob=dropout)
+            self.net = VivitForVideoClassification(cfg)
+        if grad_checkpoint:
+            self.net.gradient_checkpointing_enable()
+        self.num_layers = self.net.config.num_hidden_layers
+
+    def forward(self, x):
+        x = x.permute(0, 2, 1, 3, 4).contiguous()   # (B,C,T,H,W) -> (B,T,C,H,W)
+        return self.net(pixel_values=x).logits
+
+    def set_backbone_requires_grad(self, flag):
+        """Freeze/unfreeze everything except the classification head."""
+        for n, p in self.net.named_parameters():
+            if not n.startswith("classifier"):
+                p.requires_grad = flag
+
+    def _depth_of(self, name):
+        """0 = embeddings (input side), i+1 = encoder block i, L+1 = head."""
+        L = self.num_layers
+        if name.startswith("classifier"):
+            return L + 1
+        if "encoder.layer." in name:
+            return int(name.split("encoder.layer.")[1].split(".")[0]) + 1
+        return 0
+
+    def llrd_param_groups(self, base_lr, head_lr, decay, weight_decay):
+        """Discriminative (layer-wise decayed) LR param groups. Deeper layers
+        (closer to head) get larger LR; embeddings get base_lr*decay^L; the head
+        gets head_lr. No weight decay on biases / LayerNorm."""
+        L = self.num_layers
+        no_decay = ("bias", "layernorm", "layer_norm")
+        groups = {}
+        for n, p in self.net.named_parameters():
+            d = self._depth_of(n)
+            lr = head_lr if d == L + 1 else base_lr * (decay ** (L - d))
+            wd = 0.0 if any(k in n.lower() for k in no_decay) else weight_decay
+            key = (round(float(lr), 10), wd)
+            groups.setdefault(key, {"params": [], "lr": lr, "weight_decay": wd})
+            groups[key]["params"].append(p)
+        return list(groups.values())
+
+
 def _adapt_in_channels(model, in_ch):
     """Adapt r2plus1d/r3d/mc3 stem first conv to `in_ch` input channels, inflating
     pretrained 3-channel weights (extra channels = mean of the RGB kernels)."""
@@ -103,4 +161,7 @@ def build_model(cfg, num_classes):
     if name == "resnet_gru":
         return ResNetGRU(num_classes, dropout=dropout,
                          hidden=cfg.get("gru_hidden", 256), pretrained=pretrained)
+    if name == "vivit":
+        return ViViTWrapper(num_classes, dropout=dropout, pretrained=pretrained,
+                            grad_checkpoint=cfg.get("grad_checkpoint", True))
     raise ValueError(f"unknown backbone {name}")

@@ -18,8 +18,9 @@ import torch
 import cv2
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from dataset import build_flow, sample_indices, _to_cthw
 from models import build_model
+from inference_utils import predict_array
+from flow_pipeline import onset_flow_from_grays, resize_gray
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IMG_RE = re.compile(r"(\d+)\.(jpg|jpeg|png)$", re.IGNORECASE)
@@ -35,16 +36,19 @@ def list_frames(folder):
     return [p for _, p in files]
 
 
-def compute_onset_flow(frame_paths, base):
-    tv = cv2.optflow.DualTVL1OpticalFlow_create()
-    g0 = cv2.resize(cv2.imread(frame_paths[0], cv2.IMREAD_GRAYSCALE), (base, base),
-                    interpolation=cv2.INTER_AREA)
-    flows = []
+def compute_onset_flow(frame_paths, base, deploy=None):
+    deploy = deploy or {}
+    grays = []
     for p in frame_paths:
-        g = cv2.resize(cv2.imread(p, cv2.IMREAD_GRAYSCALE), (base, base),
-                       interpolation=cv2.INTER_AREA)
-        flows.append(tv.calc(g0, g, None).astype(np.float32))
-    return np.stack(flows, axis=0)  # (L,base,base,2)
+        image = cv2.imread(p, cv2.IMREAD_GRAYSCALE)
+        if image is None:
+            raise ValueError(f"could not read frame: {p}")
+        grays.append(resize_gray(image, base))
+    flow, _ = onset_flow_from_grays(
+        grays, preset=deploy.get("flow_preset", "default"),
+        stabilize=deploy.get("flow_stabilize", "none"),
+        clahe=deploy.get("flow_clahe", False))
+    return flow
 
 
 @torch.no_grad()
@@ -52,14 +56,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--frames", required=True, help="folder with sequence frames")
     ap.add_argument("--models", default="models")
+    ap.add_argument("--apex_index", type=int, default=None,
+                    help="optional zero-based apex frame; default: flow-energy estimate")
     args = ap.parse_args()
 
     mdir = os.path.join(REPO, args.models) if not os.path.isabs(args.models) else args.models
     deploy = json.load(open(os.path.join(mdir, "deploy.json")))
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    cfg = {"backbone": deploy["backbone"], "dropout": deploy["dropout"],
-           "pretrained": False, "modality": deploy["modality"],
-           "in_channels": deploy.get("in_channels", 3)}
+    cfg = dict(deploy)
+    cfg["pretrained"] = False
 
     models = []
     for ck in deploy["checkpoints"]:
@@ -71,30 +76,16 @@ def main():
     frames = list_frames(args.frames)
     if len(frames) < 2:
         raise SystemExit(f"need >=2 frames in {args.frames}, found {len(frames)}")
-    flow = compute_onset_flow(frames, deploy["base_size"])  # (L,base,base,2)
+    flow = compute_onset_flow(frames, deploy["base_size"], deploy)
 
-    T, s = deploy["T"], deploy["img_size"]
-    idx = sample_indices(flow.shape[0], T, train=False)
-    clip = flow[idx]
-    H, W = clip.shape[1], clip.shape[2]
-    top, left = (H - s) // 2, (W - s) // 2
-
-    probs = None
-    for flip in [False, True]:  # light TTA
-        x = build_flow(clip, top, left, s, flip, deploy["flow_clip"],
-                       third=deploy.get("flow_third", "mag"),
-                       strain_clip=deploy.get("strain_clip", 1.0))
-        xt = _to_cthw(x).unsqueeze(0).to(device)
-        for m in models:
-            with torch.autocast(device_type="cuda", enabled=(device == "cuda")):
-                out = m(xt)
-            p = torch.softmax(out.float(), dim=1).cpu().numpy()[0]
-            probs = p if probs is None else probs + p
-    probs /= (2 * len(models))
+    sample = None if args.apex_index is None else {"apex_pos": args.apex_index}
+    probs = predict_array(models, flow, deploy, device, sample=sample)
 
     names = deploy["class_names"]
     order = np.argsort(-probs)
-    print(f"\nframes: {len(frames)} | models: {len(models)} | flow (onset-ref TV-L1)")
+    print(f"\nframes: {len(frames)} | models: {len(models)} | "
+          f"views: {len(deploy.get('tta_views', [])) or deploy.get('tta', 1)} | "
+          "flow (onset-ref TV-L1)")
     print(f"PREDICTION: {names[order[0]]}  (p={probs[order[0]]:.3f})\n")
     print("all class probabilities:")
     for i in order:

@@ -1,0 +1,76 @@
+{
+  "name": "full_seed42_123_2024_equal",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-07-22T19:22:37.569214",
+  "num_classes": 5,
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "config_sha256": "e7980b9236c449aa492e1579a57fab45303a62e51a34c6e64dad1c7e96786688",
+  "fusion_recipe": {
+    "members": [
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_v2_dev_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_s123_v2_dev_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_s2024_v2_dev_v2_dev_p5"
+    ],
+    "weights": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ]
+  },
+  "UF1": 0.6902058214590183,
+  "UAR": 0.7215197706989772,
+  "ACC": 0.6927083333333334,
+  "per_class_f1": [
+    0.6666666666666666,
+    0.6352941176470588,
+    0.5714285714285714,
+    0.8571428571428571,
+    0.7204968944099379
+  ],
+  "per_class_recall": [
+    0.75,
+    0.627906976744186,
+    0.7058823529411765,
+    0.8571428571428571,
+    0.6666666666666666
+  ],
+  "confusion_matrix": [
+    [
+      18,
+      1,
+      1,
+      1,
+      3
+    ],
+    [
+      3,
+      27,
+      2,
+      0,
+      11
+    ],
+    [
+      2,
+      0,
+      12,
+      1,
+      2
+    ],
+    [
+      1,
+      1,
+      1,
+      18,
+      0
+    ],
+    [
+      6,
+      13,
+      9,
+      1,
+      58
+    ]
+  ],
+  "n": 192
+}

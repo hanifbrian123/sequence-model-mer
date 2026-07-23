@@ -1,0 +1,102 @@
+{
+  "name": "iter_45_r3d_onset_apex_s123_v2_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-07-22T18:48:35.439111",
+  "elapsed_sec": 1608.653020620346,
+  "config_sha256": "986596882f092febce094813d8c8bb0c0b87268ba57bb61071f5df4ebf9cc5e0",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "n_folds": 4,
+  "n_subjects": 21,
+  "num_classes": 5,
+  "UF1": 0.71193837535014,
+  "UAR": 0.734421491130534,
+  "ACC": 0.703125,
+  "per_class_f1": [
+    0.68,
+    0.65,
+    0.6190476190476191,
+    0.9047619047619048,
+    0.7058823529411765
+  ],
+  "per_class_recall": [
+    0.7083333333333334,
+    0.6046511627906976,
+    0.7647058823529411,
+    0.9047619047619048,
+    0.6896551724137931
+  ],
+  "confusion_matrix": [
+    [
+      17,
+      1,
+      1,
+      1,
+      4
+    ],
+    [
+      0,
+      26,
+      1,
+      1,
+      15
+    ],
+    [
+      1,
+      0,
+      13,
+      0,
+      3
+    ],
+    [
+      0,
+      0,
+      1,
+      19,
+      1
+    ],
+    [
+      8,
+      10,
+      9,
+      0,
+      60
+    ]
+  ],
+  "n": 192,
+  "config": {
+    "seed": 123,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_45_r3d_onset_apex_s123",
+    "modality": "flow",
+    "temporal_span": "onset_apex",
+    "flow_clip": 3.0
+  }
+}

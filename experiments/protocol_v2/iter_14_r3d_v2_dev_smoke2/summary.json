@@ -1,0 +1,102 @@
+{
+  "name": "iter_14_r3d_v2_dev_smoke2",
+  "role": "dev",
+  "complete": false,
+  "time": "2026-07-22T14:13:08.241564",
+  "elapsed_sec": 346.01321172714233,
+  "config_sha256": "4002ec38a4a47bceefcfeb620fd11079fc7aa1b8fdb046fc8dd3ed56a0e79443",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "n_folds": 1,
+  "n_subjects": 5,
+  "num_classes": 5,
+  "UF1": 0.4931419457735247,
+  "UAR": 0.576374269005848,
+  "ACC": 0.5714285714285714,
+  "per_class_f1": [
+    0.6666666666666666,
+    0.5263157894736842,
+    0.0,
+    0.6666666666666666,
+    0.6060606060606061
+  ],
+  "per_class_recall": [
+    0.8,
+    0.5555555555555556,
+    0.0,
+    1.0,
+    0.5263157894736842
+  ],
+  "confusion_matrix": [
+    [
+      4,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      5,
+      0,
+      0,
+      3
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      5,
+      2,
+      1,
+      10
+    ]
+  ],
+  "n": 35,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_14_r3d_res128",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0
+  }
+}

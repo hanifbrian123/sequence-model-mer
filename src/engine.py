@@ -19,16 +19,20 @@ def batch_size_of(x):
     return x[0].size(0) if isinstance(x, (list, tuple)) else x.size(0)
 
 
-def make_loader(samples, arrays, cfg, train, shuffle=None):
-    """`train` controls dataset augmentation; `shuffle` controls loader ordering.
-    For TTA we want augmentation (train=True) but NO shuffle (preserve sample order)."""
+def make_loader(samples, arrays, cfg, train, shuffle=None, view=None):
+    """Build a loader with independent augmentation, ordering, and eval view.
+
+    ``train`` enables stochastic training augmentation only. Deterministic TTA
+    is expressed by ``view`` while keeping ``train=False`` so random erase,
+    color jitter, random crop, and random temporal jitter cannot leak into eval.
+    """
     if shuffle is None:
         shuffle = train
     if cfg.get("modality") == "two_stream":
         arrays_a, arrays_b = arrays   # tuple (flow, appearance)
-        ds = TwoStreamDataset(samples, arrays_a, arrays_b, cfg, train)
+        ds = TwoStreamDataset(samples, arrays_a, arrays_b, cfg, train, view=view)
     else:
-        ds = SeqDataset(samples, arrays, cfg, train)
+        ds = SeqDataset(samples, arrays, cfg, train, view=view)
     return DataLoader(ds, batch_size=cfg["batch_size"], shuffle=shuffle,
                       num_workers=0, drop_last=False, pin_memory=True)
 
@@ -128,14 +132,154 @@ class FocalLoss(nn.Module):
         return (((1.0 - pt) ** self.gamma) * ce).mean()
 
 
+def build_criterion(samples, cfg, num_classes, device):
+    """Build the configured loss for both LOSO and train-on-all deployment."""
+    weight = class_weights(samples, num_classes, device) \
+        if cfg.get("class_weighting", True) else None
+    if cfg.get("loss", "ce") == "focal":
+        return FocalLoss(weight=weight, gamma=cfg.get("focal_gamma", 2.0),
+                         label_smoothing=cfg.get("label_smoothing", 0.0))
+    return nn.CrossEntropyLoss(weight=weight,
+                               label_smoothing=cfg.get("label_smoothing", 0.0))
+
+
+def configure_training(model, cfg):
+    """Create optimizer/scheduler and adaptive-finetuning state once.
+
+    Keeping this shared prevents train_final from silently changing the recipe
+    used during LOSO (the previous implementation always used plain CE/AdamW).
+    """
+    epochs = int(cfg["epochs"])
+    is_vivit = cfg.get("backbone") == "vivit"
+    warmup_epochs = int(cfg.get("warmup_epochs", 0))
+    freeze_epochs = int(cfg.get("freeze_epochs", 0))
+    if is_vivit:
+        model.set_backbone_requires_grad(True)
+        param_groups = model.llrd_param_groups(
+            base_lr=cfg["lr"], head_lr=cfg.get("head_lr", cfg["lr"]),
+            decay=cfg.get("llrd_decay", 0.75), weight_decay=cfg["weight_decay"])
+        optimizer = torch.optim.AdamW(param_groups)
+        if freeze_epochs > 0:
+            model.set_backbone_requires_grad(False)
+    else:
+        optimizer = torch.optim.AdamW(model.parameters(), lr=cfg["lr"],
+                                      weight_decay=cfg["weight_decay"])
+
+    snapshot_cycles = int(cfg.get("snapshot_cycles", 0))
+    if snapshot_cycles > 1:
+        cycle_length = max(1, epochs // snapshot_cycles)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            optimizer, T_0=cycle_length)
+    elif warmup_epochs > 0:
+        cycle_length = None
+        warm = torch.optim.lr_scheduler.LinearLR(
+            optimizer, start_factor=0.01, total_iters=warmup_epochs)
+        cosine = torch.optim.lr_scheduler.CosineAnnealingLR(
+            optimizer, T_max=max(1, epochs - warmup_epochs))
+        scheduler = torch.optim.lr_scheduler.SequentialLR(
+            optimizer, [warm, cosine], milestones=[warmup_epochs])
+    else:
+        cycle_length = None
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+            optimizer, T_max=epochs)
+    return {
+        "optimizer": optimizer,
+        "scheduler": scheduler,
+        "is_vivit": is_vivit,
+        "freeze_epochs": freeze_epochs,
+        "snapshot_cycles": snapshot_cycles,
+        "cycle_length": cycle_length,
+    }
+
+
+def train_one_epoch(model, loader, criterion, scaler, cfg, device, epoch,
+                    training, ema=None, ema_start=0, log_fn=None):
+    """Shared training epoch used by LOSO and final artifact training."""
+    if training["is_vivit"] and training["freeze_epochs"] > 0 \
+            and epoch == training["freeze_epochs"]:
+        model.set_backbone_requires_grad(True)
+        if log_fn is not None:
+            log_fn(f"      [unfreeze] backbone unfrozen at epoch {epoch}")
+    model.train()
+    if cfg.get("freeze_bn", False):
+        _freeze_bn(model)
+
+    optimizer = training["optimizer"]
+    accum = max(1, int(cfg.get("grad_accum", 1)))
+    mixup_alpha = float(cfg.get("mixup", 0.0))
+    total = correct = 0
+    loss_sum = 0.0
+    num_batches = len(loader)
+    optimizer.zero_grad()
+    for batch_index, (x, y) in enumerate(loader):
+        x = move_to(x, device)
+        y = y.to(device, non_blocking=True)
+        do_mixup = mixup_alpha > 0 and not isinstance(x, (list, tuple))
+        if do_mixup:
+            lam = float(np.random.beta(mixup_alpha, mixup_alpha))
+            permutation = torch.randperm(x.size(0), device=device)
+            x = lam * x + (1.0 - lam) * x[permutation]
+            y_second = y[permutation]
+        with torch.autocast(device_type="cuda", enabled=cfg.get("amp", True)):
+            output = model(x)
+            loss = (lam * criterion(output, y)
+                    + (1.0 - lam) * criterion(output, y_second)) \
+                if do_mixup else criterion(output, y)
+        scaler.scale(loss / accum).backward()
+        if (batch_index + 1) % accum == 0 or (batch_index + 1) == num_batches:
+            scaler.step(optimizer)
+            scaler.update()
+            optimizer.zero_grad()
+            if ema is not None and epoch >= ema_start:
+                ema.update(model)
+        batch_size = batch_size_of(x)
+        loss_sum += loss.item() * batch_size
+        correct += (output.argmax(1) == y).sum().item()
+        total += batch_size
+    return loss_sum / max(1, total), correct / max(1, total)
+
+
+def deterministic_tta_views(cfg, tta=1):
+    """Return fixed, reproducible eval views.
+
+    Configs may provide an explicit ``tta_views`` list. Otherwise the legacy
+    integer TTA count selects from a fixed bank of spatial/temporal views. This
+    makes reruns comparable and, crucially, keeps evaluation out of training
+    augmentation mode.
+    """
+    requested = max(1, int(tta))
+    explicit = cfg.get("tta_views")
+    if explicit is not None:
+        if not isinstance(explicit, list) or not explicit:
+            raise ValueError("tta_views must be a non-empty list of view dicts")
+        if not all(isinstance(v, dict) for v in explicit):
+            raise ValueError("every tta_views entry must be a dict")
+        return [dict(v) for v in explicit[:requested]]
+    bank = [
+        {"crop": "center", "flip": False, "temporal_phase": 0.50},
+        {"crop": "center", "flip": True,  "temporal_phase": 0.50},
+        {"crop": "top_left", "flip": False, "temporal_phase": 0.25},
+        {"crop": "top_right", "flip": True, "temporal_phase": 0.25},
+        {"crop": "bottom_left", "flip": False, "temporal_phase": 0.75},
+        {"crop": "bottom_right", "flip": True, "temporal_phase": 0.75},
+        {"crop": "top_left", "flip": True, "temporal_phase": 0.75},
+        {"crop": "top_right", "flip": False, "temporal_phase": 0.75},
+        {"crop": "bottom_left", "flip": True, "temporal_phase": 0.25},
+        {"crop": "bottom_right", "flip": False, "temporal_phase": 0.25},
+    ]
+    if requested <= len(bank):
+        return bank[:requested]
+    return [dict(bank[i % len(bank)]) for i in range(requested)]
+
+
 @torch.no_grad()
 def predict(model, samples, arrays, cfg, device, tta=1):
-    """Return averaged softmax probs (N, num_classes) over `tta` passes."""
+    """Return averaged softmax probs over deterministic TTA views."""
     model.eval()
     probs = None
-    for _ in range(max(1, tta)):
-        # TTA: augment (train-mode dataset) but keep sample order (shuffle=False)
-        loader = make_loader(samples, arrays, cfg, train=(tta > 1), shuffle=False)
+    views = deterministic_tta_views(cfg, tta)
+    for view in views:
+        loader = make_loader(samples, arrays, cfg, train=False, shuffle=False, view=view)
         batch_probs = []
         for x, _ in loader:
             x = move_to(x, device)
@@ -144,7 +288,7 @@ def predict(model, samples, arrays, cfg, device, tta=1):
             batch_probs.append(torch.softmax(out.float(), dim=1).cpu().numpy())
         p = np.concatenate(batch_probs, axis=0)
         probs = p if probs is None else probs + p
-    return probs / max(1, tta)
+    return probs / len(views)
 
 
 @torch.no_grad()
@@ -169,30 +313,19 @@ def evaluate_val(model, samples, arrays, cfg, device):
     return np.concatenate(probs, axis=0), loss_sum / max(1, tot), correct / max(1, tot)
 
 
-def train_fold(train_samples, val_samples, arrays, cfg, num_classes, device, log_fn):
+def train_fold(train_samples, val_samples, arrays, cfg, num_classes, device, log_fn,
+               snapshot_fn=None):
     torch.manual_seed(cfg["seed"])
     np.random.seed(cfg["seed"])
     model = build_model(cfg, num_classes).to(device)
 
-    opt = torch.optim.AdamW(model.parameters(), lr=cfg["lr"],
-                            weight_decay=cfg["weight_decay"])
     epochs = cfg["epochs"]
-    # snapshot ensembling: cyclic cosine-with-restarts LR; each cycle converges to
-    # a distinct good minimum -> several DECORRELATED-but-strong members from ONE
-    # run (unlike plain multi-seed averaging, which regressed toward the mean here).
-    snap_cycles = int(cfg.get("snapshot_cycles", 0))
-    if snap_cycles > 1:
-        cyc_len = max(1, epochs // snap_cycles)
-        sched = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(opt, T_0=cyc_len)
-    else:
-        cyc_len = None
-        sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=epochs)
-    w = class_weights(train_samples, num_classes, device) if cfg.get("class_weighting", True) else None
-    if cfg.get("loss", "ce") == "focal":
-        criterion = FocalLoss(weight=w, gamma=cfg.get("focal_gamma", 2.0),
-                              label_smoothing=cfg.get("label_smoothing", 0.0))
-    else:
-        criterion = nn.CrossEntropyLoss(weight=w, label_smoothing=cfg.get("label_smoothing", 0.0))
+    training = configure_training(model, cfg)
+    opt = training["optimizer"]
+    sched = training["scheduler"]
+    snap_cycles = training["snapshot_cycles"]
+    cyc_len = training["cycle_length"]
+    criterion = build_criterion(train_samples, cfg, num_classes, device)
     scaler = torch.amp.GradScaler("cuda", enabled=cfg.get("amp", True))
 
     train_loader = make_loader(train_samples, arrays, cfg, train=True)
@@ -200,55 +333,34 @@ def train_fold(train_samples, val_samples, arrays, cfg, num_classes, device, log
     eval_last_k = cfg.get("eval_last_k", 1)
     prob_accum = None
     n_accum = 0
+    monitor_val = bool(cfg.get("monitor_val", True))
 
     ema_decay = float(cfg.get("ema", 0.0))
     ema_start = int(cfg.get("ema_start_epoch", max(1, epochs // 5)))
     ema = EMA(model, ema_decay) if ema_decay > 0 else None
-    freeze_bn = bool(cfg.get("freeze_bn", False))
-
     for ep in range(epochs):
-        model.train()
-        if freeze_bn:
-            _freeze_bn(model)
-        tot, correct, loss_sum = 0, 0, 0.0
-        mixup_a = cfg.get("mixup", 0.0)
-        for x, y in train_loader:
-            x = move_to(x, device)
-            y = y.to(device, non_blocking=True)
-            opt.zero_grad()
-            # mixup (single-stream tensor only) — regularizes small data
-            do_mix = mixup_a > 0 and not isinstance(x, (list, tuple))
-            if do_mix:
-                lam = float(np.random.beta(mixup_a, mixup_a))
-                perm = torch.randperm(x.size(0), device=device)
-                x = lam * x + (1.0 - lam) * x[perm]
-                y2 = y[perm]
-            with torch.autocast(device_type="cuda", enabled=cfg.get("amp", True)):
-                out = model(x)
-                loss = (lam * criterion(out, y) + (1 - lam) * criterion(out, y2)) if do_mix \
-                    else criterion(out, y)
-            scaler.scale(loss).backward()
-            scaler.step(opt)
-            scaler.update()
-            if ema is not None and ep >= ema_start:
-                ema.update(model)
-            bs = batch_size_of(x)
-            loss_sum += loss.item() * bs
-            correct += (out.argmax(1) == y).sum().item()
-            tot += bs
+        tr_loss, tr_acc = train_one_epoch(
+            model, train_loader, criterion, scaler, cfg, device, ep, training,
+            ema=ema, ema_start=ema_start, log_fn=log_fn)
         sched.step()
         if ema is not None and ep == ema_start - 1:
             ema.reset(model)   # re-seed shadow at end of warmup (drop init phase)
-        tr_loss = loss_sum / max(1, tot)
-        tr_acc = correct / max(1, tot)
-
-        # per-epoch val/test evaluation (monitoring trend; not used for selection)
-        val_probs_ep, val_loss, val_acc = evaluate_val(model, val_samples, arrays, cfg, device)
+        # Validation monitoring is useful inside the development protocol, but
+        # disabled for a locked audit split so its labels are not repeatedly
+        # exposed while training. Snapshot epochs remain fixed by config.
+        if monitor_val:
+            val_probs_ep, val_loss, val_acc = evaluate_val(
+                model, val_samples, arrays, cfg, device)
+        else:
+            val_probs_ep, val_loss, val_acc = None, None, None
         history.append({"epoch": ep, "train_loss": tr_loss, "train_acc": tr_acc,
                         "val_loss": val_loss, "val_acc": val_acc,
                         "lr": opt.param_groups[0]["lr"]})
-        log_fn(f"      ep{ep:02d} train_loss={tr_loss:.4f} train_acc={tr_acc:.3f} "
-               f"| val_loss={val_loss:.4f} val_acc={val_acc:.3f}")
+        if monitor_val:
+            log_fn(f"      ep{ep:02d} train_loss={tr_loss:.4f} train_acc={tr_acc:.3f} "
+                   f"| val_loss={val_loss:.4f} val_acc={val_acc:.3f}")
+        else:
+            log_fn(f"      ep{ep:02d} train_loss={tr_loss:.4f} train_acc={tr_acc:.3f}")
 
         # collect predictions: at each cycle end (snapshot mode) or last-k epochs
         collect = ((ep + 1) % cyc_len == 0) if snap_cycles > 1 else (ep >= epochs - eval_last_k)
@@ -266,10 +378,15 @@ def train_fold(train_samples, val_samples, arrays, cfg, num_classes, device, log
                                momentum=cfg.get("bn_adapt_momentum", 0.1))
             if cfg.get("tta", 1) > 1:
                 p = predict(model, val_samples, arrays, cfg, device, tta=cfg["tta"])
-            elif need_restore:
+            elif need_restore or val_probs_ep is None:
                 p, _, _ = evaluate_val(model, val_samples, arrays, cfg, device)
             else:
                 p = val_probs_ep  # reuse deterministic pass
+            if snapshot_fn is not None:
+                snapshot_fn(ep, {
+                    key: value.detach().cpu().clone()
+                    for key, value in model.state_dict().items()
+                })
             if need_restore:
                 model.load_state_dict(backup)  # undo EMA/BN-adapt before continued training
             prob_accum = p if prob_accum is None else prob_accum + p

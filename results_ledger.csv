@@ -48,3 +48,12 @@ iter_26_erase_qsmoke,2026-07-17T05:43:10.003100,0.5669,0.62,0.5909,2,r3d_18,16,1
 iter_26_erase,2026-07-17T07:25:38.114415,0.6936,0.7077,0.6707,26,r3d_18,16,128,rgb,25,0.0001,6140.2,cache/index_emotion.csv,5
 iter_29_noweight_qsmoke,2026-07-17T07:44:46.622266,0.627,0.66,0.6818,2,r3d_18,16,128,rgb,25,0.0001,469.6,cache/index_emotion.csv,5
 iter_29_noweight,2026-07-17T09:25:39.790871,0.7027,0.6997,0.6748,26,r3d_18,16,128,rgb,25,0.0001,6045.2,cache/index_emotion.csv,5
+iter_30_vivit_rgb_qsmoke,2026-07-18T23:55:24.497732,0.2965,0.38,0.2727,2,vivit,32,128,rgb,20,2e-05,3987.2,cache/index_emotion.csv,5
+iter_30_vivit_rgb,2026-07-19T17:45:00.735387,0.2922,0.3094,0.3577,26,vivit,32,128,rgb,24,6e-05,63277.9,cache/index_emotion.csv,5
+iter_33_vivit_flow,2026-07-20T11:36:39.238151,0.4905,0.4947,0.5,26,vivit,32,128,rgb,24,6e-05,64195.3,cache/index_emotion.csv,5
+iter_34_r3d_diff,2026-07-20T13:47:10.490316,0.5897,0.6077,0.561,26,r3d_18,16,112,diff,25,0.0001,5093.0,cache/index_emotion.csv,5
+iter_35_r3d_diff_randstart,2026-07-20T15:09:34.390187,0.4555,0.4856,0.4472,26,r3d_18,16,112,diff,25,0.0001,4894.9,cache/index_emotion.csv,5
+iter_36_r3d_diff_res128,2026-07-20T16:52:15.727550,0.6012,0.5928,0.5813,26,r3d_18,16,128,diff,25,0.0001,6088.8,cache/index_emotion.csv,5
+iter_37_r3d_diff_evalshift,2026-07-20T18:13:52.826081,0.5773,0.5884,0.5569,26,r3d_18,16,112,diff,25,0.0001,4847.0,cache/index_emotion.csv,5
+iter_38_mc3_diff,2026-07-20T20:16:03.660881,0.6086,0.6012,0.5935,26,mc3_18,16,128,diff,25,0.0001,6469.8,cache/index_emotion.csv,5
+iter_39_r2plus1d_diff,2026-07-20T22:47:49.760868,0.5785,0.5738,0.5569,26,r2plus1d_18,16,128,diff,25,0.0001,9047.2,cache/index_emotion.csv,5

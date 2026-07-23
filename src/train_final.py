@@ -14,43 +14,70 @@ import argparse
 import numpy as np
 import pandas as pd
 import torch
-import torch.nn as nn
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from dataset import SeqDataset
 from models import build_model
-from engine import make_loader, class_weights
+from engine import (EMA, build_criterion, configure_training,
+                    deterministic_tta_views, make_loader, train_one_epoch)
 from run_experiment import DEFAULTS, load_config, preload_arrays
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def _snapshot_state(model, ema=None):
+    """Return a CPU checkpoint, optionally using EMA weights, without mutation."""
+    backup = None
+    if ema is not None:
+        backup = {k: v.detach().clone() for k, v in model.state_dict().items()}
+        ema.copy_to(model)
+    state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
+    if backup is not None:
+        model.load_state_dict(backup)
+    return state
+
+
 def train_all(seed, samples, arrays, cfg, num_classes, device, log):
+    """Train on all samples and return the same tail/snapshot recipe as LOSO."""
     cfg = dict(cfg); cfg["seed"] = seed
     torch.manual_seed(seed); np.random.seed(seed)
     model = build_model(cfg, num_classes).to(device)
-    opt = torch.optim.AdamW(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"])
-    sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=cfg["epochs"])
-    w = class_weights(samples, num_classes, device) if cfg.get("class_weighting", True) else None
-    criterion = nn.CrossEntropyLoss(weight=w, label_smoothing=cfg.get("label_smoothing", 0.0))
+    training = configure_training(model, cfg)
+    criterion = build_criterion(samples, cfg, num_classes, device)
     scaler = torch.amp.GradScaler("cuda", enabled=cfg.get("amp", True))
     loader = make_loader(samples, arrays, cfg, train=True)
-    for ep in range(cfg["epochs"]):
-        model.train()
-        tot, correct, ls = 0, 0, 0.0
-        for x, y in loader:
-            x = x.to(device, non_blocking=True) if not isinstance(x, (list, tuple)) \
-                else [t.to(device) for t in x]
-            y = y.to(device, non_blocking=True)
-            opt.zero_grad()
-            with torch.autocast(device_type="cuda", enabled=cfg.get("amp", True)):
-                out = model(x); loss = criterion(out, y)
-            scaler.scale(loss).backward(); scaler.step(opt); scaler.update()
-            bs = y.size(0); ls += loss.item() * bs; tot += bs
-            correct += (out.argmax(1) == y).sum().item()
-        sched.step()
-        log(f"  [seed {seed}] ep{ep:02d} loss={ls/tot:.4f} acc={correct/tot:.3f}")
-    return model
+    epochs = int(cfg["epochs"])
+    ema_decay = float(cfg.get("ema", 0.0))
+    ema_start = int(cfg.get("ema_start_epoch", max(1, epochs // 5)))
+    ema = EMA(model, ema_decay) if ema_decay > 0 else None
+    eval_last_k = max(1, int(cfg.get("eval_last_k", 1)))
+    snapshots = []
+
+    for ep in range(epochs):
+        loss, accuracy = train_one_epoch(
+            model, loader, criterion, scaler, cfg, device, ep, training,
+            ema=ema, ema_start=ema_start, log_fn=log)
+        training["scheduler"].step()
+        if ema is not None and ep == ema_start - 1:
+            ema.reset(model)
+        log(f"  [seed {seed}] ep{ep:02d} loss={loss:.4f} acc={accuracy:.3f}")
+
+        if training["snapshot_cycles"] > 1:
+            collect = (ep + 1) % training["cycle_length"] == 0
+        else:
+            collect = ep >= epochs - eval_last_k
+        if collect:
+            snapshots.append({
+                "epoch": ep,
+                "state_dict": _snapshot_state(model, ema=ema),
+                "weights": "ema" if ema is not None else "raw",
+            })
+    if not snapshots:
+        snapshots.append({"epoch": epochs - 1,
+                          "state_dict": _snapshot_state(model, ema=ema),
+                          "weights": "ema" if ema is not None else "raw"})
+    del model
+    torch.cuda.empty_cache()
+    return snapshots
 
 
 def main():
@@ -84,21 +111,47 @@ def main():
 
     ckpts = []
     for seed in args.seeds:
-        model = train_all(seed, samples, arrays, cfg, num_classes, device, log)
-        p = os.path.join(out_dir, f"final_seed{seed}.pt")
-        torch.save(model.state_dict(), p)
-        ckpts.append(os.path.basename(p))
-        log(f"saved {p}")
-        del model; torch.cuda.empty_cache()
+        snapshots = train_all(seed, samples, arrays, cfg, num_classes, device, log)
+        for snap in snapshots:
+            p = os.path.join(out_dir, f"final_seed{seed}_ep{snap['epoch']:02d}.pt")
+            torch.save(snap["state_dict"], p)
+            ckpts.append(os.path.basename(p))
+            log(f"saved {p} ({snap['weights']})")
 
     deploy = {
         "checkpoints": ckpts, "class_names": class_names, "num_classes": num_classes,
         "backbone": cfg["backbone"], "modality": cfg.get("modality", "flow"),
+        "input_mode": cfg.get("input_mode", "rgb"), "resize_to": cfg.get("resize_to", None),
         "T": cfg["T"], "img_size": cfg["img_size"], "base_size": cfg["base_size"],
         "flow_clip": cfg.get("flow_clip", 3.0), "dropout": cfg.get("dropout", 0.5),
         "flow_third": cfg.get("flow_third", "mag"), "strain_clip": cfg.get("strain_clip", 1.0),
+        "flow_preset": cfg.get("flow_preset", "default"),
+        "flow_stabilize": cfg.get("flow_stabilize", "none"),
+        "flow_clahe": cfg.get("flow_clahe", False),
+        "flow_compensation": cfg.get("flow_compensation", "none"),
+        "flow_roi": cfg.get("flow_roi", "none"),
         "in_channels": cfg.get("in_channels", 3),
+        "temporal_span": cfg.get("temporal_span", "onset_offset"),
+        "eval_apex_source": cfg.get("eval_apex_source", "annotation"),
+        "apex_fraction": cfg.get("apex_fraction", 0.55),
+        "apex_energy_quantile": cfg.get("apex_energy_quantile", 0.95),
+        "apex_border_fraction": cfg.get("apex_border_fraction", 0.08),
+        "apex_smooth_radius": cfg.get("apex_smooth_radius", 0),
+        "apex_search_max_fraction": cfg.get(
+            "apex_search_max_fraction", 0.55),
+        "temporal_jitter": cfg.get("temporal_jitter", True),
+        "eval_rand_start": cfg.get("eval_rand_start", False),
+        "eval_start_fraction": cfg.get("eval_start_fraction", 0.25),
+        "gru_hidden": cfg.get("gru_hidden", 256),
+        "grad_checkpoint": cfg.get("grad_checkpoint", True),
         "pretrained": False, "tta": cfg.get("tta", 5),
+        "tta_views": deterministic_tta_views(cfg, cfg.get("tta", 5)),
+        "checkpoint_aggregation": "probability_mean",
+        "checkpoint_recipe": ("snapshot_cycles" if cfg.get("snapshot_cycles", 0) > 1
+                              else "last_k_epochs"),
+        "loss": cfg.get("loss", "ce"),
+        "label_smoothing": cfg.get("label_smoothing", 0.0),
+        "ema": cfg.get("ema", 0.0),
         "kinetics_mean": [0.43216, 0.394666, 0.37645],
         "kinetics_std": [0.22803, 0.22145, 0.216989],
         "source_config": os.path.basename(args.config),

@@ -1,0 +1,10 @@
+[15:22:21] === QUEUE V10 START (fase 4: AU multi-task) ===
+[15:22:21] START iter_76_r3d_au02_full_s42
+[15:35:25] DONE  iter_76_r3d_au02_full_s42: FINAL dev: UF1=0.6894 UAR=0.7194 ACC=0.6823
+[15:35:25] START iter_77_r3d_au05_full_s42
+[15:48:09] DONE  iter_77_r3d_au05_full_s42: FINAL dev: UF1=0.6690 UAR=0.6957 ACC=0.6615
+[15:48:09] START iter_78_r3d_au10_full_s42
+[16:01:39] DONE  iter_78_r3d_au10_full_s42: FINAL dev: UF1=0.6690 UAR=0.6994 ACC=0.6562
+[16:01:40] START iter_79_r3d_au05_autoapex_s42
+[16:18:05] DONE  iter_79_r3d_au05_autoapex_s42: FINAL dev: UF1=0.6714 UAR=0.7068 ACC=0.6667
+[16:18:05] === QUEUE V10 COMPLETE ===

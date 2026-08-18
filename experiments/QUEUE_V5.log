@@ -1,0 +1,12 @@
+[10:22:20] === QUEUE V5 START (fase 1: cara melatih) ===
+[10:22:20] START iter_58_r3d_earlystop_s42
+[10:33:57] DONE  iter_58_r3d_earlystop_s42: FINAL dev: UF1=0.5755 UAR=0.5803 ACC=0.5885
+[10:33:57] START iter_59_r3d_llrd_s42
+[10:48:28] DONE  iter_59_r3d_llrd_s42: FINAL dev: UF1=0.6832 UAR=0.7131 ACC=0.6823
+[10:48:28] START iter_60_r3d_unfreeze_s42
+[11:02:31] DONE  iter_60_r3d_unfreeze_s42: FINAL dev: UF1=0.6233 UAR=0.6365 ACC=0.6250
+[11:02:31] START iter_61_r3d_ep60_s42
+[11:33:04] DONE  iter_61_r3d_ep60_s42: FINAL dev: UF1=0.6644 UAR=0.6837 ACC=0.6719
+[11:33:04] START iter_62_r3d_es_llrd_s42
+[11:44:10] DONE  iter_62_r3d_es_llrd_s42: FINAL dev: UF1=0.6194 UAR=0.6324 ACC=0.6250
+[11:44:10] === QUEUE V5 COMPLETE ===

@@ -1,0 +1,94 @@
+[20:53:07] === LOSO 26 START -- SEGEL AUDIT DIPECAH ===
+[20:53:07] >>> kandidat tunggal (1,3,4,5)
+[20:53:07] START iter_14_r3d (loso_all, 26 fold)
+[22:39:02] DONE  iter_14_r3d: FINAL dev: UF1=0.6902 UAR=0.6975 ACC=0.6707
+[22:39:02] START iter_89_r3d_regionattn_full_s42 (loso_all, 26 fold)
+[00:33:13] DONE  iter_89_r3d_regionattn_full_s42: FINAL dev: UF1=0.7022 UAR=0.7208 ACC=0.6829
+[00:33:13] START iter_96_r3d_focus_region_full_s42 (loso_all, 26 fold)
+[02:35:05] DONE  iter_96_r3d_focus_region_full_s42: FINAL dev: UF1=0.7121 UAR=0.7271 ACC=0.6951
+[02:35:05] START iter_98_r3d_focus_es_full_s42 (loso_all, 26 fold)
+[05:54:07] DONE  iter_98_r3d_focus_es_full_s42: FINAL dev: UF1=0.6508 UAR=0.6686 ACC=0.6301
+[05:54:07] >>> sisa leaf untuk gabungan
+[05:54:07] START iter_47_r3d_auto_apex_s42 (loso_all, 26 fold)
+[07:45:45] DONE  iter_47_r3d_auto_apex_s42: FINAL dev: UF1=0.7098 UAR=0.7413 ACC=0.6789
+[07:45:45] START iter_74_r3d_lastk8_ep40_s42 (loso_all, 26 fold)
+[10:41:12] DONE  iter_74_r3d_lastk8_ep40_s42: FINAL dev: UF1=0.6889 UAR=0.7010 ACC=0.6667
+[10:41:12] START iter_59_r3d_llrd_s42 (loso_all, 26 fold)
+[12:27:57] DONE  iter_59_r3d_llrd_s42: FINAL dev: UF1=0.6995 UAR=0.7192 ACC=0.6870
+[12:27:57] START iter_67_r3d_faceparse_full_s42 (loso_all, 26 fold)
+[14:15:13] DONE  iter_67_r3d_faceparse_full_s42: FINAL dev: UF1=0.6824 UAR=0.7003 ACC=0.6667
+[14:15:13] START iter_77_r3d_au05_full_s42 (loso_all, 26 fold)
+[16:02:52] DONE  iter_77_r3d_au05_full_s42: FINAL dev: UF1=0.7211 UAR=0.7378 ACC=0.6992
+[16:02:52] START iter_69_r3d_es_refit_s42 (loso_all, 26 fold)
+[18:21:35] DONE  iter_69_r3d_es_refit_s42: FINAL dev: UF1=0.6756 UAR=0.7018 ACC=0.6504
+[18:21:35] START iter_88_r2plus1d_full_s42 (loso_all, 26 fold)
+[20:50:38] DONE  iter_88_r2plus1d_full_s42: FINAL dev: UF1=0.6943 UAR=0.7011 ACC=0.6707
+[20:50:38] START iter_95_r3d_focus_energy_full_s42 (loso_all, 26 fold)
+[22:49:31] DONE  iter_95_r3d_focus_energy_full_s42: FINAL dev: UF1=0.6584 UAR=0.6730 ACC=0.6301
+[22:49:31] >>> kandidat 2: gabungan 10 model (LOSO 26)
+{
+  "output": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\fusion10_loso26",
+  "UF1": 0.7117743746936294,
+  "UAR": 0.7232469937469937,
+  "ACC": 0.6951219512195121
+}
+[22:49:37] fusi 10 model LOSO 26 selesai
+{
+  "time": "2026-08-06T22:49:40.866672",
+  "baseline": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_v2_dev_loso_all_p5",
+  "candidate": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\fusion10_loso26",
+  "iterations": 10000,
+  "interval": 0.8,
+  "gate": {
+    "passed": true,
+    "min_uf1_delta": 0.005,
+    "min_probability": 0.8,
+    "max_secondary_drop": 0.01
+  },
+  "metrics": {
+    "UF1": {
+      "baseline": 0.6901841948900772,
+      "candidate": 0.7117743746936294,
+      "delta": 0.021590179803552156,
+      "ci": [
+        0.008610402528834703,
+        0.03559596444134994
+      ],
+      "probability_improved": 0.9862
+    },
+    "UAR": {
+      "baseline": 0.6974529822029822,
+      "candidate": 0.7232469937469937,
+      "delta": 0.025794011544011508,
+      "ci": [
+        0.012880734483901712,
+        0.03982002465095288
+      ],
+      "probability_improved": 0.9973
+    },
+    "ACC": {
+      "baseline": 0.6707317073170732,
+      "candidate": 0.6951219512195121,
+      "delta": 0.024390243902438935,
+      "ci": [
+        0.011538461538461497,
+        0.037735849056603765
+      ],
+      "probability_improved": 0.9864
+    }
+  }
+}
+[22:49:41] gate fusi LOSO 26 selesai
+[22:49:41] >>> RNN tanpa pretrain + kombinasi (LOSO 26)
+[22:49:41] START iter_103_resnetgru_nopretrain_full_s42 (loso_all, 26 fold)
+[00:00:44] DONE  iter_103_resnetgru_nopretrain_full_s42: FINAL dev: UF1=0.6612 UAR=0.7117 ACC=0.6301
+[00:00:44] START iter_104_resnetgru_nopretrain_apex_s42 (loso_all, 26 fold)
+[01:15:14] DONE  iter_104_resnetgru_nopretrain_apex_s42: FINAL dev: UF1=0.6904 UAR=0.7248 ACC=0.6545
+[01:15:14] START iter_105_focus_rnn_nopretrain_full_s42 (loso_all, 26 fold)
+[02:47:04] DONE  iter_105_focus_rnn_nopretrain_full_s42: FINAL dev: UF1=0.6148 UAR=0.6498 ACC=0.5935
+[02:47:04] START iter_106_focus_rnn_nopretrain_es_full_s42 (loso_all, 26 fold)
+[06:25:43] DONE  iter_106_focus_rnn_nopretrain_es_full_s42: FINAL dev: UF1=0.5679 UAR=0.6047 ACC=0.5569
+[06:25:43] menyusun ulang laporan...
+ditulis: D:\AI-Projects\casmeII-new-from-sequence-model\reports/EKSPERIMEN.md
+ringkasan: {'lolos': 6, 'hampir': 5, 'netral': 7, 'gagal': 49, 'antre': 0}
+[06:25:48] === LOSO 26 + RNN COMPLETE ===

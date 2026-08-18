@@ -1,0 +1,8 @@
+[13:02:27] === QUEUE V14 START: Fase 2.3 segmentation attention (LOSO-21) ===
+[13:02:27] START iter_89_r3d_regionattn_full_s42 (loso_dev)
+[14:16:58] DONE  iter_89_r3d_regionattn_full_s42: FINAL dev: UF1=0.7283 UAR=0.7440 ACC=0.7135
+[14:16:58] START iter_90_r3d_regionattn_apex_s42 (loso_dev)
+[15:35:38] DONE  iter_90_r3d_regionattn_apex_s42: FINAL dev: UF1=0.6667 UAR=0.7036 ACC=0.6615
+[15:35:38] START iter_91_r3d_regionattn_dyn_s42 (loso_dev)
+[16:52:04] DONE  iter_91_r3d_regionattn_dyn_s42: FINAL dev: UF1=0.6758 UAR=0.7099 ACC=0.6667
+[16:52:04] === QUEUE V14 COMPLETE ===

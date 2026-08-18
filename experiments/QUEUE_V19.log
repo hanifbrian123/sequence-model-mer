@@ -1,0 +1,8 @@
+[08:33:32] === QUEUE V19 START: acuan baseline seed 123/2024/7 di LOSO ===
+[08:33:32] START iter_14_r3d_s123_loso (loso_dev)
+[09:41:51] DONE  iter_14_r3d_s123_loso: FINAL dev: UF1=0.6780 UAR=0.7127 ACC=0.6615
+[09:41:51] START iter_14_r3d_s2024_loso (loso_dev)
+[10:49:56] DONE  iter_14_r3d_s2024_loso: FINAL dev: UF1=0.6853 UAR=0.7222 ACC=0.6719
+[10:49:56] START iter_14_r3d_s7_loso (loso_dev)
+[11:57:35] DONE  iter_14_r3d_s7_loso: FINAL dev: UF1=0.6965 UAR=0.7215 ACC=0.6927
+[11:57:35] === QUEUE V19 COMPLETE ===

@@ -1,0 +1,6 @@
+[00:34:06] === QUEUE V17 START: Fase 2.6 fokus + early stopping (LOSO-21) ===
+[00:34:06] START iter_98_r3d_focus_es_full_s42 (loso_dev)
+[02:29:14] DONE  iter_98_r3d_focus_es_full_s42: FINAL dev: UF1=0.6198 UAR=0.6658 ACC=0.6094
+[02:29:15] START iter_99_r3d_focus_es_apex_s42 (loso_dev)
+[04:45:52] DONE  iter_99_r3d_focus_es_apex_s42: FINAL dev: UF1=0.6466 UAR=0.6736 ACC=0.6458
+[04:45:52] === QUEUE V17 COMPLETE ===

@@ -1,0 +1,6 @@
+[12:33:13] === QUEUE V7 START (fase 2: face parsing) ===
+[12:33:13] START iter_67_r3d_faceparse_full_s42
+[12:46:35] DONE  iter_67_r3d_faceparse_full_s42: FINAL dev: UF1=0.6637 UAR=0.6945 ACC=0.6719
+[12:46:35] START iter_68_r3d_faceparse_autoapex_s42
+[13:03:26] DONE  iter_68_r3d_faceparse_autoapex_s42: FINAL dev: UF1=0.6698 UAR=0.6934 ACC=0.6771
+[13:03:27] === QUEUE V7 COMPLETE ===

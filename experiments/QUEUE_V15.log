@@ -1,0 +1,8 @@
+[16:52:05] === QUEUE V15 START: Fase 2.4 fokus area AU (LOSO-21) ===
+[16:52:05] START iter_92_r3d_nocheek_full_s42 (loso_dev)
+[18:03:58] DONE  iter_92_r3d_nocheek_full_s42: FINAL dev: UF1=0.6458 UAR=0.6666 ACC=0.6354
+[18:03:58] START iter_93_r3d_auroi_full_s42 (loso_dev)
+[19:15:22] DONE  iter_93_r3d_auroi_full_s42: FINAL dev: UF1=0.6479 UAR=0.6845 ACC=0.6354
+[19:15:22] START iter_94_r3d_auroi_apex_s42 (loso_dev)
+[20:28:54] DONE  iter_94_r3d_auroi_apex_s42: FINAL dev: UF1=0.6351 UAR=0.6647 ACC=0.6250
+[20:28:54] === QUEUE V15 COMPLETE ===

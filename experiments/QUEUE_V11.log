@@ -1,0 +1,26 @@
+[16:18:07] === QUEUE V11 BAGIAN A: replikasi iter_74 (3 percobaan, ~70 menit) ===
+[16:18:07] START iter_80_r3d_lastk8_ep40_s123 (grouped)
+[16:40:41] DONE  iter_80_r3d_lastk8_ep40_s123 (grouped): FINAL dev: UF1=0.6483 UAR=0.6734 ACC=0.6562
+[16:40:42] START iter_81_r3d_lastk8_ep40_s2024 (grouped)
+[17:03:33] DONE  iter_81_r3d_lastk8_ep40_s2024 (grouped): FINAL dev: UF1=0.7088 UAR=0.7177 ACC=0.7083
+[17:03:33] START iter_82_r3d_lastk8_ep40_autoapex_s42 (grouped)
+[17:31:28] DONE  iter_82_r3d_lastk8_ep40_autoapex_s42 (grouped): FINAL dev: UF1=0.7060 UAR=0.7298 ACC=0.7135
+[17:31:28] === QUEUE V11 BAGIAN B: LOSO 21 subject (8 percobaan, ~9 jam) ===
+[17:31:28] audit subject [4,6,8,17,24] TIDAK dipakai di bagian ini
+[17:31:28] START iter_14_r3d (loso_dev)
+[18:39:24] DONE  iter_14_r3d (loso_dev): FINAL dev: UF1=0.7109 UAR=0.7348 ACC=0.6979
+[18:39:24] START iter_47_r3d_auto_apex_s42 (loso_dev)
+[19:51:17] DONE  iter_47_r3d_auto_apex_s42 (loso_dev): FINAL dev: UF1=0.6817 UAR=0.7143 ACC=0.6667
+[19:51:17] START iter_74_r3d_lastk8_ep40_s42 (loso_dev)
+[21:41:32] DONE  iter_74_r3d_lastk8_ep40_s42 (loso_dev): FINAL dev: UF1=0.7075 UAR=0.7336 ACC=0.6979
+[21:41:32] START iter_77_r3d_au05_full_s42 (loso_dev)
+[22:53:09] DONE  iter_77_r3d_au05_full_s42 (loso_dev): FINAL dev: UF1=0.6743 UAR=0.7125 ACC=0.6562
+[22:53:10] START iter_69_r3d_es_refit_s42 (loso_dev)
+[00:26:28] DONE  iter_69_r3d_es_refit_s42 (loso_dev): FINAL dev: UF1=0.6930 UAR=0.7374 ACC=0.6823
+[00:26:28] START iter_59_r3d_llrd_s42 (loso_dev)
+[01:38:01] DONE  iter_59_r3d_llrd_s42 (loso_dev): FINAL dev: UF1=0.7169 UAR=0.7392 ACC=0.7083
+[01:38:01] START iter_61_r3d_ep60_s42 (loso_dev)
+[04:26:24] DONE  iter_61_r3d_ep60_s42 (loso_dev): FINAL dev: UF1=0.6874 UAR=0.7050 ACC=0.6979
+[04:26:24] START iter_67_r3d_faceparse_full_s42 (loso_dev)
+[05:37:33] DONE  iter_67_r3d_faceparse_full_s42 (loso_dev): FINAL dev: UF1=0.7136 UAR=0.7336 ACC=0.6927
+[05:37:33] === QUEUE V11 COMPLETE ===

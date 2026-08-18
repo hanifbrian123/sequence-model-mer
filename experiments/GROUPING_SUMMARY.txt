@@ -1,0 +1,59 @@
+==========================================================================
+PERBANDINGAN PENGELOMPOKAN LABEL - 3 grouping x 3 seed
+==========================================================================
+
+PERINGATAN: angka antar-taksonomi TIDAK sebanding. Menggabungkan dua kelas
+menghapus kesalahan di antara keduanya dari metrik, jadi skor 4 kelas selalu
+lebih tinggi daripada 5 kelas pada model yang sama. Referensi 5 kelas:
+  baseline full-span UF1 0,6816 / ACC 0,6823   champion deployable UF1 0,7021
+
+--- g1_user ---
+  seed   42: UF1=0.6255  UAR=0.6513  ACC=0.6531  (n=196)
+  seed  123: UF1=0.5529  UAR=0.5897  ACC=0.5663  (n=196)
+  seed 2024: UF1=0.5779  UAR=0.6063  ACC=0.6071  (n=196)
+  rata-rata: UF1=0.5854+-0.0369  UAR=0.6158  ACC=0.6088
+  F1 per kelas (seed terbaik):
+    happiness                  F1=0.6275  (n=24)
+    disgust_surprise           F1=0.7040  (n=64)
+    fear_serious               F1=0.5000  (n=21)
+    others                     F1=0.6707  (n=87)
+
+--- g2_disgust_others ---
+  seed   42: UF1=0.7388  UAR=0.7751  ACC=0.8177  (n=192)
+  seed  123: UF1=0.7495  UAR=0.7732  ACC=0.8281  (n=192)
+  seed 2024: UF1=0.6933  UAR=0.7445  ACC=0.7812  (n=192)
+  rata-rata: UF1=0.7272+-0.0298  UAR=0.7643  ACC=0.8090
+  F1 per kelas (seed terbaik):
+    happiness                  F1=0.6800  (n=24)
+    disgust_others             F1=0.8933  (n=130)
+    repression                 F1=0.6154  (n=17)
+    surprise                   F1=0.8095  (n=21)
+
+--- g3_disgust_others_plus ---
+  seed   42: UF1=0.7129  UAR=0.7530  ACC=0.7857  (n=196)
+  seed  123: UF1=0.6769  UAR=0.7019  ACC=0.7602  (n=196)
+  seed 2024: UF1=0.6965  UAR=0.7457  ACC=0.7704  (n=196)
+  rata-rata: UF1=0.6954+-0.0180  UAR=0.7335  ACC=0.7721
+  F1 per kelas (seed terbaik):
+    happiness                  F1=0.6383  (n=24)
+    disgust_others             F1=0.8689  (n=130)
+    repression_fear_sadness    F1=0.5263  (n=21)
+    surprise                   F1=0.8182  (n=21)
+
+==========================================================================
+SATU-SATUNYA GATE YANG SAH: g3 vs g2 pada 246 sampel yang sama
+pertanyaan: apakah menambahkan 9 sampel fear/sadness menolong?
+==========================================================================
+  seed   42 (n=192): g2=0.7388 g3=0.7266 dUF1=-0.0122 CI80=[-0.0573,+0.0355] P=0.375 -> GAGAL
+  seed  123 (n=192): g2=0.7495 g3=0.6891 dUF1=-0.0604 CI80=[-0.0954,-0.0261] P=0.017 -> GAGAL
+  seed 2024 (n=192): g2=0.6933 g3=0.7097 dUF1=+0.0164 CI80=[-0.0238,+0.0654] P=0.704 -> GAGAL
+  efek lintas seed: rata-rata -0.0187, sd 0.0388, lolos di 1 dari 3 seed
+
+==========================================================================
+CARA MEMBACA
+==========================================================================
+Bandingkan g2 dengan g3 lewat gate di atas - itu perbandingan yang adil.
+Bandingkan g1 dengan g2/g3 hanya secara deskriptif: keduanya 4 kelas, tetapi
+isi kelasnya berbeda, sehingga tugasnya memang tidak sama beratnya.
+Kelas gabungan yang besar menaikkan ACC secara otomatis; lihat F1 per kelas
+untuk menilai apakah ada kelas yang dikorbankan.

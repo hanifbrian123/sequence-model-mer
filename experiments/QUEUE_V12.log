@@ -1,0 +1,13 @@
+[05:38:25] === QUEUE V12 BAGIAN A: Fase 3.1 CNN+RNN dan sisa Fase 4 ===
+[05:38:25] START iter_85_resnetgru_full_s42 (grouped)
+[05:48:58] DONE  iter_85_resnetgru_full_s42 (grouped): FINAL dev: UF1=0.5970 UAR=0.6318 ACC=0.6042
+[05:48:58] START iter_86_resnetgru_autoapex_s42 (grouped)
+[06:01:43] DONE  iter_86_resnetgru_autoapex_s42 (grouped): FINAL dev: UF1=0.6656 UAR=0.6987 ACC=0.6615
+[06:01:43] START iter_83_r3d_au01_full_s42 (grouped)
+[06:15:22] DONE  iter_83_r3d_au01_full_s42 (grouped): FINAL dev: UF1=0.6682 UAR=0.6948 ACC=0.6615
+[06:15:22] START iter_84_r3d_au02_autoapex_s42 (grouped)
+[06:31:40] DONE  iter_84_r3d_au02_autoapex_s42 (grouped): FINAL dev: UF1=0.6595 UAR=0.6985 ACC=0.6562
+[06:31:40] === QUEUE V12 BAGIAN B: LOSO 21 untuk AU versi terbaik ===
+[06:31:40] START iter_76_r3d_au02_full_s42 (loso_dev)
+[07:43:00] DONE  iter_76_r3d_au02_full_s42 (loso_dev): FINAL dev: UF1=0.6671 UAR=0.6971 ACC=0.6562
+[07:43:00] === QUEUE V12 COMPLETE ===

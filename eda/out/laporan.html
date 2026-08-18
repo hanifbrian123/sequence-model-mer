@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eksplorasi Data CASME II</title>
+<style>
+  :root {
+    --surface:#fcfcfb; --plane:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e;
+    --muted:#898781; --line:#e1e0d9; --blue:#2a78d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --surface:#1a1a19; --plane:#0d0d0d; --ink:#fff; --ink2:#c3c2b7;
+             --muted:#898781; --line:#2c2c2a; --blue:#3987e5; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--plane); color:var(--ink);
+    font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:1000px; margin:0 auto; padding:48px 20px 80px; }
+  h1 { font-size:30px; line-height:1.2; margin:0 0 8px; letter-spacing:-.02em; }
+  .lede { color:var(--ink2); margin:0 0 28px; max-width:70ch; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px; margin:0 0 32px; }
+  .stat { background:var(--surface); border:1px solid var(--line);
+    border-radius:12px; padding:14px 16px; }
+  .stat .v { font-size:26px; font-weight:650; letter-spacing:-.02em; }
+  .stat .k { font-size:12.5px; color:var(--muted); }
+  .card { background:var(--surface); border:1px solid var(--line);
+    border-radius:14px; padding:22px; margin:0 0 22px; position:relative; }
+  .num { position:absolute; top:18px; left:-14px; width:28px; height:28px;
+    border-radius:50%; background:var(--blue); color:#fff; font-size:13px;
+    font-weight:700; display:grid; place-items:center; }
+  .card img { width:100%; height:auto; display:block; border-radius:8px;
+    background:#fcfcfb; }
+  .body { color:var(--ink2); font-size:15px; margin-top:16px;
+    padding-top:16px; border-top:1px solid var(--line); max-width:78ch; }
+  code { background:var(--plane); border:1px solid var(--line);
+    padding:1px 5px; border-radius:5px; font-size:13.5px; }
+  b { color:var(--ink); font-weight:600; }
+  .warn { background:var(--surface); border:1px solid var(--line);
+    border-left:3px solid #eda100; border-radius:12px; padding:16px 20px; margin:0 0 32px; }
+  .warn ul { margin:8px 0 0; padding-left:20px; color:var(--ink2); font-size:14.5px; }
+  h2 { font-size:19px; margin:40px 0 12px; }
+  .nav { font-size:14px; color:var(--muted); margin:0 0 4px; }
+  .nav a { color:var(--blue); text-decoration:none; font-weight:600; }
+  footer { color:var(--muted); font-size:13px; margin-top:44px;
+    border-top:1px solid var(--line); padding-top:18px; }
+</style></head><body><div class="wrap">
+<h1>Eksplorasi Data CASME II</h1>
+<p class="lede">Semua angka dan grafik di halaman ini dihitung <b>hanya dari file Excel
+anotasi dan dari nama-nama file</b> di folder <code>Cropped</code>.
+Tidak ada satu pun gambar yang dibuka, didekode, atau ditampilkan.</p>
+
+<div class="stats">
+  <div class="stat"><div class="v">255</div><div class="k">klip di anotasi</div></div>
+  <div class="stat"><div class="v">246</div><div class="k">klip dipakai (5 kelas)</div></div>
+  <div class="stat"><div class="v">26</div><div class="k">orang</div></div>
+  <div class="stat"><div class="v">4.0×</div><div class="k">ketimpangan kelas</div></div>
+  <div class="stat"><div class="v">66</div><div class="k">median panjang (frame)</div></div>
+  <div class="stat"><div class="v">17,124</div><div class="k">total frame di disk</div></div>
+</div>
+
+<div class="warn"><b>Catatan pemeriksaan otomatis</b><ul><li>1 klip tidak punya ApexFrame yang sah (isi '/' di Excel).</li><li>1 klip: jumlah file != (offset - onset + 1).</li><li>Penomoran frame rapat di SEMUA klip — tidak ada frame yang dilewat.</li></ul></div>
+
+<p class="nav">Bagian 1 dari 2 &nbsp;·&nbsp; lanjut ke
+<a href="laporan_piksel.html">Eksplorasi Piksel →</a></p>
+
+<h2>Sembilan hal yang perlu diketahui sebelum melatih model</h2>
+
+    <section class="card">
+      <div class="num">1</div>
+      <img src="01_distribusi_kelas.png" alt="01_distribusi_kelas.png">
+      <div class="body">Datanya <b>tidak seimbang</b>. Kelas terbanyak (<code>others</code>, 99 klip) punya <b>4.0× lipat</b> lebih banyak contoh dibanding yang tersedikit (<code>surprise</code>, 25 klip).<br><br><b>Kenapa ini penting:</b> kalau model asal menebak <code>others</code> untuk semua input, dia sudah dapat akurasi 40% tanpa belajar apa pun. Jadi <b>akurasi biasa itu menyesatkan</b> — laporkan juga UF1/UAR yang menghitung tiap kelas dengan bobot sama.</div>
+    </section>
+    <section class="card">
+      <div class="num">2</div>
+      <img src="02_klip_per_subjek.png" alt="02_klip_per_subjek.png">
+      <div class="body">Tiap batang = satu orang. Tingginya sangat timpang. Beberapa orang menyumbang belasan klip, beberapa cuma segelintir.<br><br><b>Kenapa ini penting:</b> wajah tiap orang beda. Kalau data satu orang muncul di latihan <i>dan</i> di ujian, model bisa lulus dengan cara menghafal wajah, bukan mengenali emosi. Karena itu pembagian data harus <b>per-orang</b> (subject-independent), bukan acak per-klip.</div>
+    </section>
+    <section class="card">
+      <div class="num">3</div>
+      <img src="03_matriks_subjek_kelas.png" alt="03_matriks_subjek_kelas.png">
+      <div class="body">Baris = orang, kolom = emosi, angka = jumlah klip. Titik berarti kosong.<br><br><b>Kenapa ini penting:</b> banyak sel kosong. Artinya kalau satu orang dipakai sebagai data uji, sering kali <b>tidak semua kelas ada</b> di ujian itu. Skor dari satu orang saja jadi tidak bisa dibandingkan dengan skor orang lain — hasilnya harus <b>digabung dulu</b> dari semua fold, baru dihitung metriknya.</div>
+    </section>
+    <section class="card">
+      <div class="num">4</div>
+      <img src="04_durasi.png" alt="04_durasi.png">
+      <div class="body">Panjang klip sangat bervariasi; mediannya 66 frame. Karena kamera merekam 200 gambar per detik, itu setara 328 milidetik — memang sekejap, sesuai definisi <i>micro-expression</i>.<br><br><b>Kenapa ini penting:</b> model urutan (sequence) butuh jumlah frame yang <b>tetap</b>, misal 16. Klip pendek harus diregangkan, klip panjang diperjarang. Cara memilih 16 frame itu sendiri adalah keputusan desain yang berpengaruh besar.</div>
+    </section>
+    <section class="card">
+      <div class="num">5</div>
+      <img src="05_durasi_per_kelas.png" alt="05_durasi_per_kelas.png">
+      <div class="body">Kotak = rentang tengah (50% data), garis di dalamnya = median, titik = klip satuan.<br><br><b>Kenapa ini penting:</b> ini pemeriksaan <b>kecurangan tak sengaja</b>. Kalau satu kelas jelas lebih panjang dari yang lain, model bisa menebak benar hanya dari panjang klip — bukan dari gerak wajah. Kalau kotak-kotaknya banyak bertumpang tindih, panjang klip bukan jalan pintas, dan itu kabar baik.</div>
+    </section>
+    <section class="card">
+      <div class="num">6</div>
+      <img src="06_posisi_apex.png" alt="06_posisi_apex.png">
+      <div class="body">Apex = frame saat ekspresi paling kuat. Posisinya dinormalkan: 0 = tepat di awal klip, 1 = tepat di akhir. Mediannya 0.51.<br><br><b>Kenapa ini penting:</b> apex ini <b>ditandai manusia</b>. Di video upload dari HP, label itu tidak ada. Kalau sebarannya lebar (bukan menumpuk di satu titik), berarti apex tidak bisa ditebak dengan aturan tetap seperti 'ambil tengah' — harus dideteksi otomatis, dan itu sumber error tersendiri.</div>
+    </section>
+    <section class="card">
+      <div class="num">7</div>
+      <img src="07_action_units.png" alt="07_action_units.png">
+      <div class="body">AU (Action Unit) adalah kode standar gerakan otot wajah — misalnya AU12 = sudut bibir tertarik ke atas, AU4 = alis mengerut.<br><br><b>Kenapa ini penting:</b> ini memberi tahu <b>di mana di wajah</b> sinyalnya berada untuk tiap emosi, dan kelas mana yang berbagi otot yang sama. Dua kelas yang memakai AU yang mirip akan sulit dibedakan model — kotak ini memprediksi di mana nanti muncul kebingungan di confusion matrix.</div>
+    </section>
+    <section class="card">
+      <div class="num">8</div>
+      <img src="08_integritas_folder.png" alt="08_integritas_folder.png">
+      <div class="body">Sumbu X = jumlah frame menurut Excel, sumbu Y = jumlah file yang benar-benar ada di folder. Garis putus-putus = cocok sempurna.<br><br><b>Kenapa ini penting:</b> ini uji kejujuran data sebelum apa pun dilatih. Titik yang meleset dari garis berarti anotasi dan isi disk tidak sepakat — klip seperti itu harus diperiksa atau dibuang, bukan diam-diam ikut dilatih.</div>
+    </section>
+    <section class="card">
+      <div class="num">9</div>
+      <img src="09_kerapuhan_loso.png" alt="09_kerapuhan_loso.png">
+      <div class="body">Simulasi: <i>kalau</i> satu orang dijadikan data uji, sebanyak apa ujiannya?<br><br><b>Kenapa ini penting:</b> untuk orang dengan 4 klip, satu tebakan salah mengubah akurasi sebesar 25 poin. Itu <b>derau, bukan sinyal</b>. Kesimpulannya: jangan pernah mengambil keputusan dari skor satu fold; kumpulkan prediksi semua fold dulu, baru hitung satu metrik gabungan.</div>
+    </section>
+
+<footer>Dibuat oleh <code>eda/explore_casme2.py</code>. Tabel mentah:
+<code>metadata.csv</code> di folder yang sama — bisa dibuka dengan Excel.</footer>
+</div></body></html>

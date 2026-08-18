@@ -1,0 +1,63 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eksplorasi Lanjutan CASME II</title><style>
+:root{--surface:#fcfcfb;--plane:#f9f9f7;--ink:#0b0b0b;--ink2:#52514e;
+ --muted:#898781;--line:#e1e0d9;--blue:#2a78d6}
+@media (prefers-color-scheme:dark){:root{--surface:#1a1a19;--plane:#0d0d0d;
+ --ink:#fff;--ink2:#c3c2b7;--line:#2c2c2a;--blue:#3987e5}}
+*{box-sizing:border-box} body{margin:0;background:var(--plane);color:var(--ink);
+ font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:48px 20px 80px}
+h1{font-size:30px;line-height:1.2;margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:19px;margin:40px 0 12px}
+.lede{color:var(--ink2);margin:0 0 24px;max-width:70ch}
+.nav{font-size:14px;color:var(--muted);margin:0 0 4px}
+.nav a{color:var(--blue);text-decoration:none;font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+ padding:22px;margin:0 0 22px;position:relative}
+.num{position:absolute;top:18px;left:-14px;width:28px;height:28px;border-radius:50%;
+ background:var(--blue);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}
+.card img{width:100%;height:auto;display:block;border-radius:8px;background:#fcfcfb}
+.body{color:var(--ink2);font-size:15px;margin-top:16px;padding-top:16px;
+ border-top:1px solid var(--line);max-width:78ch}
+b{color:var(--ink);font-weight:600}
+code{background:var(--plane);border:1px solid var(--line);padding:1px 5px;
+ border-radius:5px;font-size:13.5px}
+.warn{background:var(--surface);border:1px solid var(--line);border-left:3px solid #eda100;
+ border-radius:12px;padding:16px 20px;margin:0 0 32px}
+.warn ul{margin:8px 0 0;padding-left:20px;color:var(--ink2);font-size:14.5px}
+.warn li{margin-bottom:8px}
+footer{color:var(--muted);font-size:13px;margin-top:44px;border-top:1px solid var(--line);padding-top:18px}
+</style></head><body><div class="wrap">
+<h1>Eksplorasi Lanjutan CASME II</h1>
+<p class="lede">Lima pertanyaan yang muncul setelah membaca ulang grafik tahap 1 dan 2.
+Semua pengujian di halaman ini <b>subject-independent</b>: model tidak pernah diuji
+pada orang yang pernah dilihatnya saat latihan.</p>
+<p class="nav">Bagian 3 dari 3 &nbsp;·&nbsp;
+<a href="laporan.html">← Metadata</a> &nbsp;·&nbsp;
+<a href="laporan_piksel.html">← Piksel</a></p>
+<div class="warn"><b>Angka utama</b><ul><li>12 disgust + 60 others memakai kode otot yang persis sama (AU4 saja). Peta gerak 8×8 + uji per-subjek: 79.2% / UF1 0.442, sedangkan tebak-terbanyak 83.3% / UF1 0.455 — tidak ada perbaikan. Pada seluruh 162 klip disgust+others pun sama: 64.8% / UF1 0.602 vs 61.1% / UF1 0.379.</li><li>Tanpa melihat gerakan wajah sama sekali, akurasi terbaik 38.6% (UF1 0.210) dari 'hanya besar gerakan' — dibanding tebak-terbanyak 40.2% (UF1 0.115). Identitas orang bisa ditebak 60% hanya dari kecerahan dan kontras (tebak acak 3.8%).</li><li>Kekhawatiran perancu subjek ternyata kecil: menyamakan bobot tiap orang hampir tidak mengubah peta gerak (korelasi 0.95–0.99 dengan versi lama). Antar kelas, peta paling mirip disgust↔others (+0.91) dan paling berbeda repression↔surprise (-0.03).</li><li>Di frame offset, gerak di tengah wajah masih 96% dari puncaknya (pinggir 92%). Gerak pinggir sebesar 0.78× gerak tengah (median); pada 24% klip pinggir bahkan lebih besar.</li><li>Penebak apex terbaik: konstanta 0,50, meleset rata-rata 0.125; konstanta 0,50 meleset 0.125; puncak piksel mentah 0.284.</li><li>Bentuk kurva saja: akurasi 41.5% / UF1 0.210. Besar gerakan saja: 41.5% / UF1 0.170. Kurva mentah: 41.9% / UF1 0.204. Tebak-terbanyak: 40.2% / UF1 0.115.</li><li>Ruang saja (peta apex): 45.5% / UF1 0.411. Waktu saja (kurva global): 41.9% / UF1 0.204. Ruang × waktu: 43.5% / UF1 0.371. Tebak-terbanyak: 40.2% / UF1 0.115.</li></ul></div>
+<h2>Tujuh pemeriksaan</h2>
+
+    <section class="card"><div class="num">17</div>
+      <img src="17_disgust_vs_others.png" alt="">
+      <div class="body">Ini adalah pemeriksaan paling penting di halaman ini. Diambil hanya klip yang kode ototnya <b>persis sama</b> (AU4 saja), lalu ditanya: bisakah dibedakan mana yang dilabeli <code>disgust</code> dan mana <code>others</code>?<br><br><b>Kenapa ini penting:</b> kalau jawabannya tidak, maka sebagian dari 'kesulitan' dataset ini <b>ada di labelnya</b>, bukan di modelnya. Tidak ada arsitektur yang bisa memperbaiki dua nama berbeda untuk gerakan yang sama. Itu mengubah cara membaca setiap angka akurasi setelah ini.</div></section>
+    <section class="card"><div class="num">18</div>
+      <img src="18_uji_jalan_pintas.png" alt="">
+      <div class="body">Kiri: pengklasifikasi yang <b>tidak melihat gerakan wajah sama sekali</b> — hanya angka ringkasan seperti kecerahan, kontras, panjang klip. Kanan: bisakah ditebak <i>siapa orangnya</i> hanya dari kecerahan?<br><br><b>Kenapa ini penting:</b> panel kiri memberi <b>garis dasar yang jujur</b>. Model apa pun yang hasilnya tidak jauh dari batang-batang ini sebenarnya belum belajar apa-apa. Panel kanan mengukur seberapa kentara identitas orang — makin tinggi, makin besar godaan model untuk menghafal wajah alih-alih mengenali emosi.</div></section>
+    <section class="card"><div class="num">19</div>
+      <img src="19_peta_gerak_adil.png" alt="">
+      <div class="body">Baris atas: rata-rata semua klip (orang dengan banyak klip mendominasi). Baris tengah: tiap orang diberi bobot sama dulu. Baris bawah: selisihnya.<br><br><b>Kenapa ini penting:</b> <code>repression</code> 70% klipnya dari 3 orang saja, dan sub17 sendirian menyumbang sepertiga. Jadi 'pola gerak repression' pada baris atas bisa jadi sebenarnya 'bentuk wajah sub17'. Baris tengah memperbaiki itu. Kalau kelima peta pada baris tengah tetap mirip satu sama lain, memotong wilayah wajah (ROI) tidak akan menolong.</div></section>
+    <section class="card"><div class="num">20</div>
+      <img src="20_kontrol_offset.png" alt="">
+      <div class="body">Wilayah tengah (mata/hidung/mulut) dibandingkan dengan pinggir potongan (rambut, latar, tepi). Pinggir dipakai sebagai <b>kontrol</b>: di sana tidak ada otot ekspresi.<br><br><b>Kenapa ini penting:</b> di tahap 2 terlihat gerakan tidak pernah kembali ke nol di frame offset. Ada dua kemungkinan: ekspresinya memang belum selesai, atau kepala/cahaya yang bergeser. Grafik ini memisahkan keduanya. Kalau pinggir ikut naik sebesar tengah, sebagian besar yang selama ini diukur sebagai 'gerak ekspresi' sebenarnya <b>gerak kepala</b>.</div></section>
+    <section class="card"><div class="num">21</div>
+      <img src="21_penebak_apex.png" alt="">
+      <div class="body">Tujuh cara menebak posisi apex tanpa label manusia, diadu dengan anotasi asli. Batang lebih pendek = lebih baik.<br><br><b>Kenapa ini penting:</b> di video upload tidak ada apex dari manusia. Grafik ini menjawab dengan angka: cara mana yang layak dipakai, dan apakah usaha mendeteksi apex secara otomatis lebih baik daripada sekadar mengambil frame tengah. Kalau tidak ada yang mengalahkan konstanta 0,50, pakai saja konstanta — lebih sederhana dan tidak bisa gagal.</div></section>
+    <section class="card"><div class="num">22</div>
+      <img src="22_bentuk_vs_amplitudo.png" alt="">
+      <div class="body">Tiap kurva dibagi puncaknya sendiri, sehingga yang tersisa hanya <b>bentuk waktunya</b> — cepat atau lambat naiknya, kapan mendatar. Kanan: seberapa jauh tiap jenis informasi bisa membawa.<br><br><b>Kenapa ini penting:</b> ini keputusan arsitektur. Kalau 'bentuk saja' hampir tidak lebih baik dari tebak-terbanyak, maka informasi waktu tipis, dan model urutan yang rumit sulit dibenarkan atas model satu-frame yang sederhana. Kalau bentuk membawa sinyal nyata, model urutan memang tepat.<br><br><b>Hati-hati membacanya:</b> yang diuji di sini adalah <i>satu</i> kurva rata-rata seluruh wajah. Itu ringkasan yang sangat kasar. Grafik berikutnya menguji versi yang adil.</div></section>
+    <section class="card"><div class="num">23</div>
+      <img src="23_ruang_vs_waktu.png" alt="">
+      <div class="body">Tiga jenis informasi diadu dengan bahan yang sama persis (kotak 8×8): <b>hanya waktu</b> (satu kurva, ruangnya dibuang), <b>hanya ruang</b> (peta di frame puncak, waktunya dibuang), dan <b>ruang × waktu</b> (10 titik waktu × 64 kotak).<br><br><b>Kenapa ini penting:</b> ini pertanyaan arsitektur yang sebenarnya. Kalau 'ruang × waktu' tidak lebih baik dari 'ruang saja', maka satu frame puncak sudah memuat hampir semua informasi, dan model urutan yang mahal sulit dibenarkan. Kalau lebih baik, model urutan memang membawa sesuatu yang nyata. Catatan jujur: kotak 8×8 itu kasar — hasil di sini adalah <b>batas bawah</b>, bukan batas atas untuk model sungguhan.</div></section>
+<footer>Dibuat oleh <code>eda/explore_deep.py</code>.</footer></div></body></html>

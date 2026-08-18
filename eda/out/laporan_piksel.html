@@ -1,0 +1,67 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eksplorasi Piksel CASME II</title><style>
+:root { --surface:#fcfcfb; --plane:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e;
+ --muted:#898781; --line:#e1e0d9; --blue:#2a78d6; }
+@media (prefers-color-scheme: dark) { :root { --surface:#1a1a19; --plane:#0d0d0d;
+ --ink:#fff; --ink2:#c3c2b7; --line:#2c2c2a; --blue:#3987e5; } }
+*{box-sizing:border-box} body{margin:0;background:var(--plane);color:var(--ink);
+ font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:48px 20px 80px}
+h1{font-size:30px;line-height:1.2;margin:0 0 8px;letter-spacing:-.02em}
+.lede{color:var(--ink2);margin:0 0 28px;max-width:70ch}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 32px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat .v{font-size:26px;font-weight:650;letter-spacing:-.02em}
+.stat .k{font-size:12.5px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+ padding:22px;margin:0 0 22px;position:relative}
+.num{position:absolute;top:18px;left:-14px;width:28px;height:28px;border-radius:50%;
+ background:var(--blue);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}
+.card img{width:100%;height:auto;display:block;border-radius:8px;background:#fcfcfb}
+.body{color:var(--ink2);font-size:15px;margin-top:16px;padding-top:16px;
+ border-top:1px solid var(--line);max-width:78ch}
+b{color:var(--ink);font-weight:600} h2{font-size:19px;margin:40px 0 12px}
+.nav{font-size:14px;color:var(--muted);margin:0 0 4px}
+.nav a{color:var(--blue);text-decoration:none;font-weight:600}
+code{background:var(--plane);border:1px solid var(--line);padding:1px 5px;border-radius:5px;font-size:13.5px}
+footer{color:var(--muted);font-size:13px;margin-top:44px;border-top:1px solid var(--line);padding-top:18px}
+</style></head><body><div class="wrap">
+<h1>Eksplorasi Piksel CASME II</h1>
+<p class="lede">Bagian ini <b>menghitung</b> dari isi gambar — bukan menampilkannya.
+Tiap frame didekode sebentar menjadi matriks angka 32×32, diambil statistiknya,
+lalu dibuang. Tidak ada gambar yang disimpan, ditampilkan, atau dikirim ke mana pun.</p>
+<div class="stats">
+ <div class="stat"><div class="v">246</div><div class="k">klip diproses</div></div>
+ <div class="stat"><div class="v">16,723</div><div class="k">frame dihitung</div></div>
+ <div class="stat"><div class="v">100</div><div class="k">kecerahan rata-rata</div></div>
+ <div class="stat"><div class="v">66</div><div class="k">median frame/klip</div></div>
+</div>
+<p class="nav">Bagian 2 dari 2 &nbsp;·&nbsp;
+<a href="laporan.html">← kembali ke Eksplorasi Metadata</a></p>
+
+<h2>Tujuh hal yang hanya kelihatan dari piksel</h2>
+
+    <section class="card"><div class="num">10</div>
+      <img src="10_ukuran_crop.png" alt="">
+      <div class="body">Ukuran piksel tiap klip berbeda-beda (sekitar 225–300 lebarnya), tapi <b>bentuknya hampir seragam</b>: rasio tinggi÷lebar berkumpul rapat di sekitar 1,21.<br><br><b>Kenapa ini penting:</b> model butuh masukan berukuran tetap, jadi semua gambar akan diregangkan. Kalau rasionya bervariasi lebar, wajah akan melar berbeda-beda dan itu jadi derau. Di sini <b>hasilnya kabar baik</b>: rasionya sudah konsisten, jadi resize ke ukuran tetap hampir tidak menimbulkan distorsi tambahan. Satu sumber masalah yang bisa dicoret dari daftar.</div></section>
+    <section class="card"><div class="num">11</div>
+      <img src="11_kecerahan_per_subjek.png" alt="">
+      <div class="body">Kecerahan rata-rata tiap orang berbeda jauh: dari 71 sampai 134 dari skala 0–255.<br><br><b>Kenapa ini penting:</b> ini disebut <i>domain shift</i>. Model bisa diam-diam belajar 'gambar terang = orang A', dan kemampuannya runtuh saat diuji pada orang yang belum pernah dilihat. Ini salah satu penyebab hasil antar-orang naik-turun ekstrem. Penangkalnya: <b>normalisasi per klip</b> (kurangi rata-rata, bagi simpangan baku) atau pakai selisih antar-frame, bukan piksel mentah.</div></section>
+    <section class="card"><div class="num">12</div>
+      <img src="12_kurva_gerak.png" alt="">
+      <div class="body">Sumbu tegak = seberapa jauh sebuah frame berbeda dari frame pertama, dihitung langsung dari piksel. Sumbu datar = posisi waktu di dalam klip.<br><br><b>Kenapa ini penting:</b> kurvanya <b>naik lalu melandai</b>, bukan naik-turun kacau. Artinya sinyalnya mulus terhadap waktu — model urutan memang cocok, dan mengambil 16 frame dari klip tidak akan merusak bentuk kurva ini. Kalau kurva tiap kelas berbeda bentuknya, itu berarti <b>pola waktu</b> membawa informasi kelas, bukan cuma satu frame puncak.</div></section>
+    <section class="card"><div class="num">13</div>
+      <img src="13_apex_vs_puncak_gerak.png" alt="">
+      <div class="body">Sumbu datar = apex yang ditandai manusia. Sumbu tegak = frame dengan perubahan piksel terbesar, dihitung otomatis. Garis putus-putus = tebakan otomatis persis sama dengan manusia.<br><br><b>Kenapa ini penting:</b> di video upload nanti tidak ada apex dari manusia. Grafik ini mengukur <b>seberapa jauh</b> penggantinya meleset. Titik yang berkumpul di atas garis berarti tebakan otomatis cenderung terlalu akhir — itu bias yang bisa dikoreksi, dan koreksinya harus dihitung dari data latih saja, jangan dari data uji.</div></section>
+    <section class="card"><div class="num">14</div>
+      <img src="14_peta_gerak_blok.png" alt="">
+      <div class="body">Wajah dibagi jadi kotak 8×8. Warna tiap kotak = rata-rata besarnya perubahan piksel dari onset ke apex, dirata-ratakan atas puluhan klip dari orang berbeda. Ini <b>peta angka</b>, bukan foto.<br><br><b>Kenapa ini penting:</b> ini menunjukkan <b>di mana</b> sinyal berada. Kalau kotak gelapnya berkumpul di daerah mulut untuk satu kelas dan di daerah alis untuk kelas lain, memotong wilayah wajah (ROI) masuk akal. Kalau petanya mirip semua, ROI tidak akan menolong — dan itu menghemat berhari-hari percobaan.</div></section>
+    <section class="card"><div class="num">15</div>
+      <img src="15_amplitudo_per_kelas.png" alt="">
+      <div class="body">Seberapa besar perubahan piksel maksimum dalam satu klip, dipisah per emosi.<br><br><b>Kenapa ini penting:</b> pemeriksaan jalan pintas kedua. Kalau satu kelas jelas bergerak lebih besar, model bisa menang hanya dengan mengukur 'seberapa ramai'. Kotak yang bertumpang tindih berarti model <b>terpaksa</b> belajar bentuk gerakan, bukan sekadar besarnya — itu yang kita mau.</div></section>
+    <section class="card"><div class="num">16</div>
+      <img src="16_frame_diam.png" alt="">
+      <div class="body">Kiri: berapa kali lipat gerakan seluruh ekspresi dibanding gerakan antara dua frame yang berurutan. Kanan: apakah klip yang panjang cenderung punya gerakan besar.<br><br><b>Kenapa ini penting:</b> pada 200 frame/detik, dua frame berurutan nyaris identik — bedanya kurang dari setengah tingkat keabuan, setipis derau kamera. Artinya <b>informasinya jauh lebih sedikit daripada jumlah framenya</b>. Ini alasan teknis kenapa memilih 16 frame dari 65, atau menurunkan ke 30 frame/detik, tidak otomatis merusak sinyal. Panel kanan memastikan panjang klip tidak diam-diam menyandi kekuatan ekspresi.</div></section>
+<footer>Dibuat oleh <code>eda/explore_pixels.py</code>. Angka mentah per klip:
+<code>pixel_stats.csv</code>.</footer></div></body></html>

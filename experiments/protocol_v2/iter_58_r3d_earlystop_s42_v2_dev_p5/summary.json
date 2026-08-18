@@ -1,0 +1,108 @@
+{
+  "name": "iter_58_r3d_earlystop_s42_v2_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-08-03T10:33:56.565409",
+  "elapsed_sec": 689.8876075744629,
+  "config_sha256": "f8038add2dcfaeea71b094ae10d580de8931da76ea564090d33983d3e2e027dd",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "n_folds": 4,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": true,
+  "num_classes": 5,
+  "UF1": 0.575458873492608,
+  "UAR": 0.5803278007273479,
+  "ACC": 0.5885416666666666,
+  "per_class_f1": [
+    0.5283018867924528,
+    0.5333333333333333,
+    0.36363636363636365,
+    0.8292682926829268,
+    0.6227544910179641
+  ],
+  "per_class_recall": [
+    0.5833333333333334,
+    0.5581395348837209,
+    0.35294117647058826,
+    0.8095238095238095,
+    0.5977011494252874
+  ],
+  "confusion_matrix": [
+    [
+      14,
+      1,
+      1,
+      1,
+      7
+    ],
+    [
+      4,
+      24,
+      1,
+      0,
+      14
+    ],
+    [
+      3,
+      1,
+      6,
+      0,
+      7
+    ],
+    [
+      2,
+      1,
+      1,
+      17,
+      0
+    ],
+    [
+      6,
+      20,
+      7,
+      2,
+      52
+    ]
+  ],
+  "n": 192,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 60,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_58_r3d_earlystop_s42",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "early_stopping": true,
+    "es_patience": 10,
+    "es_val_fraction": 0.2,
+    "es_metric": "uf1",
+    "es_min_epochs": 10
+  }
+}

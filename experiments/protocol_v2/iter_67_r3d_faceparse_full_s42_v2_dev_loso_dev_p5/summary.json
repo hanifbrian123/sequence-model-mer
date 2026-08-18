@@ -1,0 +1,104 @@
+{
+  "name": "iter_67_r3d_faceparse_full_s42_v2_dev_loso_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-08-04T05:37:32.625917",
+  "elapsed_sec": 4259.26394534111,
+  "config_sha256": "4870d7e5622cf8f13b5fc360ed9bd321404d062fa827c8a171d62d34aee4a3b7",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "split": "loso_dev",
+  "n_folds": 21,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": false,
+  "num_classes": 5,
+  "UF1": 0.7136094714256039,
+  "UAR": 0.7336173763811858,
+  "ACC": 0.6927083333333334,
+  "per_class_f1": [
+    0.7058823529411765,
+    0.611764705882353,
+    0.6153846153846154,
+    0.9523809523809523,
+    0.6826347305389222
+  ],
+  "per_class_recall": [
+    0.75,
+    0.6046511627906976,
+    0.7058823529411765,
+    0.9523809523809523,
+    0.6551724137931034
+  ],
+  "confusion_matrix": [
+    [
+      18,
+      0,
+      1,
+      1,
+      4
+    ],
+    [
+      0,
+      26,
+      1,
+      0,
+      16
+    ],
+    [
+      2,
+      0,
+      12,
+      0,
+      3
+    ],
+    [
+      0,
+      0,
+      1,
+      20,
+      0
+    ],
+    [
+      7,
+      16,
+      7,
+      0,
+      57
+    ]
+  ],
+  "n": 192,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144_parse",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_67_r3d_faceparse_full_s42",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0
+  }
+}

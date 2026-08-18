@@ -223,11 +223,3 @@ replikasi seed label-free (`iter_50`/`iter_51`). Antreannya di `run_queue_v2.sh`
 
 Ekspektasi jujur: Fase 2 kemungkinan besar **menurunkan** 0,7021, dan itu sehat —
 0,7021 adalah angka kondisi ideal.
-
-## Cara kerja yang saya harapkan
-
-- Jangan ubah file apa pun sebelum menjelaskan rencana dan saya setujui.
-- Jangan menjalankan training GPU tanpa memberi tahu saya dulu.
-- Laporkan hasil dengan pooled metrics + gate statistik, bukan skor fold tunggal.
-- Kalau sebuah kandidat gagal gate, tutup cabangnya; jangan cari-cari bobot
-  sampai kelihatan menang.

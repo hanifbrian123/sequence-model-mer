@@ -232,6 +232,44 @@ def build_flow(flow, top, left, s, flip, flow_clip, third="mag", strain_clip=1.0
     return np.stack(chans, axis=-1)
 
 
+def focus_map(flow_out, region=None, mode="energy", smooth_fraction=0.06,
+              quantile=0.98):
+    """A "look here" hint appended as an extra input channel. Nothing is removed.
+
+    The flow itself says where the expression happened, so the hint is derived
+    from the data with no labels and no extra model — it works identically on an
+    uploaded video. This is the opposite of masking: the network still receives
+    every pixel and additionally learns how much to trust the hint.
+
+    ``energy`` is the smoothed per-pixel motion energy, so the focus follows the
+    actual movement and differs from clip to clip — which matters because a
+    disgust moves the nose and upper lip while a surprise moves the brows, and
+    one fixed anatomical map cannot represent both.
+
+    ``region`` averages that energy inside each facial region and paints the
+    region constant, giving a genuinely segmented focus map: "this part of the
+    face is where it is happening".
+    """
+    # flow_out is (T,H,W,C) with the magnitude channel normalised to [-1,1].
+    energy = ((flow_out[..., 2] + 1.0) * 0.5).mean(axis=0).astype(np.float32)
+    size = energy.shape[0]
+    blur = max(1, int(round(size * smooth_fraction)))
+    energy = cv2.GaussianBlur(energy, (2 * blur + 1, 2 * blur + 1), 0)
+    if mode == "region":
+        if region is None:
+            raise ValueError("focus_map mode 'region' requires region masks")
+        region = np.asarray(region, dtype=np.float32)
+        weights = region.sum(axis=(1, 2))
+        levels = (region * energy[None]).sum(axis=(1, 2)) / np.maximum(weights, 1e-6)
+        energy = (region * levels[:, None, None]).sum(axis=0)
+    elif mode != "energy":
+        raise ValueError(f"unknown focus map mode: {mode}")
+    # Percentile rather than max so one hot pixel cannot flatten the whole map.
+    scale = float(np.quantile(energy, quantile))
+    energy = np.clip(energy / max(scale, 1e-6), 0.0, 1.0)
+    return energy * 2.0 - 1.0        # match the other channels' [-1,1] range
+
+
 def random_erase(clip, prob, area_range=(0.02, 0.15), aspect=(0.5, 2.0)):
     """Cutout/random-erasing on a (T,H,W,C) clip. Same spatial box across ALL
     frames (temporal consistency) -> simulates occluding a face region, forcing
@@ -255,7 +293,7 @@ def _to_cthw(clip):
     return torch.from_numpy(np.transpose(clip, (3, 0, 1, 2)).copy()).float()
 
 
-def prepare_seq_array(arr, sample, cfg, train=False, view=None):
+def prepare_seq_array(arr, sample, cfg, train=False, view=None, region=None):
     """Apply the canonical single-stream preprocessing recipe to one array.
 
     This function is intentionally shared by ``SeqDataset`` and deployment
@@ -300,15 +338,61 @@ def prepare_seq_array(arr, sample, cfg, train=False, view=None):
         output = build_rgb(
             clip, top, left, size, flip, color_factor,
             cfg.get("input_mode", "rgb"))
+    focus_mode = cfg.get("focus_channel", "none")
+    if focus_mode != "none":
+        # Region masks are already cropped/flipped in lockstep further down, so
+        # do the same here before they are used to quantise the focus map.
+        focus_region = None
+        if focus_mode == "region":
+            if region is None:
+                raise ValueError("focus_channel 'region' needs region masks")
+            focus_region = _prepare_region(
+                region, top, left, size, flip, None).numpy()
+        hint = focus_map(output, region=focus_region, mode=focus_mode,
+                         quantile=cfg.get("focus_quantile", 0.98))
+        output = np.concatenate(
+            [output, np.repeat(hint[None, :, :, None], output.shape[0], axis=0)],
+            axis=-1)
     erase_probability = cfg.get("random_erase", 0.0)
     if train and erase_probability > 0:
         output = random_erase(output, erase_probability)
     output = resize_clip(output, cfg.get("resize_to", None))
-    return _to_cthw(output)
+    clip_tensor = _to_cthw(output)
+    # Masks are returned alongside the clip only for RegionAttention, which needs
+    # them at forward time. The focus channel consumes them here and returns a
+    # plain tensor, so the two features stay independent.
+    if region is None or not cfg.get("region_attention", False):
+        return clip_tensor
+    # Region masks must follow the SAME crop and flip as the clip, otherwise the
+    # gate would be applied to the wrong part of the face.
+    return clip_tensor, _prepare_region(region, top, left, size, flip,
+                                        cfg.get("resize_to", None))
+
+
+def _prepare_region(region, top, left, size, flip, resize_to):
+    """Crop/flip/resize (K,H,W) masks in lockstep with the clip, then renormalize.
+
+    Renormalizing after the geometry keeps the partition property — masks summing
+    to 1 at every pixel — which is what guarantees the attention gate starts as a
+    no-op instead of silently rescaling the input.
+    """
+    region = np.asarray(region, dtype=np.float32)
+    region = region[:, top:top + size, left:left + size]
+    if flip:
+        region = region[:, :, ::-1].copy()
+    if resize_to is not None and region.shape[1] != resize_to:
+        region = np.stack([
+            cv2.resize(plane, (resize_to, resize_to),
+                       interpolation=cv2.INTER_LINEAR)
+            for plane in region
+        ], axis=0)
+    total = region.sum(axis=0, keepdims=True)
+    region = region / np.maximum(total, 1e-6)
+    return torch.from_numpy(region).float()
 
 
 class SeqDataset(Dataset):
-    def __init__(self, samples, arrays, cfg, train, view=None):
+    def __init__(self, samples, arrays, cfg, train, view=None, region_masks=None):
         self.samples = samples
         self.arrays = arrays
         self.cfg = cfg
@@ -320,6 +404,12 @@ class SeqDataset(Dataset):
         self.modality = cfg.get("modality", "rgb")
         self.flow_clip = cfg.get("flow_clip", 3.0)
         self.span = cfg.get("temporal_span", "onset_offset")  # or "onset_apex"
+        # Auxiliary Action Unit targets are emitted as a third batch element and
+        # only when requested, so every existing (x, y) consumer is untouched.
+        self.au_multitask = bool(cfg.get("au_multitask", False))
+        # Region masks arrive as a side dict so no cache is rebuilt and the
+        # protocol fingerprint (key/subject/label) is untouched.
+        self.region_masks = region_masks
 
     def __len__(self):
         return len(self.samples)
@@ -332,8 +422,18 @@ class SeqDataset(Dataset):
     def __getitem__(self, i):
         s = self.samples[i]
         arr = self.arrays[s["key"]]
-        return prepare_seq_array(
-            arr, s, self.cfg, train=self.train, view=self.view), int(s["label"])
+        # Masks live on the sample dict, same pattern as the AU labels, so no
+        # cache is rebuilt and the protocol fingerprint stays untouched.
+        region = s.get("region")
+        if region is None and self.region_masks is not None:
+            region = self.region_masks.get(s["key"])
+        clip = prepare_seq_array(
+            arr, s, self.cfg, train=self.train, view=self.view, region=region)
+        if self.au_multitask:
+            au = torch.from_numpy(
+                np.asarray(s.get("au", []), dtype=np.float32))
+            return clip, int(s["label"]), au
+        return clip, int(s["label"])
 
 
 class TwoStreamDataset(Dataset):

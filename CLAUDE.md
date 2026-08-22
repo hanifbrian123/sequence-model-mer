@@ -7,6 +7,13 @@ Detail lengkap (inventaris file, perintah CLI, hasil per-fold, roadmap E0–E9,
 arsitektur target) ada di `docs/handoff-codex-2026-07-22.md`. Baca file itu saat
 butuh konteks lebih dalam — jangan diasumsikan sudah termuat di sini.
 
+> ⚠️ **Repo ini berisi DUA proyek.** Seluruh dokumen ini hanya berlaku untuk
+> CASME II. proyek kedua, **FER** (ekspresi wajah gambar diam), ada di
+> `fer/` dan punya aturan sendiri di **`fer/CLAUDE.md`** — baca itu dulu
+> sebelum menyentuh apa pun di dalam `fer/`. Aturannya berbeda (protokol,
+> struktur folder, aturan penamaan) dan dijaga oleh `fer/tests/`
+> (`bash fer/scripts/check.sh`).
+
 ## Aturan keras
 
 - **JANGAN membuka, membaca, atau menampilkan isi dataset** — dataset berlisensi.

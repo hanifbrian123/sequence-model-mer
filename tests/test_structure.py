@@ -130,5 +130,35 @@ class TestDatasetStaysPrivate(unittest.TestCase):
         self.assertIn("logs/", content, "Folder logs/ harus di-gitignore")
 
 
+class TestPackageArchitecture(unittest.TestCase):
+    """Enforces clean, modular src-layout architecture."""
+
+    def test_src_has_only_canonical_casme_package(self):
+        src_entries = [d for d in os.listdir(SRC) if not d.startswith((".", "_")) and not d.endswith(".egg-info")]
+        self.assertEqual(
+            src_entries, ["casme"],
+            f"src/ hanya boleh berisi satu paket kanonik 'casme'. Ditemukan: {src_entries}"
+        )
+
+    def test_data_package_is_runtime_clean(self):
+        data_dir = os.path.join(SRC, "casme", "data")
+        files = [f for f in os.listdir(data_dir) if f.endswith(".py") and f != "__init__.py"]
+        expected = {"apex_dataset.py", "dataset.py", "flow_pipeline.py", "preprocess.py"}
+        self.assertEqual(
+            set(files), expected,
+            f"casme.data hanya boleh berisi abstraksi data runtime ({expected}). Ditemukan: {set(files)}"
+        )
+
+    def test_tools_package_exists_and_contains_etl(self):
+        tools_dir = os.path.join(SRC, "casme", "tools")
+        self.assertTrue(os.path.isdir(tools_dir), "Sub-paket casme.tools wajib ada untuk offline ETL tools")
+        tool_files = [f for f in os.listdir(tools_dir) if f.endswith(".py") and f != "__init__.py"]
+        self.assertGreaterEqual(
+            len(tool_files), 10,
+            f"casme.tools harus menampung seluruh script ETL/offline tools. Ditemukan: {len(tool_files)}"
+        )
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

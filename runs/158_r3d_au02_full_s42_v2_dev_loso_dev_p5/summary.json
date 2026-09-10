@@ -1,0 +1,108 @@
+{
+  "name": "iter_76_r3d_au02_full_s42_v2_dev_loso_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-08-04T07:42:59.331238",
+  "elapsed_sec": 4269.901205539703,
+  "config_sha256": "f013c88ea829590f4fb93c4ce01c7b574cccd28546f96659c0c9218ff3b60f59",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "split": "loso_dev",
+  "n_folds": 21,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": false,
+  "num_classes": 5,
+  "UF1": 0.667144038756942,
+  "UAR": 0.6971237973938573,
+  "ACC": 0.65625,
+  "per_class_f1": [
+    0.6666666666666666,
+    0.6153846153846154,
+    0.5238095238095238,
+    0.8717948717948718,
+    0.6580645161290323
+  ],
+  "per_class_recall": [
+    0.7916666666666666,
+    0.6511627906976745,
+    0.6470588235294118,
+    0.8095238095238095,
+    0.5862068965517241
+  ],
+  "confusion_matrix": [
+    [
+      19,
+      0,
+      2,
+      1,
+      2
+    ],
+    [
+      1,
+      28,
+      2,
+      0,
+      12
+    ],
+    [
+      3,
+      0,
+      11,
+      0,
+      3
+    ],
+    [
+      2,
+      1,
+      1,
+      17,
+      0
+    ],
+    [
+      8,
+      19,
+      9,
+      0,
+      51
+    ]
+  ],
+  "n": 192,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_76_r3d_au02_full_s42",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "au_multitask": true,
+    "num_au": 11,
+    "au_labels": "cache/au_labels.csv",
+    "au_loss_weight": 0.2
+  }
+}

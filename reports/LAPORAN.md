@@ -1,6 +1,6 @@
 # Laporan Eksperimen CASME II — Klasifikasi Micro-Expression (5 Kelas)
 
-Dibuat otomatis dari hasil eksperimen pada **10 September 2026, 16:32**.
+Dibuat otomatis dari hasil eksperimen pada **10 September 2026, 17:01**.
 Regenerasi laporan: `python -m casme.reporting.report` atau `bash scripts/rebuild_reports.sh`.
 
 Seluruh data angka terpusat di `results/results.csv` (satu baris per run). Dokumen ini adalah satu-satunya file laporan resmi proyek; narasi disunting di `docs/narasi.md`.

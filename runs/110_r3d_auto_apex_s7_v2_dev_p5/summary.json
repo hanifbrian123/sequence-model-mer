@@ -1,0 +1,109 @@
+{
+  "name": "iter_54_r3d_auto_apex_s7_v2_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-07-23T19:40:29.679837",
+  "elapsed_sec": 993.1823899745941,
+  "config_sha256": "510dd34ebf127c213d2ca3fd54ae2c9d49cbb8c99aeaf8617fafc969075a95c2",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "n_folds": 4,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": true,
+  "num_classes": 5,
+  "UF1": 0.6760649775896705,
+  "UAR": 0.7090641629546767,
+  "ACC": 0.6770833333333334,
+  "per_class_f1": [
+    0.6909090909090909,
+    0.5352112676056338,
+    0.5853658536585366,
+    0.8636363636363636,
+    0.7052023121387283
+  ],
+  "per_class_recall": [
+    0.7916666666666666,
+    0.4418604651162791,
+    0.7058823529411765,
+    0.9047619047619048,
+    0.7011494252873564
+  ],
+  "confusion_matrix": [
+    [
+      19,
+      0,
+      1,
+      1,
+      3
+    ],
+    [
+      3,
+      19,
+      2,
+      0,
+      19
+    ],
+    [
+      3,
+      0,
+      12,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      1,
+      19,
+      1
+    ],
+    [
+      6,
+      9,
+      8,
+      3,
+      61
+    ]
+  ],
+  "n": 192,
+  "config": {
+    "seed": 7,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_54_r3d_auto_apex_s7",
+    "modality": "flow",
+    "temporal_span": "onset_apex",
+    "train_apex_source": "annotation",
+    "eval_apex_source": "flow_energy",
+    "apex_energy_quantile": 0.95,
+    "apex_border_fraction": 0.08,
+    "apex_smooth_radius": 0,
+    "apex_search_max_fraction": 0.55,
+    "flow_clip": 3.0
+  }
+}

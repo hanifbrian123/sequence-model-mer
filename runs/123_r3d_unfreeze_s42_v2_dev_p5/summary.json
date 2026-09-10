@@ -1,0 +1,104 @@
+{
+  "name": "iter_60_r3d_unfreeze_s42_v2_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-08-03T11:02:30.560593",
+  "elapsed_sec": 833.388614654541,
+  "config_sha256": "28968dc66ee3357d6f184559d199157742135e9e11e7fac9e00efd948fa3f08f",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "n_folds": 4,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": true,
+  "num_classes": 5,
+  "UF1": 0.6232809640692288,
+  "UAR": 0.636524072339441,
+  "ACC": 0.625,
+  "per_class_f1": [
+    0.6086956521739131,
+    0.5647058823529412,
+    0.5116279069767442,
+    0.7804878048780488,
+    0.650887573964497
+  ],
+  "per_class_recall": [
+    0.5833333333333334,
+    0.5581395348837209,
+    0.6470588235294118,
+    0.7619047619047619,
+    0.632183908045977
+  ],
+  "confusion_matrix": [
+    [
+      14,
+      0,
+      2,
+      1,
+      7
+    ],
+    [
+      0,
+      24,
+      4,
+      1,
+      14
+    ],
+    [
+      1,
+      0,
+      11,
+      0,
+      5
+    ],
+    [
+      2,
+      1,
+      1,
+      16,
+      1
+    ],
+    [
+      5,
+      17,
+      8,
+      2,
+      55
+    ]
+  ],
+  "n": 192,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_60_r3d_unfreeze_s42",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "freeze_epochs": 3
+  }
+}

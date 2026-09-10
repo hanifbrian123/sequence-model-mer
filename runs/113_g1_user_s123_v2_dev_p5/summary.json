@@ -1,0 +1,90 @@
+{
+  "name": "iter_56_g1_user_s123_v2_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-07-23T21:57:07.546029",
+  "elapsed_sec": 761.5778408050537,
+  "config_sha256": "f272b5206ade52d9a43a463d5c4212b1566732df41379f39a9ef2ee9685ee142",
+  "protocol_samples_sha256": "8ff7ea4dbacc7f7d8bd105f48b6b93314b9c63328dce7f4fc2a28a7a7c1d7bca",
+  "n_folds": 4,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": true,
+  "num_classes": 4,
+  "UF1": 0.5528571160133788,
+  "UAR": 0.5896513238916257,
+  "ACC": 0.5663265306122449,
+  "per_class_f1": [
+    0.6181818181818182,
+    0.559322033898305,
+    0.43636363636363634,
+    0.5975609756097561
+  ],
+  "per_class_recall": [
+    0.7083333333333334,
+    0.515625,
+    0.5714285714285714,
+    0.5632183908045977
+  ],
+  "confusion_matrix": [
+    [
+      17,
+      0,
+      2,
+      5
+    ],
+    [
+      5,
+      33,
+      7,
+      19
+    ],
+    [
+      3,
+      2,
+      12,
+      4
+    ],
+    [
+      6,
+      19,
+      13,
+      49
+    ]
+  ],
+  "n": 196,
+  "config": {
+    "seed": 123,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust_surprise",
+      "fear_serious",
+      "others"
+    ],
+    "name": "iter_56_g1_user_s123",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "manifest_name": "manifest_g1_user.csv"
+  }
+}

@@ -9,11 +9,10 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
-
-import compare_protocol  # noqa: E402
-import lock_protocol_champion  # noqa: E402
-import protocol_v2  # noqa: E402
-import run_protocol_v2  # noqa: E402
+from casme.evaluation import compare_protocol  # noqa: E402
+from casme.evaluation import lock_protocol_champion  # noqa: E402
+from casme.evaluation import protocol_v2  # noqa: E402
+from casme.training import run_protocol_v2  # noqa: E402
 
 
 def grouped_samples():

@@ -9,9 +9,8 @@ import torch
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
-
-import engine  # noqa: E402
-import train_final  # noqa: E402
+from casme.training import engine  # noqa: E402
+from casme.training import train_final  # noqa: E402
 
 
 class TinyClassifier(torch.nn.Module):

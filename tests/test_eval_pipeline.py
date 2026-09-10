@@ -10,10 +10,9 @@ import torch
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
-
-import dataset  # noqa: E402
-import engine  # noqa: E402
-import inference_utils  # noqa: E402
+from casme.data import dataset  # noqa: E402
+from casme.training import engine  # noqa: E402
+from casme.serving import inference_utils  # noqa: E402
 
 
 class TinyModel(torch.nn.Module):

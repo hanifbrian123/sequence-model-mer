@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: casme
+Version: 0.2.0
+Summary: CASME II micro-expression classification package
+Requires-Python: >=3.9

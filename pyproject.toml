@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "casme"
+version = "0.2.0"
+description = "CASME II micro-expression classification package"
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+where = ["src"]

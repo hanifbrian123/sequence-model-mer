@@ -1,0 +1,74 @@
+{
+  "name": "champion_ema_80_20",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-07-22T17:50:18.010244",
+  "num_classes": 5,
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "config_sha256": "1f53185ee03c640cbb6f40e1b389d7d0532c44e7799c5257f425dc7f4226737a",
+  "fusion_recipe": {
+    "members": [
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\fusions\\baseline_iter43_50full_50apex",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_20_ema_v2_dev_p5"
+    ],
+    "weights": [
+      0.8,
+      0.2
+    ]
+  },
+  "UF1": 0.7070602191965694,
+  "UAR": 0.7318476949721349,
+  "ACC": 0.7083333333333334,
+  "per_class_f1": [
+    0.6296296296296297,
+    0.6585365853658537,
+    0.6341463414634146,
+    0.8780487804878049,
+    0.7349397590361446
+  ],
+  "per_class_recall": [
+    0.7083333333333334,
+    0.627906976744186,
+    0.7647058823529411,
+    0.8571428571428571,
+    0.7011494252873564
+  ],
+  "confusion_matrix": [
+    [
+      17,
+      1,
+      1,
+      1,
+      4
+    ],
+    [
+      2,
+      27,
+      1,
+      0,
+      13
+    ],
+    [
+      3,
+      0,
+      13,
+      0,
+      1
+    ],
+    [
+      1,
+      1,
+      1,
+      18,
+      0
+    ],
+    [
+      7,
+      10,
+      8,
+      1,
+      61
+    ]
+  ],
+  "n": 192
+}

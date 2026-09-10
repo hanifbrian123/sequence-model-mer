@@ -143,7 +143,7 @@ def collect(verbose: bool = True) -> pd.DataFrame:
 
     for item in sorted(os.listdir(RUNS_DIR)):
         run_path = os.path.join(RUNS_DIR, item)
-        if not os.path.isdir(run_path):
+        if not os.path.isdir(run_path) or item.startswith(("_", ".")):
             continue
         rec = read_run(run_path)
         if rec:

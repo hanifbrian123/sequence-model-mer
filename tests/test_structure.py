@@ -85,12 +85,27 @@ class TestNamingConventions(unittest.TestCase):
         )
 
     def test_runs_are_numbered(self):
-        runs = [d for d in os.listdir(RUNS_DIR) if os.path.isdir(os.path.join(RUNS_DIR, d))]
+        runs = [d for d in os.listdir(RUNS_DIR) if os.path.isdir(os.path.join(RUNS_DIR, d)) and not d.startswith(("_", "."))]
         numbered_runs = [d for d in runs if re.match(r"^\d{3}_", d)]
         self.assertGreater(
             len(numbered_runs), 50,
             f"Runs di runs/ wajib menggunakan format bernomor NNN_nama. "
             f"Ditemukan {len(numbered_runs)} dari {len(runs)}"
+        )
+
+    def test_runs_and_configs_have_strictly_unique_numbers(self):
+        runs = [d for d in os.listdir(RUNS_DIR) if os.path.isdir(os.path.join(RUNS_DIR, d)) and not d.startswith(("_", "."))]
+        run_prefixes = [d[:3] for d in runs if re.match(r"^\d{3}_", d)]
+        self.assertEqual(
+            len(run_prefixes), len(set(run_prefixes)),
+            f"Setiap run di runs/ wajib memiliki nomor unik tanpa duplikat! Ditemukan duplikat pada run."
+        )
+
+        cfgs = [os.path.basename(f)[:-5] for f in glob.glob(os.path.join(CONFIG_DIR, "*.json"))]
+        cfg_prefixes = [c[:3] for c in cfgs if re.match(r"^\d{3}_", c)]
+        self.assertEqual(
+            len(cfg_prefixes), len(set(cfg_prefixes)),
+            f"Setiap config di configs/ wajib memiliki nomor unik tanpa duplikat! Ditemukan duplikat pada configs."
         )
 
 

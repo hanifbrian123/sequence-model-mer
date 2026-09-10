@@ -23,9 +23,9 @@ Metode ini dirancang untuk pipeline inferensi offline dari video unggahan penggu
 ⚠️ **Peringatan Integritas Angka — Asumsi Jendela Sempurna:**
 Semua metrik evaluasi dihitung di atas jendela temporal ekspresi yang dipotong dari rentang `[onset, offset]` berlabel dataset.
 Pada skenario nyata (video upload pengguna), onset maupun offset tidak diketahui sebelumnya.
-Tantangan estimasi apex tanpa anotasi telah dipecahkan menggunakan **estimator energi optical flow label-free** (`047_r3d_auto_apex_s42_v2_dev_p5`),
-menghasilkan model **Champion Deployable (0,7021 UF1)** yang siap diaplikasikan pada backend produksi.
-Sebagai pembanding, angka 0,7104 UF1 adalah champion *oracle* (menggunakan anotasi apex dataset yang tidak tersedia pada upload nyata),
+Tantangan estimasi apex tanpa anotasi telah dipecahkan menggunakan **estimator energi optical flow label-free** (`091_r3d_auto_apex_s42_v2_dev_p5`),
+menghasilkan model **Champion Deployable (0,7021 UF1)** (`096_fusion_deployable_50full_50auto47`) yang siap diaplikasikan pada backend produksi.
+Sebagai pembanding, angka 0,7104 UF1 adalah champion *oracle* (`068_fusion_baseline_iter43_50full_50apex` menggunakan anotasi apex dataset yang tidak tersedia pada upload nyata),
 sehingga acuan realistis untuk evaluasi aplikasi adalah **0,7021 UF1**.
 <!-- /bagian -->
 

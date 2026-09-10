@@ -51,23 +51,20 @@ log "=== ANTREAN CASME II: ${stems[*]} ==="
 
 for stem in "${stems[@]}"; do
   out="runs/${stem}"
-  p2_out="experiments/protocol_v2/${stem}_v2_dev_p5"
   
-  if [ -z "${FORCE:-}" ] && { [ -f "${out}/summary.json" ] && grep -q '"complete": true' "${out}/summary.json" 2>/dev/null || [ -f "${p2_out}/summary.json" ] && grep -q '"complete": true' "${p2_out}/summary.json" 2>/dev/null; }; then
+  if [ -z "${FORCE:-}" ] && [ -f "${out}/summary.json" ] && grep -q '"complete": true' "${out}/summary.json" 2>/dev/null; then
     log "LEWATI ${stem} (sudah selesai; gunakan FORCE=1 untuk menjalankan ulang)"
     continue
   fi
 
   log "MULAI  ${stem}"
-  $PY src/run_protocol_v2.py --config "configs/${stem}.json" --role dev --tag p5 \
-      > "logs/${stem}_stdout.log" 2>&1 || true
+  $PY -m casme.training.run_protocol_v2 --config "configs/${stem}.json" --role dev --tag p5 \
+      > "logs/runs/${stem}_stdout.log" 2>&1 || true
 
   if [ -f "${out}/summary.json" ] && grep -q '"complete": true' "${out}/summary.json" 2>/dev/null; then
     log "SELESAI ${stem}: $(grep 'FINAL dev' "${out}/run.log" 2>/dev/null | tail -1)"
-  elif [ -f "${p2_out}/summary.json" ] && grep -q '"complete": true' "${p2_out}/summary.json" 2>/dev/null; then
-    log "SELESAI ${stem}: $(grep 'FINAL dev' "${p2_out}/run.log" 2>/dev/null | tail -1)"
   else
-    log "!! GAGAL ${stem} -- lihat logs/${stem}_stdout.log"
+    log "!! GAGAL ${stem} -- lihat logs/runs/${stem}_stdout.log"
   fi
 done
 

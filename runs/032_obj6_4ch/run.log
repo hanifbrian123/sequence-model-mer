@@ -1,0 +1,794 @@
+=== EXPERIMENT obj6_4ch ===
+time: 2026-07-16T07:18:02.881380
+device: cuda (NVIDIA GeForce RTX 3060)
+platform: Windows-10-10.0.26200-SP0 | torch 2.6.0+cu124
+config:
+{
+  "seed": 42,
+  "T": 16,
+  "img_size": 128,
+  "base_size": 144,
+  "input_mode": "rgb",
+  "backbone": "r2plus1d_18",
+  "pretrained": true,
+  "dropout": 0.5,
+  "epochs": 25,
+  "lr": 0.0001,
+  "weight_decay": 0.001,
+  "batch_size": 6,
+  "class_weighting": true,
+  "label_smoothing": 0.1,
+  "hflip": true,
+  "color_jitter": 0.0,
+  "temporal_jitter": true,
+  "amp": true,
+  "eval_last_k": 3,
+  "tta": 5,
+  "cache_dir": "cache/flow144",
+  "index": "cache/index_objective.csv",
+  "class_names": [
+    "obj1",
+    "obj2",
+    "obj3",
+    "obj4",
+    "obj5",
+    "obj7"
+  ],
+  "name": "obj6_4ch",
+  "modality": "flow",
+  "temporal_span": "onset_offset",
+  "flow_clip": 3.0,
+  "manifest_name": "manifest_obj6.csv",
+  "flow_third": "both",
+  "in_channels": 4,
+  "strain_clip": 0.3
+}
+samples: 254 | classes: 6 ['obj1', 'obj2', 'obj3', 'obj4', 'obj5', 'obj7']
+loading arrays into RAM...
+loaded 254 arrays
+
+--- Fold 1/26 | test sub01 (9 test, 245 train) ---
+      ep00 train_loss=2.0197 train_acc=0.212 | val_loss=1.2762 val_acc=0.444
+      ep01 train_loss=1.5710 train_acc=0.514 | val_loss=0.8119 val_acc=0.889
+      ep02 train_loss=1.4469 train_acc=0.563 | val_loss=0.5644 val_acc=0.889
+      ep03 train_loss=1.3912 train_acc=0.596 | val_loss=0.7415 val_acc=0.778
+      ep04 train_loss=1.2786 train_acc=0.665 | val_loss=0.6851 val_acc=0.667
+      ep05 train_loss=1.2203 train_acc=0.669 | val_loss=0.6712 val_acc=0.778
+      ep06 train_loss=1.1187 train_acc=0.763 | val_loss=0.4751 val_acc=0.889
+      ep07 train_loss=1.1239 train_acc=0.759 | val_loss=0.4952 val_acc=0.778
+      ep08 train_loss=0.9975 train_acc=0.800 | val_loss=0.7237 val_acc=0.889
+      ep09 train_loss=1.0031 train_acc=0.808 | val_loss=0.5427 val_acc=0.889
+      ep10 train_loss=0.9600 train_acc=0.837 | val_loss=0.7357 val_acc=0.778
+      ep11 train_loss=0.8739 train_acc=0.902 | val_loss=0.6200 val_acc=0.667
+      ep12 train_loss=0.8100 train_acc=0.902 | val_loss=0.5585 val_acc=0.778
+      ep13 train_loss=0.8917 train_acc=0.886 | val_loss=0.5820 val_acc=0.778
+      ep14 train_loss=0.8703 train_acc=0.902 | val_loss=0.5735 val_acc=0.778
+      ep15 train_loss=0.8542 train_acc=0.910 | val_loss=0.5467 val_acc=0.778
+      ep16 train_loss=0.7691 train_acc=0.959 | val_loss=0.4629 val_acc=0.778
+      ep17 train_loss=0.8048 train_acc=0.931 | val_loss=0.4845 val_acc=0.778
+      ep18 train_loss=0.7878 train_acc=0.947 | val_loss=0.4311 val_acc=0.889
+      ep19 train_loss=0.7675 train_acc=0.967 | val_loss=0.4753 val_acc=0.889
+      ep20 train_loss=0.8059 train_acc=0.939 | val_loss=0.4558 val_acc=0.889
+      ep21 train_loss=0.7607 train_acc=0.943 | val_loss=0.4704 val_acc=0.778
+      ep22 train_loss=0.7545 train_acc=0.980 | val_loss=0.4649 val_acc=0.778
+      ep23 train_loss=0.8076 train_acc=0.947 | val_loss=0.4810 val_acc=0.778
+      ep24 train_loss=0.8211 train_acc=0.971 | val_loss=0.4943 val_acc=0.778
+    fold acc=0.889 time=351.4s | running pooled acc=0.889
+
+--- Fold 2/26 | test sub02 (13 test, 241 train) ---
+      ep00 train_loss=2.0093 train_acc=0.245 | val_loss=1.4623 val_acc=0.308
+      ep01 train_loss=1.6922 train_acc=0.485 | val_loss=1.0592 val_acc=0.615
+      ep02 train_loss=1.4921 train_acc=0.539 | val_loss=1.1179 val_acc=0.462
+      ep03 train_loss=1.3673 train_acc=0.651 | val_loss=0.9376 val_acc=0.615
+      ep04 train_loss=1.2386 train_acc=0.710 | val_loss=1.0871 val_acc=0.462
+      ep05 train_loss=1.1539 train_acc=0.747 | val_loss=1.1629 val_acc=0.615
+      ep06 train_loss=1.1107 train_acc=0.763 | val_loss=1.0724 val_acc=0.538
+      ep07 train_loss=1.1661 train_acc=0.739 | val_loss=1.0685 val_acc=0.538
+      ep08 train_loss=1.0689 train_acc=0.842 | val_loss=1.0837 val_acc=0.538
+      ep09 train_loss=1.0585 train_acc=0.801 | val_loss=1.1066 val_acc=0.538
+      ep10 train_loss=0.8750 train_acc=0.876 | val_loss=1.3382 val_acc=0.462
+      ep11 train_loss=0.9152 train_acc=0.900 | val_loss=0.9994 val_acc=0.615
+      ep12 train_loss=0.8969 train_acc=0.888 | val_loss=1.1212 val_acc=0.692
+      ep13 train_loss=0.9411 train_acc=0.880 | val_loss=1.1577 val_acc=0.692
+      ep14 train_loss=0.8918 train_acc=0.892 | val_loss=1.2660 val_acc=0.692
+      ep15 train_loss=0.8582 train_acc=0.900 | val_loss=1.1095 val_acc=0.538
+      ep16 train_loss=0.8011 train_acc=0.979 | val_loss=1.1183 val_acc=0.692
+      ep17 train_loss=0.8123 train_acc=0.950 | val_loss=1.0818 val_acc=0.769
+      ep18 train_loss=0.8150 train_acc=0.959 | val_loss=1.1270 val_acc=0.538
+      ep19 train_loss=0.8398 train_acc=0.921 | val_loss=1.1813 val_acc=0.538
+      ep20 train_loss=0.7924 train_acc=0.959 | val_loss=1.0011 val_acc=0.692
+      ep21 train_loss=0.7882 train_acc=0.963 | val_loss=0.9370 val_acc=0.615
+      ep22 train_loss=0.7679 train_acc=0.983 | val_loss=1.1065 val_acc=0.615
+      ep23 train_loss=0.8254 train_acc=0.971 | val_loss=0.9617 val_acc=0.692
+      ep24 train_loss=0.8171 train_acc=0.942 | val_loss=1.0776 val_acc=0.615
+    fold acc=0.538 time=349.4s | running pooled acc=0.682
+
+--- Fold 3/26 | test sub03 (7 test, 247 train) ---
+      ep00 train_loss=2.0405 train_acc=0.215 | val_loss=2.2071 val_acc=0.286
+      ep01 train_loss=1.6062 train_acc=0.530 | val_loss=1.9198 val_acc=0.143
+      ep02 train_loss=1.4635 train_acc=0.543 | val_loss=2.6618 val_acc=0.143
+      ep03 train_loss=1.3272 train_acc=0.644 | val_loss=1.9345 val_acc=0.286
+      ep04 train_loss=1.2482 train_acc=0.688 | val_loss=1.7268 val_acc=0.429
+      ep05 train_loss=1.1033 train_acc=0.765 | val_loss=1.4983 val_acc=0.286
+      ep06 train_loss=1.1101 train_acc=0.761 | val_loss=1.7889 val_acc=0.429
+      ep07 train_loss=1.0191 train_acc=0.862 | val_loss=2.2861 val_acc=0.286
+      ep08 train_loss=1.0387 train_acc=0.810 | val_loss=2.2723 val_acc=0.143
+      ep09 train_loss=1.0491 train_acc=0.810 | val_loss=2.4200 val_acc=0.286
+      ep10 train_loss=0.9212 train_acc=0.899 | val_loss=2.9966 val_acc=0.143
+      ep11 train_loss=0.8373 train_acc=0.903 | val_loss=2.5294 val_acc=0.286
+      ep12 train_loss=0.8781 train_acc=0.891 | val_loss=3.2073 val_acc=0.286
+      ep13 train_loss=0.8473 train_acc=0.943 | val_loss=3.0296 val_acc=0.286
+      ep14 train_loss=0.8458 train_acc=0.887 | val_loss=3.1734 val_acc=0.143
+      ep15 train_loss=0.8136 train_acc=0.935 | val_loss=2.9222 val_acc=0.286
+      ep16 train_loss=0.8983 train_acc=0.935 | val_loss=2.7617 val_acc=0.143
+      ep17 train_loss=0.8082 train_acc=0.935 | val_loss=2.5150 val_acc=0.286
+      ep18 train_loss=0.8171 train_acc=0.899 | val_loss=3.1203 val_acc=0.143
+      ep19 train_loss=0.7888 train_acc=0.960 | val_loss=2.6083 val_acc=0.286
+      ep20 train_loss=0.8243 train_acc=0.939 | val_loss=2.4800 val_acc=0.286
+      ep21 train_loss=0.7918 train_acc=0.976 | val_loss=2.8501 val_acc=0.143
+      ep22 train_loss=0.7687 train_acc=0.968 | val_loss=2.6218 val_acc=0.286
+      ep23 train_loss=0.7887 train_acc=0.972 | val_loss=2.7162 val_acc=0.143
+      ep24 train_loss=0.7667 train_acc=0.947 | val_loss=2.6510 val_acc=0.143
+    fold acc=0.143 time=350.0s | running pooled acc=0.552
+
+--- Fold 4/26 | test sub04 (5 test, 249 train) ---
+      ep00 train_loss=1.9458 train_acc=0.229 | val_loss=1.2325 val_acc=0.600
+      ep01 train_loss=1.6137 train_acc=0.454 | val_loss=1.7517 val_acc=0.400
+      ep02 train_loss=1.4460 train_acc=0.534 | val_loss=2.1541 val_acc=0.400
+      ep03 train_loss=1.4053 train_acc=0.598 | val_loss=1.2399 val_acc=0.400
+      ep04 train_loss=1.2846 train_acc=0.675 | val_loss=2.4901 val_acc=0.400
+      ep05 train_loss=1.2349 train_acc=0.699 | val_loss=1.6425 val_acc=0.600
+      ep06 train_loss=1.0538 train_acc=0.791 | val_loss=1.9870 val_acc=0.400
+      ep07 train_loss=0.9984 train_acc=0.823 | val_loss=2.8048 val_acc=0.400
+      ep08 train_loss=0.9882 train_acc=0.843 | val_loss=2.3668 val_acc=0.400
+      ep09 train_loss=0.9015 train_acc=0.888 | val_loss=1.6826 val_acc=0.400
+      ep10 train_loss=0.8815 train_acc=0.916 | val_loss=2.0219 val_acc=0.400
+      ep11 train_loss=0.9140 train_acc=0.855 | val_loss=1.9466 val_acc=0.400
+      ep12 train_loss=0.8670 train_acc=0.940 | val_loss=2.1151 val_acc=0.400
+      ep13 train_loss=0.8017 train_acc=0.936 | val_loss=1.9173 val_acc=0.400
+      ep14 train_loss=0.8371 train_acc=0.928 | val_loss=2.0839 val_acc=0.400
+      ep15 train_loss=0.7859 train_acc=0.964 | val_loss=1.6791 val_acc=0.400
+      ep16 train_loss=0.7810 train_acc=0.976 | val_loss=1.5821 val_acc=0.400
+      ep17 train_loss=0.7914 train_acc=0.948 | val_loss=1.5509 val_acc=0.400
+      ep18 train_loss=0.8074 train_acc=0.944 | val_loss=1.7738 val_acc=0.400
+      ep19 train_loss=0.7377 train_acc=0.976 | val_loss=2.0410 val_acc=0.400
+      ep20 train_loss=0.7980 train_acc=0.948 | val_loss=2.0567 val_acc=0.400
+      ep21 train_loss=0.8131 train_acc=0.956 | val_loss=1.6691 val_acc=0.400
+      ep22 train_loss=0.7667 train_acc=0.968 | val_loss=1.7692 val_acc=0.400
+      ep23 train_loss=0.7830 train_acc=0.964 | val_loss=1.8383 val_acc=0.400
+      ep24 train_loss=0.7981 train_acc=0.948 | val_loss=1.8191 val_acc=0.400
+    fold acc=0.400 time=351.9s | running pooled acc=0.529
+
+--- Fold 5/26 | test sub05 (19 test, 235 train) ---
+      ep00 train_loss=1.9878 train_acc=0.230 | val_loss=1.1717 val_acc=0.684
+      ep01 train_loss=1.6472 train_acc=0.451 | val_loss=1.3984 val_acc=0.421
+      ep02 train_loss=1.4220 train_acc=0.570 | val_loss=1.3490 val_acc=0.579
+      ep03 train_loss=1.3890 train_acc=0.634 | val_loss=1.6071 val_acc=0.474
+      ep04 train_loss=1.2397 train_acc=0.664 | val_loss=1.8024 val_acc=0.211
+      ep05 train_loss=1.2201 train_acc=0.728 | val_loss=1.2287 val_acc=0.632
+      ep06 train_loss=1.1323 train_acc=0.774 | val_loss=2.2546 val_acc=0.632
+      ep07 train_loss=1.0252 train_acc=0.830 | val_loss=1.2863 val_acc=0.579
+      ep08 train_loss=1.0302 train_acc=0.813 | val_loss=2.5047 val_acc=0.421
+      ep09 train_loss=0.9510 train_acc=0.826 | val_loss=1.3403 val_acc=0.474
+      ep10 train_loss=0.9778 train_acc=0.864 | val_loss=1.7300 val_acc=0.526
+      ep11 train_loss=0.9216 train_acc=0.872 | val_loss=1.6441 val_acc=0.421
+      ep12 train_loss=0.8374 train_acc=0.919 | val_loss=1.4370 val_acc=0.526
+      ep13 train_loss=0.8299 train_acc=0.919 | val_loss=1.5459 val_acc=0.579
+      ep14 train_loss=0.7921 train_acc=0.953 | val_loss=1.6026 val_acc=0.579
+      ep15 train_loss=0.8494 train_acc=0.919 | val_loss=1.5246 val_acc=0.526
+      ep16 train_loss=0.8205 train_acc=0.936 | val_loss=1.3930 val_acc=0.526
+      ep17 train_loss=0.8068 train_acc=0.945 | val_loss=1.4361 val_acc=0.632
+      ep18 train_loss=0.8209 train_acc=0.940 | val_loss=1.4285 val_acc=0.526
+      ep19 train_loss=0.8120 train_acc=0.945 | val_loss=1.6068 val_acc=0.579
+      ep20 train_loss=0.7865 train_acc=0.970 | val_loss=1.5222 val_acc=0.579
+      ep21 train_loss=0.8059 train_acc=0.966 | val_loss=1.4751 val_acc=0.579
+      ep22 train_loss=0.8445 train_acc=0.906 | val_loss=1.6090 val_acc=0.526
+      ep23 train_loss=0.7846 train_acc=0.962 | val_loss=1.5777 val_acc=0.526
+      ep24 train_loss=0.7659 train_acc=0.979 | val_loss=1.6201 val_acc=0.526
+    fold acc=0.579 time=347.6s | running pooled acc=0.547
+
+--- Fold 6/26 | test sub06 (5 test, 249 train) ---
+      ep00 train_loss=1.9447 train_acc=0.245 | val_loss=1.6297 val_acc=0.400
+      ep01 train_loss=1.6180 train_acc=0.482 | val_loss=1.5190 val_acc=0.200
+      ep02 train_loss=1.4780 train_acc=0.506 | val_loss=2.0076 val_acc=0.000
+      ep03 train_loss=1.3525 train_acc=0.618 | val_loss=1.7053 val_acc=0.200
+      ep04 train_loss=1.3074 train_acc=0.679 | val_loss=1.3896 val_acc=0.600
+      ep05 train_loss=1.2655 train_acc=0.707 | val_loss=1.7100 val_acc=0.400
+      ep06 train_loss=1.0856 train_acc=0.771 | val_loss=1.6985 val_acc=0.200
+      ep07 train_loss=1.0298 train_acc=0.827 | val_loss=1.7199 val_acc=0.200
+      ep08 train_loss=1.0356 train_acc=0.815 | val_loss=2.3364 val_acc=0.200
+      ep09 train_loss=0.9293 train_acc=0.876 | val_loss=1.1805 val_acc=0.400
+      ep10 train_loss=0.9029 train_acc=0.896 | val_loss=1.8862 val_acc=0.200
+      ep11 train_loss=0.9510 train_acc=0.871 | val_loss=1.6282 val_acc=0.200
+      ep12 train_loss=0.9297 train_acc=0.900 | val_loss=1.2419 val_acc=0.600
+      ep13 train_loss=0.8161 train_acc=0.908 | val_loss=1.2461 val_acc=0.400
+      ep14 train_loss=0.8143 train_acc=0.948 | val_loss=1.2225 val_acc=0.600
+      ep15 train_loss=0.8019 train_acc=0.956 | val_loss=1.2835 val_acc=0.600
+      ep16 train_loss=0.7990 train_acc=0.976 | val_loss=1.4739 val_acc=0.400
+      ep17 train_loss=0.7939 train_acc=0.964 | val_loss=1.2841 val_acc=0.600
+      ep18 train_loss=0.8073 train_acc=0.964 | val_loss=1.3665 val_acc=0.400
+      ep19 train_loss=0.7627 train_acc=0.960 | val_loss=1.1900 val_acc=0.400
+      ep20 train_loss=0.7768 train_acc=0.964 | val_loss=1.2904 val_acc=0.400
+      ep21 train_loss=0.8317 train_acc=0.948 | val_loss=1.2426 val_acc=0.600
+      ep22 train_loss=0.7596 train_acc=0.976 | val_loss=1.3289 val_acc=0.400
+      ep23 train_loss=0.7765 train_acc=0.968 | val_loss=1.3171 val_acc=0.400
+      ep24 train_loss=0.7837 train_acc=0.964 | val_loss=1.1811 val_acc=0.600
+    fold acc=0.400 time=351.8s | running pooled acc=0.534
+
+--- Fold 7/26 | test sub07 (9 test, 245 train) ---
+      ep00 train_loss=1.9870 train_acc=0.245 | val_loss=2.4760 val_acc=0.222
+      ep01 train_loss=1.5646 train_acc=0.518 | val_loss=1.6190 val_acc=0.222
+      ep02 train_loss=1.4630 train_acc=0.555 | val_loss=1.7909 val_acc=0.333
+      ep03 train_loss=1.3490 train_acc=0.616 | val_loss=2.1557 val_acc=0.111
+      ep04 train_loss=1.2950 train_acc=0.653 | val_loss=1.8385 val_acc=0.222
+      ep05 train_loss=1.1620 train_acc=0.710 | val_loss=2.2049 val_acc=0.111
+      ep06 train_loss=1.1277 train_acc=0.735 | val_loss=1.6252 val_acc=0.444
+      ep07 train_loss=1.1298 train_acc=0.776 | val_loss=3.3583 val_acc=0.222
+      ep08 train_loss=1.0563 train_acc=0.829 | val_loss=1.8397 val_acc=0.333
+      ep09 train_loss=0.9923 train_acc=0.829 | val_loss=2.0096 val_acc=0.333
+      ep10 train_loss=0.9833 train_acc=0.865 | val_loss=1.8134 val_acc=0.333
+      ep11 train_loss=0.8475 train_acc=0.898 | val_loss=2.5538 val_acc=0.222
+      ep12 train_loss=0.8308 train_acc=0.910 | val_loss=2.4904 val_acc=0.333
+      ep13 train_loss=0.9283 train_acc=0.886 | val_loss=2.5321 val_acc=0.000
+      ep14 train_loss=0.8407 train_acc=0.927 | val_loss=2.7395 val_acc=0.111
+      ep15 train_loss=0.8564 train_acc=0.910 | val_loss=2.5608 val_acc=0.000
+      ep16 train_loss=0.7815 train_acc=0.955 | val_loss=2.6703 val_acc=0.222
+      ep17 train_loss=0.7990 train_acc=0.967 | val_loss=2.5689 val_acc=0.000
+      ep18 train_loss=0.7546 train_acc=0.955 | val_loss=2.7332 val_acc=0.111
+      ep19 train_loss=0.7429 train_acc=0.976 | val_loss=3.1713 val_acc=0.111
+      ep20 train_loss=0.8304 train_acc=0.927 | val_loss=2.9815 val_acc=0.222
+      ep21 train_loss=0.7780 train_acc=0.943 | val_loss=2.7597 val_acc=0.222
+      ep22 train_loss=0.7387 train_acc=0.971 | val_loss=2.8403 val_acc=0.111
+      ep23 train_loss=0.8211 train_acc=0.935 | val_loss=2.7728 val_acc=0.111
+      ep24 train_loss=0.7815 train_acc=0.955 | val_loss=2.5047 val_acc=0.222
+    fold acc=0.444 time=353.2s | running pooled acc=0.522
+
+--- Fold 8/26 | test sub08 (3 test, 251 train) ---
+      ep00 train_loss=1.9658 train_acc=0.235 | val_loss=1.1675 val_acc=0.667
+      ep01 train_loss=1.6535 train_acc=0.486 | val_loss=0.9724 val_acc=0.667
+      ep02 train_loss=1.4526 train_acc=0.574 | val_loss=1.2269 val_acc=0.667
+      ep03 train_loss=1.3630 train_acc=0.594 | val_loss=0.7159 val_acc=0.667
+      ep04 train_loss=1.3066 train_acc=0.689 | val_loss=1.3390 val_acc=0.667
+      ep05 train_loss=1.2420 train_acc=0.709 | val_loss=0.9109 val_acc=0.667
+      ep06 train_loss=1.1448 train_acc=0.725 | val_loss=0.9853 val_acc=0.667
+      ep07 train_loss=1.1569 train_acc=0.721 | val_loss=0.5248 val_acc=1.000
+      ep08 train_loss=0.9792 train_acc=0.829 | val_loss=0.7025 val_acc=1.000
+      ep09 train_loss=0.9496 train_acc=0.869 | val_loss=1.1816 val_acc=0.667
+      ep10 train_loss=0.8639 train_acc=0.904 | val_loss=0.7550 val_acc=1.000
+      ep11 train_loss=0.9643 train_acc=0.865 | val_loss=0.5364 val_acc=1.000
+      ep12 train_loss=0.8840 train_acc=0.845 | val_loss=0.7781 val_acc=0.667
+      ep13 train_loss=0.8287 train_acc=0.928 | val_loss=0.6235 val_acc=1.000
+      ep14 train_loss=0.7984 train_acc=0.940 | val_loss=0.8777 val_acc=0.667
+      ep15 train_loss=0.7929 train_acc=0.960 | val_loss=0.7085 val_acc=0.667
+      ep16 train_loss=0.8020 train_acc=0.960 | val_loss=0.6544 val_acc=1.000
+      ep17 train_loss=0.7799 train_acc=0.952 | val_loss=0.6537 val_acc=1.000
+      ep18 train_loss=0.8270 train_acc=0.940 | val_loss=0.5644 val_acc=1.000
+      ep19 train_loss=0.7647 train_acc=0.968 | val_loss=0.7240 val_acc=0.667
+      ep20 train_loss=0.7523 train_acc=0.956 | val_loss=0.6433 val_acc=0.667
+      ep21 train_loss=0.7756 train_acc=0.964 | val_loss=0.7233 val_acc=0.667
+      ep22 train_loss=0.7382 train_acc=0.980 | val_loss=0.7040 val_acc=0.667
+      ep23 train_loss=0.7623 train_acc=0.968 | val_loss=0.6898 val_acc=0.667
+      ep24 train_loss=0.7876 train_acc=0.956 | val_loss=0.7620 val_acc=0.667
+    fold acc=0.667 time=366.2s | running pooled acc=0.529
+
+--- Fold 9/26 | test sub09 (13 test, 241 train) ---
+      ep00 train_loss=2.0310 train_acc=0.220 | val_loss=1.6560 val_acc=0.385
+      ep01 train_loss=1.6629 train_acc=0.477 | val_loss=1.3101 val_acc=0.538
+      ep02 train_loss=1.4754 train_acc=0.560 | val_loss=1.0198 val_acc=0.615
+      ep03 train_loss=1.4029 train_acc=0.622 | val_loss=1.0312 val_acc=0.615
+      ep04 train_loss=1.2581 train_acc=0.718 | val_loss=0.9009 val_acc=0.692
+      ep05 train_loss=1.3158 train_acc=0.689 | val_loss=1.0309 val_acc=0.615
+      ep06 train_loss=1.1903 train_acc=0.793 | val_loss=0.8467 val_acc=0.769
+      ep07 train_loss=1.1397 train_acc=0.751 | val_loss=0.9652 val_acc=0.615
+      ep08 train_loss=1.0941 train_acc=0.817 | val_loss=1.0738 val_acc=0.615
+      ep09 train_loss=1.0713 train_acc=0.793 | val_loss=0.9674 val_acc=0.769
+      ep10 train_loss=0.9142 train_acc=0.896 | val_loss=0.8654 val_acc=0.846
+      ep11 train_loss=0.9302 train_acc=0.896 | val_loss=0.9853 val_acc=0.769
+      ep12 train_loss=0.8991 train_acc=0.880 | val_loss=0.9475 val_acc=0.769
+      ep13 train_loss=0.9557 train_acc=0.900 | val_loss=0.9893 val_acc=0.769
+      ep14 train_loss=0.8451 train_acc=0.917 | val_loss=1.0166 val_acc=0.692
+      ep15 train_loss=0.8767 train_acc=0.921 | val_loss=0.8097 val_acc=0.692
+      ep16 train_loss=0.7994 train_acc=0.954 | val_loss=0.9791 val_acc=0.692
+      ep17 train_loss=0.8138 train_acc=0.934 | val_loss=0.9069 val_acc=0.769
+      ep18 train_loss=0.8574 train_acc=0.938 | val_loss=0.7997 val_acc=0.846
+      ep19 train_loss=0.8621 train_acc=0.938 | val_loss=1.0165 val_acc=0.692
+      ep20 train_loss=0.7996 train_acc=0.950 | val_loss=0.8574 val_acc=0.846
+      ep21 train_loss=0.8139 train_acc=0.967 | val_loss=0.8215 val_acc=0.846
+      ep22 train_loss=0.8259 train_acc=0.946 | val_loss=0.8529 val_acc=0.846
+      ep23 train_loss=0.8196 train_acc=0.959 | val_loss=0.8688 val_acc=0.846
+      ep24 train_loss=0.8314 train_acc=0.934 | val_loss=0.9218 val_acc=0.846
+    fold acc=0.769 time=375.9s | running pooled acc=0.566
+
+--- Fold 10/26 | test sub10 (14 test, 240 train) ---
+      ep00 train_loss=2.0340 train_acc=0.204 | val_loss=0.5799 val_acc=0.929
+      ep01 train_loss=1.5752 train_acc=0.496 | val_loss=0.6711 val_acc=0.857
+      ep02 train_loss=1.4361 train_acc=0.554 | val_loss=0.4958 val_acc=0.857
+      ep03 train_loss=1.3465 train_acc=0.600 | val_loss=0.7286 val_acc=0.857
+      ep04 train_loss=1.2746 train_acc=0.617 | val_loss=0.7060 val_acc=0.857
+      ep05 train_loss=1.2211 train_acc=0.708 | val_loss=0.5266 val_acc=0.786
+      ep06 train_loss=1.1026 train_acc=0.746 | val_loss=0.3383 val_acc=0.929
+      ep07 train_loss=0.9505 train_acc=0.821 | val_loss=0.8145 val_acc=0.857
+      ep08 train_loss=0.9450 train_acc=0.842 | val_loss=0.3228 val_acc=0.929
+      ep09 train_loss=0.8661 train_acc=0.896 | val_loss=0.4789 val_acc=0.929
+      ep10 train_loss=0.8184 train_acc=0.900 | val_loss=0.4315 val_acc=0.929
+      ep11 train_loss=0.7964 train_acc=0.938 | val_loss=0.5052 val_acc=0.857
+      ep12 train_loss=0.8443 train_acc=0.887 | val_loss=0.2835 val_acc=0.929
+      ep13 train_loss=0.8444 train_acc=0.912 | val_loss=0.2732 val_acc=0.929
+      ep14 train_loss=0.8092 train_acc=0.917 | val_loss=0.2259 val_acc=0.929
+      ep15 train_loss=0.7970 train_acc=0.954 | val_loss=0.3486 val_acc=0.929
+      ep16 train_loss=0.7844 train_acc=0.938 | val_loss=0.3124 val_acc=0.929
+      ep17 train_loss=0.7383 train_acc=0.967 | val_loss=0.2503 val_acc=0.929
+      ep18 train_loss=0.7861 train_acc=0.929 | val_loss=0.2854 val_acc=0.929
+      ep19 train_loss=0.7304 train_acc=0.971 | val_loss=0.2668 val_acc=0.929
+      ep20 train_loss=0.7793 train_acc=0.954 | val_loss=0.2553 val_acc=0.929
+      ep21 train_loss=0.7132 train_acc=0.979 | val_loss=0.2597 val_acc=0.929
+      ep22 train_loss=0.7459 train_acc=0.983 | val_loss=0.3146 val_acc=0.929
+      ep23 train_loss=0.7202 train_acc=0.967 | val_loss=0.2132 val_acc=0.929
+      ep24 train_loss=0.7538 train_acc=0.971 | val_loss=0.2168 val_acc=0.929
+    fold acc=1.000 time=359.4s | running pooled acc=0.629
+
+--- Fold 11/26 | test sub11 (10 test, 244 train) ---
+      ep00 train_loss=2.0671 train_acc=0.209 | val_loss=0.9126 val_acc=0.800
+      ep01 train_loss=1.5365 train_acc=0.529 | val_loss=1.0167 val_acc=0.700
+      ep02 train_loss=1.5067 train_acc=0.533 | val_loss=0.6342 val_acc=1.000
+      ep03 train_loss=1.3490 train_acc=0.639 | val_loss=0.8179 val_acc=0.600
+      ep04 train_loss=1.2411 train_acc=0.672 | val_loss=0.6595 val_acc=0.800
+      ep05 train_loss=1.1180 train_acc=0.750 | val_loss=0.7348 val_acc=0.700
+      ep06 train_loss=1.0937 train_acc=0.746 | val_loss=0.6810 val_acc=0.700
+      ep07 train_loss=1.0009 train_acc=0.803 | val_loss=0.7833 val_acc=0.800
+      ep08 train_loss=1.0045 train_acc=0.844 | val_loss=0.7408 val_acc=0.900
+      ep09 train_loss=0.9681 train_acc=0.832 | val_loss=0.6053 val_acc=0.900
+      ep10 train_loss=0.9049 train_acc=0.918 | val_loss=0.7852 val_acc=0.900
+      ep11 train_loss=0.8530 train_acc=0.902 | val_loss=0.7870 val_acc=0.800
+      ep12 train_loss=0.8610 train_acc=0.902 | val_loss=0.7943 val_acc=0.800
+      ep13 train_loss=0.8760 train_acc=0.902 | val_loss=0.6575 val_acc=0.800
+      ep14 train_loss=0.8381 train_acc=0.934 | val_loss=0.5556 val_acc=0.800
+      ep15 train_loss=0.7840 train_acc=0.951 | val_loss=0.5299 val_acc=0.900
+      ep16 train_loss=0.7619 train_acc=0.975 | val_loss=0.4732 val_acc=0.900
+      ep17 train_loss=0.7937 train_acc=0.926 | val_loss=0.5566 val_acc=0.900
+      ep18 train_loss=0.8477 train_acc=0.939 | val_loss=0.7038 val_acc=0.800
+      ep19 train_loss=0.7801 train_acc=0.951 | val_loss=0.6898 val_acc=0.800
+      ep20 train_loss=0.7677 train_acc=0.971 | val_loss=0.6420 val_acc=0.800
+      ep21 train_loss=0.7559 train_acc=0.984 | val_loss=0.6656 val_acc=0.800
+      ep22 train_loss=0.7795 train_acc=0.951 | val_loss=0.6033 val_acc=0.800
+      ep23 train_loss=0.7647 train_acc=0.955 | val_loss=0.6480 val_acc=0.800
+      ep24 train_loss=0.7428 train_acc=0.971 | val_loss=0.6028 val_acc=0.800
+    fold acc=0.800 time=383.8s | running pooled acc=0.645
+
+--- Fold 12/26 | test sub12 (12 test, 242 train) ---
+      ep00 train_loss=2.1598 train_acc=0.186 | val_loss=1.2583 val_acc=0.583
+      ep01 train_loss=1.6709 train_acc=0.525 | val_loss=0.9110 val_acc=0.833
+      ep02 train_loss=1.6100 train_acc=0.492 | val_loss=1.5407 val_acc=0.500
+      ep03 train_loss=1.4322 train_acc=0.607 | val_loss=0.8019 val_acc=0.750
+      ep04 train_loss=1.3076 train_acc=0.674 | val_loss=1.3751 val_acc=0.250
+      ep05 train_loss=1.2062 train_acc=0.707 | val_loss=1.5762 val_acc=0.417
+      ep06 train_loss=1.1899 train_acc=0.723 | val_loss=1.4983 val_acc=0.417
+      ep07 train_loss=1.1138 train_acc=0.798 | val_loss=0.8917 val_acc=0.667
+      ep08 train_loss=1.1476 train_acc=0.793 | val_loss=1.7557 val_acc=0.417
+      ep09 train_loss=1.0336 train_acc=0.826 | val_loss=0.9945 val_acc=0.667
+      ep10 train_loss=0.9843 train_acc=0.851 | val_loss=1.3800 val_acc=0.583
+      ep11 train_loss=0.9455 train_acc=0.860 | val_loss=2.2022 val_acc=0.417
+      ep12 train_loss=0.9577 train_acc=0.876 | val_loss=1.7972 val_acc=0.417
+      ep13 train_loss=0.9043 train_acc=0.901 | val_loss=1.5040 val_acc=0.583
+      ep14 train_loss=0.8690 train_acc=0.913 | val_loss=1.6765 val_acc=0.583
+      ep15 train_loss=0.8671 train_acc=0.934 | val_loss=2.0329 val_acc=0.417
+      ep16 train_loss=0.8332 train_acc=0.979 | val_loss=1.7141 val_acc=0.583
+      ep17 train_loss=0.8993 train_acc=0.942 | val_loss=1.6768 val_acc=0.583
+      ep18 train_loss=0.8199 train_acc=0.963 | val_loss=1.4838 val_acc=0.583
+      ep19 train_loss=0.8722 train_acc=0.921 | val_loss=1.4318 val_acc=0.667
+      ep20 train_loss=0.8289 train_acc=0.955 | val_loss=1.5625 val_acc=0.583
+      ep21 train_loss=0.8619 train_acc=0.946 | val_loss=1.7046 val_acc=0.583
+      ep22 train_loss=0.8035 train_acc=0.942 | val_loss=1.5863 val_acc=0.583
+      ep23 train_loss=0.8079 train_acc=0.967 | val_loss=1.7074 val_acc=0.583
+      ep24 train_loss=0.8277 train_acc=0.963 | val_loss=1.7580 val_acc=0.583
+    fold acc=0.667 time=371.4s | running pooled acc=0.647
+
+--- Fold 13/26 | test sub13 (8 test, 246 train) ---
+      ep00 train_loss=1.9790 train_acc=0.236 | val_loss=1.3196 val_acc=0.500
+      ep01 train_loss=1.5724 train_acc=0.553 | val_loss=1.2009 val_acc=0.500
+      ep02 train_loss=1.4251 train_acc=0.593 | val_loss=0.9066 val_acc=0.625
+      ep03 train_loss=1.3862 train_acc=0.618 | val_loss=0.9868 val_acc=0.750
+      ep04 train_loss=1.2200 train_acc=0.720 | val_loss=0.9333 val_acc=0.625
+      ep05 train_loss=1.2021 train_acc=0.687 | val_loss=0.9086 val_acc=0.625
+      ep06 train_loss=1.0420 train_acc=0.744 | val_loss=0.9301 val_acc=0.625
+      ep07 train_loss=1.0556 train_acc=0.805 | val_loss=0.7749 val_acc=0.625
+      ep08 train_loss=1.0220 train_acc=0.866 | val_loss=1.2758 val_acc=0.500
+      ep09 train_loss=0.9355 train_acc=0.862 | val_loss=1.3309 val_acc=0.375
+      ep10 train_loss=0.9206 train_acc=0.837 | val_loss=1.3721 val_acc=0.500
+      ep11 train_loss=0.8795 train_acc=0.874 | val_loss=1.2558 val_acc=0.500
+      ep12 train_loss=0.8131 train_acc=0.939 | val_loss=1.1113 val_acc=0.500
+      ep13 train_loss=0.8697 train_acc=0.915 | val_loss=0.9877 val_acc=0.500
+      ep14 train_loss=0.8671 train_acc=0.915 | val_loss=1.2350 val_acc=0.500
+      ep15 train_loss=0.8069 train_acc=0.947 | val_loss=1.2067 val_acc=0.625
+      ep16 train_loss=0.8477 train_acc=0.939 | val_loss=1.0715 val_acc=0.625
+      ep17 train_loss=0.7685 train_acc=0.951 | val_loss=0.9567 val_acc=0.625
+      ep18 train_loss=0.7943 train_acc=0.947 | val_loss=1.0319 val_acc=0.625
+      ep19 train_loss=0.7846 train_acc=0.963 | val_loss=1.0613 val_acc=0.625
+      ep20 train_loss=0.7533 train_acc=0.967 | val_loss=1.0711 val_acc=0.625
+      ep21 train_loss=0.7473 train_acc=0.959 | val_loss=0.9239 val_acc=0.625
+      ep22 train_loss=0.7327 train_acc=0.980 | val_loss=0.9428 val_acc=0.625
+      ep23 train_loss=0.7484 train_acc=0.980 | val_loss=0.9384 val_acc=0.625
+      ep24 train_loss=0.7541 train_acc=0.963 | val_loss=0.9503 val_acc=0.625
+    fold acc=0.750 time=364.7s | running pooled acc=0.654
+
+--- Fold 14/26 | test sub14 (4 test, 250 train) ---
+      ep00 train_loss=2.0219 train_acc=0.208 | val_loss=1.2552 val_acc=0.750
+      ep01 train_loss=1.5918 train_acc=0.524 | val_loss=1.5493 val_acc=0.250
+      ep02 train_loss=1.4491 train_acc=0.584 | val_loss=1.4301 val_acc=0.250
+      ep03 train_loss=1.2792 train_acc=0.680 | val_loss=1.6969 val_acc=0.250
+      ep04 train_loss=1.2402 train_acc=0.692 | val_loss=0.7606 val_acc=0.750
+      ep05 train_loss=1.1256 train_acc=0.744 | val_loss=1.5192 val_acc=0.500
+      ep06 train_loss=1.1909 train_acc=0.724 | val_loss=0.8580 val_acc=0.750
+      ep07 train_loss=1.0225 train_acc=0.808 | val_loss=1.3907 val_acc=0.500
+      ep08 train_loss=1.0446 train_acc=0.824 | val_loss=1.3887 val_acc=0.500
+      ep09 train_loss=1.0379 train_acc=0.856 | val_loss=1.5030 val_acc=0.500
+      ep10 train_loss=0.9862 train_acc=0.848 | val_loss=1.5401 val_acc=0.500
+      ep11 train_loss=0.9307 train_acc=0.900 | val_loss=1.6200 val_acc=0.500
+      ep12 train_loss=0.8888 train_acc=0.880 | val_loss=0.8306 val_acc=0.750
+      ep13 train_loss=0.8648 train_acc=0.908 | val_loss=1.2635 val_acc=0.500
+      ep14 train_loss=0.8363 train_acc=0.940 | val_loss=1.4976 val_acc=0.750
+      ep15 train_loss=0.8667 train_acc=0.892 | val_loss=1.1648 val_acc=0.500
+      ep16 train_loss=0.7604 train_acc=0.960 | val_loss=1.2872 val_acc=0.500
+      ep17 train_loss=0.8000 train_acc=0.972 | val_loss=1.5742 val_acc=0.500
+      ep18 train_loss=0.7619 train_acc=0.972 | val_loss=1.6021 val_acc=0.500
+      ep19 train_loss=0.8004 train_acc=0.952 | val_loss=1.4685 val_acc=0.500
+      ep20 train_loss=0.7593 train_acc=0.960 | val_loss=1.6612 val_acc=0.500
+      ep21 train_loss=0.7937 train_acc=0.960 | val_loss=1.5358 val_acc=0.500
+      ep22 train_loss=0.7960 train_acc=0.960 | val_loss=1.5535 val_acc=0.500
+      ep23 train_loss=0.7784 train_acc=0.948 | val_loss=1.7054 val_acc=0.500
+      ep24 train_loss=0.8332 train_acc=0.928 | val_loss=1.3038 val_acc=0.500
+    fold acc=0.500 time=370.1s | running pooled acc=0.649
+
+--- Fold 15/26 | test sub15 (3 test, 251 train) ---
+      ep00 train_loss=2.0726 train_acc=0.239 | val_loss=1.2643 val_acc=0.667
+      ep01 train_loss=1.6363 train_acc=0.490 | val_loss=1.0340 val_acc=0.667
+      ep02 train_loss=1.4078 train_acc=0.610 | val_loss=1.8047 val_acc=0.333
+      ep03 train_loss=1.4062 train_acc=0.633 | val_loss=1.5501 val_acc=0.333
+      ep04 train_loss=1.2264 train_acc=0.725 | val_loss=1.6825 val_acc=0.333
+      ep05 train_loss=1.1661 train_acc=0.733 | val_loss=1.7018 val_acc=0.333
+      ep06 train_loss=1.1105 train_acc=0.741 | val_loss=1.6867 val_acc=0.333
+      ep07 train_loss=1.0012 train_acc=0.813 | val_loss=1.3257 val_acc=0.667
+      ep08 train_loss=1.0407 train_acc=0.797 | val_loss=0.7789 val_acc=0.667
+      ep09 train_loss=0.9564 train_acc=0.825 | val_loss=0.9242 val_acc=0.667
+      ep10 train_loss=0.9210 train_acc=0.880 | val_loss=1.8114 val_acc=0.000
+      ep11 train_loss=0.9384 train_acc=0.876 | val_loss=1.7332 val_acc=0.000
+      ep12 train_loss=0.8868 train_acc=0.904 | val_loss=1.4836 val_acc=0.333
+      ep13 train_loss=0.8074 train_acc=0.952 | val_loss=1.3982 val_acc=0.333
+      ep14 train_loss=0.7647 train_acc=0.972 | val_loss=1.4473 val_acc=0.333
+      ep15 train_loss=0.8280 train_acc=0.948 | val_loss=0.9544 val_acc=0.333
+      ep16 train_loss=0.8100 train_acc=0.956 | val_loss=1.4188 val_acc=0.667
+      ep17 train_loss=0.7835 train_acc=0.932 | val_loss=1.2855 val_acc=0.333
+      ep18 train_loss=0.8449 train_acc=0.936 | val_loss=1.2929 val_acc=0.333
+      ep19 train_loss=0.7644 train_acc=0.964 | val_loss=1.4386 val_acc=0.333
+      ep20 train_loss=0.7632 train_acc=0.976 | val_loss=1.3861 val_acc=0.000
+      ep21 train_loss=0.7603 train_acc=0.976 | val_loss=1.5354 val_acc=0.000
+      ep22 train_loss=0.7498 train_acc=0.988 | val_loss=1.5993 val_acc=0.000
+      ep23 train_loss=0.7789 train_acc=0.972 | val_loss=1.4414 val_acc=0.000
+      ep24 train_loss=0.8339 train_acc=0.956 | val_loss=1.4355 val_acc=0.000
+    fold acc=0.333 time=392.6s | running pooled acc=0.642
+
+--- Fold 16/26 | test sub16 (4 test, 250 train) ---
+      ep00 train_loss=2.0047 train_acc=0.240 | val_loss=2.2703 val_acc=0.250
+      ep01 train_loss=1.5886 train_acc=0.500 | val_loss=1.8294 val_acc=0.500
+      ep02 train_loss=1.4449 train_acc=0.600 | val_loss=2.1588 val_acc=0.250
+      ep03 train_loss=1.2873 train_acc=0.704 | val_loss=1.7059 val_acc=0.250
+      ep04 train_loss=1.2361 train_acc=0.696 | val_loss=1.8093 val_acc=0.250
+      ep05 train_loss=1.1954 train_acc=0.708 | val_loss=2.0260 val_acc=0.500
+      ep06 train_loss=1.1954 train_acc=0.748 | val_loss=1.7059 val_acc=0.500
+      ep07 train_loss=1.0040 train_acc=0.796 | val_loss=1.7345 val_acc=0.500
+      ep08 train_loss=1.0357 train_acc=0.792 | val_loss=1.9146 val_acc=0.250
+      ep09 train_loss=1.1178 train_acc=0.812 | val_loss=1.4749 val_acc=0.500
+      ep10 train_loss=0.9944 train_acc=0.816 | val_loss=1.8700 val_acc=0.500
+      ep11 train_loss=0.9101 train_acc=0.912 | val_loss=2.1022 val_acc=0.500
+      ep12 train_loss=0.8785 train_acc=0.864 | val_loss=1.4401 val_acc=0.500
+      ep13 train_loss=0.8361 train_acc=0.924 | val_loss=1.5970 val_acc=0.500
+      ep14 train_loss=0.8591 train_acc=0.924 | val_loss=1.3132 val_acc=0.500
+      ep15 train_loss=0.8801 train_acc=0.912 | val_loss=1.5454 val_acc=0.500
+      ep16 train_loss=0.7634 train_acc=0.980 | val_loss=1.7779 val_acc=0.500
+      ep17 train_loss=0.7945 train_acc=0.964 | val_loss=1.2638 val_acc=0.500
+      ep18 train_loss=0.7672 train_acc=0.948 | val_loss=1.4654 val_acc=0.500
+      ep19 train_loss=0.7820 train_acc=0.968 | val_loss=1.3817 val_acc=0.500
+      ep20 train_loss=0.7728 train_acc=0.964 | val_loss=1.5827 val_acc=0.500
+      ep21 train_loss=0.7807 train_acc=0.960 | val_loss=1.8270 val_acc=0.500
+      ep22 train_loss=0.7771 train_acc=0.952 | val_loss=1.3713 val_acc=0.500
+      ep23 train_loss=0.7857 train_acc=0.964 | val_loss=1.5211 val_acc=0.500
+      ep24 train_loss=0.8649 train_acc=0.888 | val_loss=1.7777 val_acc=0.500
+    fold acc=0.500 time=368.0s | running pooled acc=0.638
+
+--- Fold 17/26 | test sub17 (36 test, 218 train) ---
+      ep00 train_loss=2.0228 train_acc=0.183 | val_loss=1.3690 val_acc=0.611
+      ep01 train_loss=1.6025 train_acc=0.472 | val_loss=1.0863 val_acc=0.556
+      ep02 train_loss=1.3960 train_acc=0.583 | val_loss=1.0673 val_acc=0.694
+      ep03 train_loss=1.2830 train_acc=0.651 | val_loss=1.0891 val_acc=0.500
+      ep04 train_loss=1.2824 train_acc=0.619 | val_loss=1.0159 val_acc=0.667
+      ep05 train_loss=1.2036 train_acc=0.734 | val_loss=1.0119 val_acc=0.611
+      ep06 train_loss=1.0531 train_acc=0.771 | val_loss=1.0610 val_acc=0.667
+      ep07 train_loss=1.0134 train_acc=0.803 | val_loss=1.0550 val_acc=0.639
+      ep08 train_loss=0.9990 train_acc=0.839 | val_loss=1.1090 val_acc=0.667
+      ep09 train_loss=0.9472 train_acc=0.853 | val_loss=1.0330 val_acc=0.639
+      ep10 train_loss=0.9656 train_acc=0.849 | val_loss=1.0485 val_acc=0.639
+      ep11 train_loss=0.9132 train_acc=0.872 | val_loss=1.0616 val_acc=0.722
+      ep12 train_loss=0.8674 train_acc=0.890 | val_loss=0.9372 val_acc=0.694
+      ep13 train_loss=0.8578 train_acc=0.890 | val_loss=1.0995 val_acc=0.667
+      ep14 train_loss=0.8519 train_acc=0.927 | val_loss=0.9163 val_acc=0.694
+      ep15 train_loss=0.8153 train_acc=0.922 | val_loss=1.1025 val_acc=0.611
+      ep16 train_loss=0.7752 train_acc=0.936 | val_loss=1.0516 val_acc=0.722
+      ep17 train_loss=0.8070 train_acc=0.931 | val_loss=1.0494 val_acc=0.694
+      ep18 train_loss=0.7815 train_acc=0.945 | val_loss=1.0096 val_acc=0.722
+      ep19 train_loss=0.7974 train_acc=0.940 | val_loss=1.0469 val_acc=0.667
+      ep20 train_loss=0.7479 train_acc=0.963 | val_loss=1.0034 val_acc=0.694
+      ep21 train_loss=0.7581 train_acc=0.963 | val_loss=1.0412 val_acc=0.667
+      ep22 train_loss=0.7696 train_acc=0.963 | val_loss=1.0594 val_acc=0.667
+      ep23 train_loss=0.7709 train_acc=0.968 | val_loss=1.1295 val_acc=0.639
+      ep24 train_loss=0.7133 train_acc=0.982 | val_loss=1.0302 val_acc=0.667
+    fold acc=0.694 time=358.7s | running pooled acc=0.649
+
+--- Fold 18/26 | test sub18 (3 test, 251 train) ---
+      ep00 train_loss=2.0662 train_acc=0.243 | val_loss=0.8482 val_acc=0.667
+      ep01 train_loss=1.5647 train_acc=0.478 | val_loss=0.5974 val_acc=1.000
+      ep02 train_loss=1.4277 train_acc=0.550 | val_loss=1.0007 val_acc=0.667
+      ep03 train_loss=1.3574 train_acc=0.606 | val_loss=0.6343 val_acc=1.000
+      ep04 train_loss=1.2696 train_acc=0.701 | val_loss=0.3935 val_acc=1.000
+      ep05 train_loss=1.1726 train_acc=0.745 | val_loss=0.4314 val_acc=1.000
+      ep06 train_loss=1.1296 train_acc=0.765 | val_loss=0.3929 val_acc=1.000
+      ep07 train_loss=1.0345 train_acc=0.837 | val_loss=0.3711 val_acc=1.000
+      ep08 train_loss=0.9866 train_acc=0.841 | val_loss=0.2450 val_acc=1.000
+      ep09 train_loss=0.9448 train_acc=0.853 | val_loss=0.3730 val_acc=1.000
+      ep10 train_loss=0.9251 train_acc=0.853 | val_loss=0.2470 val_acc=1.000
+      ep11 train_loss=0.8788 train_acc=0.884 | val_loss=0.2247 val_acc=1.000
+      ep12 train_loss=0.9045 train_acc=0.880 | val_loss=0.3426 val_acc=1.000
+      ep13 train_loss=0.7803 train_acc=0.952 | val_loss=0.2945 val_acc=1.000
+      ep14 train_loss=0.7748 train_acc=0.984 | val_loss=0.3308 val_acc=1.000
+      ep15 train_loss=0.8078 train_acc=0.948 | val_loss=0.2692 val_acc=1.000
+      ep16 train_loss=0.8174 train_acc=0.952 | val_loss=0.2075 val_acc=1.000
+      ep17 train_loss=0.8015 train_acc=0.932 | val_loss=0.2515 val_acc=1.000
+      ep18 train_loss=0.7826 train_acc=0.936 | val_loss=0.1731 val_acc=1.000
+      ep19 train_loss=0.7440 train_acc=0.980 | val_loss=0.2416 val_acc=1.000
+      ep20 train_loss=0.7714 train_acc=0.972 | val_loss=0.2302 val_acc=1.000
+      ep21 train_loss=0.7526 train_acc=0.972 | val_loss=0.2566 val_acc=1.000
+      ep22 train_loss=0.7602 train_acc=0.964 | val_loss=0.2057 val_acc=1.000
+      ep23 train_loss=0.7502 train_acc=0.980 | val_loss=0.2228 val_acc=1.000
+      ep24 train_loss=0.8241 train_acc=0.964 | val_loss=0.2284 val_acc=1.000
+    fold acc=1.000 time=363.7s | running pooled acc=0.655
+
+--- Fold 19/26 | test sub19 (16 test, 238 train) ---
+      ep00 train_loss=2.0106 train_acc=0.218 | val_loss=1.4082 val_acc=0.375
+      ep01 train_loss=1.6934 train_acc=0.513 | val_loss=1.4355 val_acc=0.312
+      ep02 train_loss=1.4133 train_acc=0.613 | val_loss=1.1279 val_acc=0.438
+      ep03 train_loss=1.4625 train_acc=0.592 | val_loss=0.9757 val_acc=0.562
+      ep04 train_loss=1.3529 train_acc=0.668 | val_loss=1.1728 val_acc=0.375
+      ep05 train_loss=1.4136 train_acc=0.655 | val_loss=0.7919 val_acc=0.688
+      ep06 train_loss=1.1517 train_acc=0.756 | val_loss=1.0643 val_acc=0.562
+      ep07 train_loss=1.1026 train_acc=0.811 | val_loss=1.0357 val_acc=0.438
+      ep08 train_loss=1.0970 train_acc=0.840 | val_loss=1.1193 val_acc=0.438
+      ep09 train_loss=1.0855 train_acc=0.857 | val_loss=1.1681 val_acc=0.500
+      ep10 train_loss=0.9923 train_acc=0.849 | val_loss=1.1145 val_acc=0.438
+      ep11 train_loss=0.9506 train_acc=0.895 | val_loss=1.2073 val_acc=0.625
+      ep12 train_loss=0.9838 train_acc=0.866 | val_loss=1.1151 val_acc=0.500
+      ep13 train_loss=0.9386 train_acc=0.895 | val_loss=1.0178 val_acc=0.625
+      ep14 train_loss=0.8581 train_acc=0.937 | val_loss=0.9575 val_acc=0.562
+      ep15 train_loss=0.8451 train_acc=0.941 | val_loss=1.3297 val_acc=0.500
+      ep16 train_loss=0.8413 train_acc=0.979 | val_loss=1.0777 val_acc=0.562
+      ep17 train_loss=0.8612 train_acc=0.945 | val_loss=1.1585 val_acc=0.500
+      ep18 train_loss=0.8832 train_acc=0.912 | val_loss=1.0994 val_acc=0.562
+      ep19 train_loss=0.8836 train_acc=0.958 | val_loss=1.0801 val_acc=0.562
+      ep20 train_loss=0.8460 train_acc=0.975 | val_loss=1.1121 val_acc=0.625
+      ep21 train_loss=0.8260 train_acc=0.971 | val_loss=1.1720 val_acc=0.500
+      ep22 train_loss=0.8588 train_acc=0.937 | val_loss=1.1405 val_acc=0.500
+      ep23 train_loss=0.8050 train_acc=0.971 | val_loss=1.2576 val_acc=0.375
+      ep24 train_loss=0.8360 train_acc=0.971 | val_loss=1.1618 val_acc=0.438
+    fold acc=0.500 time=361.9s | running pooled acc=0.642
+
+--- Fold 20/26 | test sub20 (11 test, 243 train) ---
+      ep00 train_loss=1.9557 train_acc=0.255 | val_loss=1.0416 val_acc=0.636
+      ep01 train_loss=1.6319 train_acc=0.506 | val_loss=0.9790 val_acc=0.636
+      ep02 train_loss=1.4780 train_acc=0.527 | val_loss=0.9138 val_acc=0.818
+      ep03 train_loss=1.2501 train_acc=0.646 | val_loss=1.1151 val_acc=0.545
+      ep04 train_loss=1.2225 train_acc=0.733 | val_loss=1.1142 val_acc=0.545
+      ep05 train_loss=1.1716 train_acc=0.700 | val_loss=1.2965 val_acc=0.545
+      ep06 train_loss=1.0182 train_acc=0.786 | val_loss=1.2120 val_acc=0.636
+      ep07 train_loss=1.0525 train_acc=0.761 | val_loss=1.0221 val_acc=0.636
+      ep08 train_loss=1.0401 train_acc=0.811 | val_loss=1.3663 val_acc=0.545
+      ep09 train_loss=0.9415 train_acc=0.819 | val_loss=0.9250 val_acc=0.545
+      ep10 train_loss=0.8924 train_acc=0.852 | val_loss=1.3206 val_acc=0.455
+      ep11 train_loss=0.9692 train_acc=0.827 | val_loss=1.3673 val_acc=0.545
+      ep12 train_loss=0.8864 train_acc=0.922 | val_loss=1.1474 val_acc=0.636
+      ep13 train_loss=0.8080 train_acc=0.938 | val_loss=1.2776 val_acc=0.636
+      ep14 train_loss=0.7787 train_acc=0.955 | val_loss=1.3824 val_acc=0.636
+      ep15 train_loss=0.8201 train_acc=0.914 | val_loss=1.5240 val_acc=0.364
+      ep16 train_loss=0.7885 train_acc=0.947 | val_loss=1.5100 val_acc=0.636
+      ep17 train_loss=0.7726 train_acc=0.947 | val_loss=1.2743 val_acc=0.727
+      ep18 train_loss=0.7742 train_acc=0.938 | val_loss=1.3859 val_acc=0.545
+      ep19 train_loss=0.7854 train_acc=0.955 | val_loss=1.5091 val_acc=0.636
+      ep20 train_loss=0.7735 train_acc=0.922 | val_loss=1.3968 val_acc=0.636
+      ep21 train_loss=0.7455 train_acc=0.963 | val_loss=1.3822 val_acc=0.636
+      ep22 train_loss=0.7304 train_acc=0.975 | val_loss=1.4053 val_acc=0.727
+      ep23 train_loss=0.7674 train_acc=0.951 | val_loss=1.4154 val_acc=0.636
+      ep24 train_loss=0.7767 train_acc=0.951 | val_loss=1.2585 val_acc=0.727
+    fold acc=0.727 time=361.9s | running pooled acc=0.647
+
+--- Fold 21/26 | test sub21 (2 test, 252 train) ---
+      ep00 train_loss=2.0001 train_acc=0.258 | val_loss=0.9966 val_acc=0.500
+      ep01 train_loss=1.6250 train_acc=0.484 | val_loss=1.2289 val_acc=0.000
+      ep02 train_loss=1.4460 train_acc=0.607 | val_loss=1.8175 val_acc=0.500
+      ep03 train_loss=1.3517 train_acc=0.615 | val_loss=1.5476 val_acc=0.500
+      ep04 train_loss=1.2838 train_acc=0.647 | val_loss=1.8332 val_acc=0.500
+      ep05 train_loss=1.1835 train_acc=0.690 | val_loss=2.6334 val_acc=0.500
+      ep06 train_loss=1.0586 train_acc=0.782 | val_loss=1.3782 val_acc=0.500
+      ep07 train_loss=1.0668 train_acc=0.774 | val_loss=1.7917 val_acc=0.500
+      ep08 train_loss=1.0171 train_acc=0.810 | val_loss=1.7933 val_acc=0.500
+      ep09 train_loss=0.9686 train_acc=0.825 | val_loss=1.7180 val_acc=0.500
+      ep10 train_loss=0.9234 train_acc=0.877 | val_loss=2.0447 val_acc=0.500
+      ep11 train_loss=0.8774 train_acc=0.889 | val_loss=0.8034 val_acc=0.500
+      ep12 train_loss=0.8832 train_acc=0.901 | val_loss=1.4211 val_acc=0.500
+      ep13 train_loss=0.8558 train_acc=0.917 | val_loss=1.0749 val_acc=0.500
+      ep14 train_loss=0.8071 train_acc=0.913 | val_loss=1.4631 val_acc=0.500
+      ep15 train_loss=0.8657 train_acc=0.925 | val_loss=1.3797 val_acc=0.500
+      ep16 train_loss=0.7759 train_acc=0.925 | val_loss=1.9950 val_acc=0.500
+      ep17 train_loss=0.7547 train_acc=0.968 | val_loss=1.9585 val_acc=0.500
+      ep18 train_loss=0.7986 train_acc=0.952 | val_loss=2.4573 val_acc=0.500
+      ep19 train_loss=0.8140 train_acc=0.952 | val_loss=1.9450 val_acc=0.500
+      ep20 train_loss=0.7730 train_acc=0.976 | val_loss=1.9177 val_acc=0.500
+      ep21 train_loss=0.7708 train_acc=0.968 | val_loss=1.8582 val_acc=0.500
+      ep22 train_loss=0.7499 train_acc=0.964 | val_loss=1.9230 val_acc=0.500
+      ep23 train_loss=0.7670 train_acc=0.976 | val_loss=1.6781 val_acc=0.500
+      ep24 train_loss=0.7903 train_acc=0.956 | val_loss=2.1108 val_acc=0.500
+    fold acc=0.500 time=364.7s | running pooled acc=0.646
+
+--- Fold 22/26 | test sub22 (2 test, 252 train) ---
+      ep00 train_loss=2.0276 train_acc=0.246 | val_loss=2.1413 val_acc=0.000
+      ep01 train_loss=1.6476 train_acc=0.472 | val_loss=2.3139 val_acc=0.000
+      ep02 train_loss=1.4560 train_acc=0.603 | val_loss=0.9716 val_acc=1.000
+      ep03 train_loss=1.3649 train_acc=0.627 | val_loss=1.3743 val_acc=0.000
+      ep04 train_loss=1.2936 train_acc=0.659 | val_loss=0.7862 val_acc=1.000
+      ep05 train_loss=1.2197 train_acc=0.714 | val_loss=1.0533 val_acc=1.000
+      ep06 train_loss=1.0624 train_acc=0.798 | val_loss=1.3966 val_acc=0.000
+      ep07 train_loss=1.0970 train_acc=0.802 | val_loss=0.5540 val_acc=1.000
+      ep08 train_loss=1.0292 train_acc=0.821 | val_loss=0.3707 val_acc=1.000
+      ep09 train_loss=0.9764 train_acc=0.833 | val_loss=0.0447 val_acc=1.000
+      ep10 train_loss=0.9334 train_acc=0.885 | val_loss=0.0995 val_acc=1.000
+      ep11 train_loss=0.8762 train_acc=0.873 | val_loss=1.0083 val_acc=0.500
+      ep12 train_loss=0.8957 train_acc=0.893 | val_loss=0.9605 val_acc=0.000
+      ep13 train_loss=0.8656 train_acc=0.913 | val_loss=0.7379 val_acc=1.000
+      ep14 train_loss=0.8264 train_acc=0.909 | val_loss=0.4561 val_acc=1.000
+      ep15 train_loss=0.8649 train_acc=0.944 | val_loss=0.1750 val_acc=1.000
+      ep16 train_loss=0.7705 train_acc=0.956 | val_loss=0.1845 val_acc=1.000
+      ep17 train_loss=0.7707 train_acc=0.972 | val_loss=0.7186 val_acc=1.000
+      ep18 train_loss=0.8237 train_acc=0.937 | val_loss=0.3988 val_acc=1.000
+      ep19 train_loss=0.8249 train_acc=0.960 | val_loss=0.4936 val_acc=1.000
+      ep20 train_loss=0.7871 train_acc=0.972 | val_loss=0.4941 val_acc=1.000
+      ep21 train_loss=0.7851 train_acc=0.960 | val_loss=0.6178 val_acc=1.000
+      ep22 train_loss=0.7676 train_acc=0.964 | val_loss=0.3032 val_acc=1.000
+      ep23 train_loss=0.7707 train_acc=0.976 | val_loss=0.4622 val_acc=1.000
+      ep24 train_loss=0.8040 train_acc=0.948 | val_loss=0.5399 val_acc=1.000
+    fold acc=1.000 time=365.0s | running pooled acc=0.649
+
+--- Fold 23/26 | test sub23 (12 test, 242 train) ---
+      ep00 train_loss=2.0035 train_acc=0.227 | val_loss=1.1944 val_acc=0.500
+      ep01 train_loss=1.5328 train_acc=0.541 | val_loss=1.0448 val_acc=0.667
+      ep02 train_loss=1.4395 train_acc=0.550 | val_loss=0.6904 val_acc=0.833
+      ep03 train_loss=1.3807 train_acc=0.603 | val_loss=0.6493 val_acc=0.833
+      ep04 train_loss=1.2289 train_acc=0.690 | val_loss=0.9056 val_acc=0.667
+      ep05 train_loss=1.1766 train_acc=0.736 | val_loss=1.6191 val_acc=0.667
+      ep06 train_loss=1.1407 train_acc=0.752 | val_loss=1.0519 val_acc=0.667
+      ep07 train_loss=1.1279 train_acc=0.764 | val_loss=1.0673 val_acc=0.583
+      ep08 train_loss=0.9540 train_acc=0.876 | val_loss=0.8681 val_acc=0.667
+      ep09 train_loss=0.9569 train_acc=0.847 | val_loss=0.4140 val_acc=0.917
+      ep10 train_loss=0.9791 train_acc=0.868 | val_loss=1.2152 val_acc=0.583
+      ep11 train_loss=0.9537 train_acc=0.880 | val_loss=1.0361 val_acc=0.667
+      ep12 train_loss=0.9304 train_acc=0.843 | val_loss=0.4881 val_acc=1.000
+      ep13 train_loss=0.9054 train_acc=0.893 | val_loss=0.4790 val_acc=0.833
+      ep14 train_loss=0.8219 train_acc=0.930 | val_loss=0.5948 val_acc=0.833
+      ep15 train_loss=0.8398 train_acc=0.917 | val_loss=0.4264 val_acc=0.917
+      ep16 train_loss=0.8203 train_acc=0.955 | val_loss=0.5265 val_acc=0.833
+      ep17 train_loss=0.8024 train_acc=0.955 | val_loss=0.7072 val_acc=0.833
+      ep18 train_loss=0.7967 train_acc=0.946 | val_loss=0.4336 val_acc=0.833
+      ep19 train_loss=0.8012 train_acc=0.963 | val_loss=0.5978 val_acc=0.833
+      ep20 train_loss=0.7833 train_acc=0.959 | val_loss=0.6229 val_acc=0.833
+      ep21 train_loss=0.7697 train_acc=0.975 | val_loss=0.5329 val_acc=0.833
+      ep22 train_loss=0.8006 train_acc=0.946 | val_loss=0.5828 val_acc=0.833
+      ep23 train_loss=0.7487 train_acc=0.959 | val_loss=0.5321 val_acc=0.833
+      ep24 train_loss=0.7750 train_acc=0.946 | val_loss=0.5463 val_acc=0.833
+    fold acc=0.833 time=363.0s | running pooled acc=0.659
+
+--- Fold 24/26 | test sub24 (10 test, 244 train) ---
+      ep00 train_loss=2.0411 train_acc=0.197 | val_loss=1.5755 val_acc=0.300
+      ep01 train_loss=1.5896 train_acc=0.504 | val_loss=1.3945 val_acc=0.400
+      ep02 train_loss=1.4229 train_acc=0.553 | val_loss=1.6740 val_acc=0.400
+      ep03 train_loss=1.4086 train_acc=0.619 | val_loss=1.5671 val_acc=0.500
+      ep04 train_loss=1.2947 train_acc=0.639 | val_loss=1.6034 val_acc=0.500
+      ep05 train_loss=1.2234 train_acc=0.725 | val_loss=1.5415 val_acc=0.500
+      ep06 train_loss=1.0929 train_acc=0.816 | val_loss=1.4223 val_acc=0.500
+      ep07 train_loss=1.0725 train_acc=0.791 | val_loss=1.4145 val_acc=0.400
+      ep08 train_loss=1.0273 train_acc=0.857 | val_loss=1.5526 val_acc=0.500
+      ep09 train_loss=0.9490 train_acc=0.852 | val_loss=2.0330 val_acc=0.500
+      ep10 train_loss=0.9464 train_acc=0.861 | val_loss=2.2511 val_acc=0.500
+      ep11 train_loss=0.9108 train_acc=0.939 | val_loss=1.7465 val_acc=0.400
+      ep12 train_loss=0.8679 train_acc=0.918 | val_loss=1.4161 val_acc=0.600
+      ep13 train_loss=0.9003 train_acc=0.918 | val_loss=1.7675 val_acc=0.500
+      ep14 train_loss=0.8362 train_acc=0.955 | val_loss=1.8025 val_acc=0.600
+      ep15 train_loss=0.8207 train_acc=0.959 | val_loss=1.8386 val_acc=0.500
+      ep16 train_loss=0.8504 train_acc=0.955 | val_loss=1.5124 val_acc=0.600
+      ep17 train_loss=0.8058 train_acc=0.959 | val_loss=1.5732 val_acc=0.500
+      ep18 train_loss=0.8340 train_acc=0.955 | val_loss=1.7075 val_acc=0.500
+      ep19 train_loss=0.8001 train_acc=0.971 | val_loss=1.6544 val_acc=0.500
+      ep20 train_loss=0.8263 train_acc=0.955 | val_loss=1.6881 val_acc=0.500
+      ep21 train_loss=0.8004 train_acc=0.959 | val_loss=1.6298 val_acc=0.500
+      ep22 train_loss=0.8161 train_acc=0.943 | val_loss=1.5000 val_acc=0.500
+      ep23 train_loss=0.8071 train_acc=0.975 | val_loss=1.6448 val_acc=0.500
+      ep24 train_loss=0.7884 train_acc=0.959 | val_loss=1.6917 val_acc=0.500
+    fold acc=0.500 time=362.6s | running pooled acc=0.652
+
+--- Fold 25/26 | test sub25 (7 test, 247 train) ---
+      ep00 train_loss=2.0205 train_acc=0.190 | val_loss=1.1911 val_acc=0.429
+      ep01 train_loss=1.5221 train_acc=0.526 | val_loss=1.0471 val_acc=0.571
+      ep02 train_loss=1.3975 train_acc=0.615 | val_loss=1.4308 val_acc=0.571
+      ep03 train_loss=1.3210 train_acc=0.607 | val_loss=1.5825 val_acc=0.143
+      ep04 train_loss=1.2576 train_acc=0.713 | val_loss=1.2649 val_acc=0.571
+      ep05 train_loss=1.2516 train_acc=0.672 | val_loss=1.0137 val_acc=0.429
+      ep06 train_loss=1.1184 train_acc=0.749 | val_loss=1.1965 val_acc=0.571
+      ep07 train_loss=1.1177 train_acc=0.741 | val_loss=1.2548 val_acc=0.571
+      ep08 train_loss=0.9963 train_acc=0.866 | val_loss=1.2973 val_acc=0.571
+      ep09 train_loss=0.9766 train_acc=0.842 | val_loss=1.3714 val_acc=0.571
+      ep10 train_loss=0.8830 train_acc=0.862 | val_loss=1.3791 val_acc=0.429
+      ep11 train_loss=0.9196 train_acc=0.883 | val_loss=1.6840 val_acc=0.286
+      ep12 train_loss=0.8549 train_acc=0.866 | val_loss=1.1741 val_acc=0.571
+      ep13 train_loss=0.8314 train_acc=0.923 | val_loss=1.1279 val_acc=0.571
+      ep14 train_loss=0.8312 train_acc=0.919 | val_loss=1.1215 val_acc=0.571
+      ep15 train_loss=0.8215 train_acc=0.947 | val_loss=1.1712 val_acc=0.571
+      ep16 train_loss=0.8261 train_acc=0.939 | val_loss=1.1461 val_acc=0.571
+      ep17 train_loss=0.7991 train_acc=0.939 | val_loss=1.4025 val_acc=0.429
+      ep18 train_loss=0.7832 train_acc=0.960 | val_loss=1.3055 val_acc=0.571
+      ep19 train_loss=0.8070 train_acc=0.964 | val_loss=1.2055 val_acc=0.571
+      ep20 train_loss=0.7986 train_acc=0.951 | val_loss=1.2428 val_acc=0.571
+      ep21 train_loss=0.7977 train_acc=0.960 | val_loss=1.1607 val_acc=0.571
+      ep22 train_loss=0.7829 train_acc=0.947 | val_loss=1.1834 val_acc=0.571
+      ep23 train_loss=0.7153 train_acc=0.980 | val_loss=1.3034 val_acc=0.571
+      ep24 train_loss=0.7603 train_acc=0.972 | val_loss=1.1167 val_acc=0.571
+    fold acc=0.571 time=364.8s | running pooled acc=0.650
+
+--- Fold 26/26 | test sub26 (17 test, 237 train) ---
+      ep00 train_loss=2.0800 train_acc=0.173 | val_loss=1.2190 val_acc=0.706
+      ep01 train_loss=1.6156 train_acc=0.464 | val_loss=1.0477 val_acc=0.529
+      ep02 train_loss=1.4499 train_acc=0.544 | val_loss=0.9813 val_acc=0.706
+      ep03 train_loss=1.3052 train_acc=0.620 | val_loss=1.0176 val_acc=0.706
+      ep04 train_loss=1.2266 train_acc=0.705 | val_loss=1.1561 val_acc=0.588
+      ep05 train_loss=1.1294 train_acc=0.743 | val_loss=1.0300 val_acc=0.647
+      ep06 train_loss=1.0288 train_acc=0.751 | val_loss=1.1529 val_acc=0.647
+      ep07 train_loss=1.0560 train_acc=0.806 | val_loss=0.7605 val_acc=0.765
+      ep08 train_loss=0.9879 train_acc=0.827 | val_loss=1.1447 val_acc=0.588
+      ep09 train_loss=1.0096 train_acc=0.857 | val_loss=1.4052 val_acc=0.529
+      ep10 train_loss=0.9777 train_acc=0.869 | val_loss=0.8578 val_acc=0.824
+      ep11 train_loss=0.8683 train_acc=0.920 | val_loss=1.1682 val_acc=0.706
+      ep12 train_loss=0.8701 train_acc=0.903 | val_loss=0.8857 val_acc=0.706
+      ep13 train_loss=0.8220 train_acc=0.907 | val_loss=1.0652 val_acc=0.706
+      ep14 train_loss=0.8004 train_acc=0.941 | val_loss=1.0162 val_acc=0.706
+      ep15 train_loss=0.8191 train_acc=0.932 | val_loss=0.8721 val_acc=0.765
+      ep16 train_loss=0.7844 train_acc=0.945 | val_loss=0.8481 val_acc=0.765
+      ep17 train_loss=0.7789 train_acc=0.962 | val_loss=0.9266 val_acc=0.765
+      ep18 train_loss=0.7550 train_acc=0.954 | val_loss=0.9892 val_acc=0.706
+      ep19 train_loss=0.7731 train_acc=0.945 | val_loss=0.9372 val_acc=0.765
+      ep20 train_loss=0.7238 train_acc=0.975 | val_loss=0.9180 val_acc=0.765
+      ep21 train_loss=0.7985 train_acc=0.941 | val_loss=0.9405 val_acc=0.824
+      ep22 train_loss=0.7785 train_acc=0.941 | val_loss=0.9225 val_acc=0.765
+      ep23 train_loss=0.7506 train_acc=0.962 | val_loss=0.9352 val_acc=0.765
+      ep24 train_loss=0.7440 train_acc=0.949 | val_loss=0.9727 val_acc=0.765
+    fold acc=0.706 time=360.6s | running pooled acc=0.654
+
+=== FINAL (pooled LOSO) ===
+UF1 = 0.5358
+UAR = 0.5460
+ACC = 0.6535
+per-class F1: obj1=0.526, obj2=0.333, obj3=0.857, obj4=0.510, obj5=0.348, obj7=0.641
+per-class recall: obj1=0.600, obj2=0.333, obj3=0.848, obj4=0.500, obj5=0.400, obj7=0.594
+confusion matrix (rows=true):
+          obj1   obj2   obj3   obj4   obj5   obj7
+   obj1     15      0      0      2      2      6
+   obj2      0      5      0      0      8      2
+   obj3      1      1     84      8      0      5
+   obj4      2      0      9     13      0      2
+   obj5      2      6      1      0      8      3
+   obj7     12      3      3      2      8     41
+
+saved to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\obj6_4ch
+elapsed 9435.4s

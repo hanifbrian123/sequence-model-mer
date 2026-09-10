@@ -1,0 +1,116 @@
+=== PROTOCOL V2 iter_14_r3d_v2_dev ===
+time: 2026-07-22T14:13:53.423129 | role: dev
+device: cuda (NVIDIA GeForce RTX 3060)
+platform: Windows-10-10.0.26200-SP0 | torch 2.6.0+cu124
+loading 246 cached arrays
+fixed split loaded: 21 development subjects, 5 sealed audit subjects
+fold 1/4: 16 train subjects / 5 validation subjects; 164 train / 35 validation samples
+      ep00 train_loss=1.5733 train_acc=0.293 | val_loss=1.2725 val_acc=0.486
+      ep01 train_loss=1.1673 train_acc=0.598 | val_loss=1.2031 val_acc=0.429
+      ep02 train_loss=0.9829 train_acc=0.713 | val_loss=1.2706 val_acc=0.457
+      ep03 train_loss=0.8829 train_acc=0.744 | val_loss=1.0523 val_acc=0.600
+      ep04 train_loss=0.8210 train_acc=0.780 | val_loss=1.2010 val_acc=0.514
+      ep05 train_loss=0.7737 train_acc=0.848 | val_loss=1.0361 val_acc=0.571
+      ep06 train_loss=0.6749 train_acc=0.890 | val_loss=1.0787 val_acc=0.543
+      ep07 train_loss=0.6889 train_acc=0.866 | val_loss=0.9315 val_acc=0.629
+      ep08 train_loss=0.6871 train_acc=0.878 | val_loss=1.4391 val_acc=0.457
+      ep09 train_loss=0.6498 train_acc=0.884 | val_loss=1.0736 val_acc=0.600
+      ep10 train_loss=0.5765 train_acc=0.982 | val_loss=1.0076 val_acc=0.629
+      ep11 train_loss=0.6075 train_acc=0.939 | val_loss=0.9437 val_acc=0.571
+      ep12 train_loss=0.5886 train_acc=0.957 | val_loss=1.0750 val_acc=0.571
+      ep13 train_loss=0.5658 train_acc=0.957 | val_loss=1.1536 val_acc=0.486
+      ep14 train_loss=0.5554 train_acc=0.963 | val_loss=1.1538 val_acc=0.486
+      ep15 train_loss=0.5762 train_acc=0.951 | val_loss=1.0851 val_acc=0.486
+      ep16 train_loss=0.6026 train_acc=0.939 | val_loss=1.0820 val_acc=0.543
+      ep17 train_loss=0.5682 train_acc=0.963 | val_loss=1.1940 val_acc=0.514
+      ep18 train_loss=0.5474 train_acc=0.994 | val_loss=1.1596 val_acc=0.514
+      ep19 train_loss=0.5511 train_acc=0.988 | val_loss=1.1301 val_acc=0.514
+      ep20 train_loss=0.5460 train_acc=0.988 | val_loss=1.1459 val_acc=0.457
+      ep21 train_loss=0.5475 train_acc=0.976 | val_loss=1.0951 val_acc=0.514
+      ep22 train_loss=0.5257 train_acc=0.982 | val_loss=1.1194 val_acc=0.514
+      ep23 train_loss=0.5484 train_acc=0.957 | val_loss=1.2153 val_acc=0.486
+      ep24 train_loss=0.5319 train_acc=0.994 | val_loss=1.2248 val_acc=0.486
+fold result: UF1=0.4931 UAR=0.5764 ACC=0.5714
+fold 2/4: 16 train subjects / 5 validation subjects; 127 train / 72 validation samples
+      ep00 train_loss=1.7115 train_acc=0.236 | val_loss=1.5847 val_acc=0.347
+      ep01 train_loss=1.2200 train_acc=0.559 | val_loss=1.0739 val_acc=0.556
+      ep02 train_loss=1.1000 train_acc=0.638 | val_loss=1.0668 val_acc=0.639
+      ep03 train_loss=0.9687 train_acc=0.701 | val_loss=1.1438 val_acc=0.625
+      ep04 train_loss=0.8794 train_acc=0.756 | val_loss=0.9843 val_acc=0.597
+      ep05 train_loss=0.8583 train_acc=0.772 | val_loss=1.0513 val_acc=0.653
+      ep06 train_loss=0.7643 train_acc=0.843 | val_loss=1.1255 val_acc=0.542
+      ep07 train_loss=0.6831 train_acc=0.874 | val_loss=1.1325 val_acc=0.569
+      ep08 train_loss=0.7632 train_acc=0.858 | val_loss=1.1304 val_acc=0.569
+      ep09 train_loss=0.6593 train_acc=0.937 | val_loss=1.0985 val_acc=0.556
+      ep10 train_loss=0.6469 train_acc=0.937 | val_loss=1.3499 val_acc=0.528
+      ep11 train_loss=0.6389 train_acc=0.953 | val_loss=1.2358 val_acc=0.583
+      ep12 train_loss=0.6737 train_acc=0.890 | val_loss=1.1074 val_acc=0.597
+      ep13 train_loss=0.6662 train_acc=0.937 | val_loss=1.1966 val_acc=0.569
+      ep14 train_loss=0.6095 train_acc=0.937 | val_loss=1.2410 val_acc=0.569
+      ep15 train_loss=0.5848 train_acc=0.961 | val_loss=1.1697 val_acc=0.639
+      ep16 train_loss=0.5949 train_acc=0.969 | val_loss=1.2051 val_acc=0.597
+      ep17 train_loss=0.5933 train_acc=0.961 | val_loss=1.1867 val_acc=0.611
+      ep18 train_loss=0.5951 train_acc=0.961 | val_loss=1.2138 val_acc=0.528
+      ep19 train_loss=0.5763 train_acc=0.953 | val_loss=1.1709 val_acc=0.569
+      ep20 train_loss=0.5876 train_acc=0.976 | val_loss=1.1418 val_acc=0.583
+      ep21 train_loss=0.5639 train_acc=0.969 | val_loss=1.1828 val_acc=0.611
+      ep22 train_loss=0.5635 train_acc=0.976 | val_loss=1.1717 val_acc=0.611
+      ep23 train_loss=0.5543 train_acc=0.984 | val_loss=1.1491 val_acc=0.569
+      ep24 train_loss=0.5947 train_acc=0.945 | val_loss=1.1560 val_acc=0.625
+fold result: UF1=0.6348 UAR=0.6806 ACC=0.5833
+fold 3/4: 15 train subjects / 6 validation subjects; 122 train / 77 validation samples
+      ep00 train_loss=1.6824 train_acc=0.254 | val_loss=1.6012 val_acc=0.312
+      ep01 train_loss=1.2558 train_acc=0.492 | val_loss=1.2408 val_acc=0.468
+      ep02 train_loss=1.1458 train_acc=0.639 | val_loss=1.4706 val_acc=0.442
+      ep03 train_loss=0.9553 train_acc=0.730 | val_loss=1.3106 val_acc=0.481
+      ep04 train_loss=1.0318 train_acc=0.705 | val_loss=1.4235 val_acc=0.468
+      ep05 train_loss=0.9404 train_acc=0.770 | val_loss=1.2542 val_acc=0.506
+      ep06 train_loss=0.9327 train_acc=0.795 | val_loss=1.4327 val_acc=0.351
+      ep07 train_loss=0.7887 train_acc=0.893 | val_loss=1.2684 val_acc=0.468
+      ep08 train_loss=0.7690 train_acc=0.902 | val_loss=1.3021 val_acc=0.429
+      ep09 train_loss=0.7489 train_acc=0.918 | val_loss=1.2625 val_acc=0.429
+      ep10 train_loss=0.7988 train_acc=0.852 | val_loss=1.4646 val_acc=0.481
+      ep11 train_loss=0.7896 train_acc=0.877 | val_loss=1.4207 val_acc=0.481
+      ep12 train_loss=0.7428 train_acc=0.910 | val_loss=1.3373 val_acc=0.455
+      ep13 train_loss=0.7348 train_acc=0.902 | val_loss=1.3829 val_acc=0.416
+      ep14 train_loss=0.7103 train_acc=0.959 | val_loss=1.4125 val_acc=0.468
+      ep15 train_loss=0.7168 train_acc=0.934 | val_loss=1.4446 val_acc=0.494
+      ep16 train_loss=0.7068 train_acc=0.959 | val_loss=1.5177 val_acc=0.403
+      ep17 train_loss=0.6682 train_acc=0.967 | val_loss=1.5221 val_acc=0.416
+      ep18 train_loss=0.6485 train_acc=0.975 | val_loss=1.3507 val_acc=0.468
+      ep19 train_loss=0.6689 train_acc=0.959 | val_loss=1.3214 val_acc=0.494
+      ep20 train_loss=0.6836 train_acc=0.943 | val_loss=1.3835 val_acc=0.468
+      ep21 train_loss=0.7715 train_acc=0.943 | val_loss=1.3778 val_acc=0.455
+      ep22 train_loss=0.6680 train_acc=0.959 | val_loss=1.2845 val_acc=0.519
+      ep23 train_loss=0.6914 train_acc=0.943 | val_loss=1.4666 val_acc=0.429
+      ep24 train_loss=0.6319 train_acc=0.992 | val_loss=1.3249 val_acc=0.494
+fold result: UF1=0.5132 UAR=0.5268 ACC=0.4935
+fold 4/4: 16 train subjects / 5 validation subjects; 184 train / 15 validation samples
+      ep00 train_loss=1.5324 train_acc=0.359 | val_loss=1.0139 val_acc=0.867
+      ep01 train_loss=1.1613 train_acc=0.565 | val_loss=0.8415 val_acc=0.733
+      ep02 train_loss=1.0495 train_acc=0.630 | val_loss=0.7875 val_acc=0.800
+      ep03 train_loss=0.9999 train_acc=0.723 | val_loss=1.0685 val_acc=0.533
+      ep04 train_loss=0.9162 train_acc=0.701 | val_loss=0.7750 val_acc=0.800
+      ep05 train_loss=0.7990 train_acc=0.815 | val_loss=0.9161 val_acc=0.733
+      ep06 train_loss=0.7912 train_acc=0.821 | val_loss=1.2068 val_acc=0.667
+      ep07 train_loss=0.7491 train_acc=0.832 | val_loss=1.0854 val_acc=0.667
+      ep08 train_loss=0.6942 train_acc=0.886 | val_loss=1.1352 val_acc=0.600
+      ep09 train_loss=0.6601 train_acc=0.924 | val_loss=0.6468 val_acc=0.733
+      ep10 train_loss=0.6669 train_acc=0.913 | val_loss=1.0422 val_acc=0.667
+      ep11 train_loss=0.6117 train_acc=0.929 | val_loss=1.1075 val_acc=0.667
+      ep12 train_loss=0.6286 train_acc=0.924 | val_loss=0.7222 val_acc=0.867
+      ep13 train_loss=0.6769 train_acc=0.891 | val_loss=0.7016 val_acc=0.733
+      ep14 train_loss=0.5809 train_acc=0.967 | val_loss=0.9135 val_acc=0.667
+      ep15 train_loss=0.5754 train_acc=0.989 | val_loss=0.9644 val_acc=0.667
+      ep16 train_loss=0.5806 train_acc=0.967 | val_loss=0.9246 val_acc=0.667
+      ep17 train_loss=0.5472 train_acc=0.984 | val_loss=0.8516 val_acc=0.667
+      ep18 train_loss=0.6007 train_acc=0.973 | val_loss=1.0206 val_acc=0.733
+      ep19 train_loss=0.5461 train_acc=0.989 | val_loss=0.8386 val_acc=0.667
+      ep20 train_loss=0.5682 train_acc=0.978 | val_loss=0.8579 val_acc=0.667
+      ep21 train_loss=0.5697 train_acc=0.973 | val_loss=0.9168 val_acc=0.667
+      ep22 train_loss=0.5708 train_acc=0.973 | val_loss=0.8539 val_acc=0.667
+      ep23 train_loss=0.5884 train_acc=0.962 | val_loss=0.8937 val_acc=0.667
+      ep24 train_loss=0.5606 train_acc=0.973 | val_loss=0.9461 val_acc=0.667
+fold result: UF1=0.4143 UAR=0.4083 ACC=0.6667
+FINAL dev: UF1=0.5902 UAR=0.6040 ACC=0.5528
+saved reproducible artifacts to D:\AI-Projects\casmeII-new-from-sequence-model\experiments\protocol_v2\iter_14_r3d_v2_dev in 1708.3s

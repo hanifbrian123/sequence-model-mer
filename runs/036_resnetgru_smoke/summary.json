@@ -1,0 +1,70 @@
+{
+  "name": "iter_23_resnetgru_smoke",
+  "time": "2026-07-16T18:29:25.461355",
+  "elapsed_sec": 328.1,
+  "n_folds": 2,
+  "num_classes": 5,
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ],
+  "UF1": 0.6171428571428572,
+  "UAR": 0.7,
+  "ACC": 0.6363636363636364,
+  "n": 22,
+  "per_class_f1": [
+    0.2857142857142857,
+    0.8,
+    0.5,
+    0.75,
+    0.75
+  ],
+  "per_class_recall": [
+    0.5,
+    1.0,
+    0.4,
+    1.0,
+    0.6
+  ],
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "resnet_gru",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_23_resnetgru",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "gru_hidden": 256,
+    "ema": 0.998,
+    "ema_start_epoch": 5
+  }
+}

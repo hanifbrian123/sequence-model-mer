@@ -10,4 +10,9 @@ AGENTS.md
 # Re-evaluation snapshots stay local; the probs.npz artifacts they produce are
 # committed instead, which is what every downstream comparison actually reads.
 *.pt
+runs/**/fold_checkpoints/
 experiments/**/fold_checkpoints/
+
+
+# Other Repository
+fer/logs/

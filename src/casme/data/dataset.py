@@ -167,7 +167,25 @@ def build_rgb(clip, top, left, s, flip, color_factor, input_mode):
     elif input_mode == "diff":
         d = np.zeros_like(clip); d[1:] = clip[1:] - clip[:-1]
         clip = np.clip(d * 0.5 + 0.5, 0, 1)
-    return (clip - KINETICS_MEAN) / KINETICS_STD
+    elif input_mode == "rgb_muscle":
+        # Compute Muscle Map (Sobel Gradients on Luma)
+        muscle = np.empty(clip.shape[:3] + (1,), dtype=np.float32)
+        for t in range(clip.shape[0]):
+            gray = cv2.cvtColor(clip[t], cv2.COLOR_RGB2GRAY) if clip.shape[3] == 3 else clip[t]
+            sobelx = cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=3)
+            sobely = cv2.Sobel(gray, cv2.CV_32F, 0, 1, ksize=3)
+            mag = np.sqrt(sobelx**2 + sobely**2)
+            muscle[t, ..., 0] = np.clip(mag, 0, 1.0)
+        # 4-Channel: RGB + Muscle
+        clip = np.concatenate([clip, muscle], axis=-1)
+        # We need to return this without KINETICS normalization because it's 4CH,
+        # or normalize only the first 3 channels.
+        rgb_norm = (clip[..., :3] - KINETICS_MEAN) / KINETICS_STD
+        muscle_norm = (clip[..., 3:] - 0.5) * 2.0  # simple [-1, 1] scaling
+        return np.concatenate([rgb_norm, muscle_norm], axis=-1)
+    
+    if input_mode != "rgb_muscle":
+        return (clip - KINETICS_MEAN) / KINETICS_STD
 
 
 def _optical_strain(u, v):

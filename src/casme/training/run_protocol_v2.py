@@ -23,7 +23,7 @@ from casme.evaluation.protocol_v2 import (config_fingerprint, load_or_create_pro
 from run_experiment import load_config, plot_confusion, preload_arrays
 
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 
 def _apex_position(row):
@@ -53,9 +53,14 @@ def _load_problem(cfg, log):
         arrays = preload_arrays(os.path.join(REPO, cfg["cache_dir"]), manifest)
     samples = [
         {"key": row["key"], "subject": int(row["subject"]),
-         "label": int(row["label"]), "apex_pos": _apex_position(row)}
+         "label": int(row["label"]), "apex_pos": _apex_position(row),
+         "emotion": row.get("emotion", "")}
         for _, row in manifest.iterrows()
     ]
+    if cfg.get("external_replica", False):
+        valid_emotions = ["disgust", "fear", "happiness", "sadness", "surprise"]
+        samples = [s for s in samples if s["emotion"] in valid_emotions]
+        log(f"external_replica filter applied: {len(samples)} remaining")
     _attach_au_labels(samples, cfg, log)
     _attach_region_masks(samples, cfg, log)
     return samples, arrays

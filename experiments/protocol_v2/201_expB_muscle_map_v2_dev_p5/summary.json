@@ -1,0 +1,104 @@
+{
+  "name": "201_expB_muscle_map_v2_dev_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-09-10T21:23:20.681368",
+  "elapsed_sec": 758.3069605827332,
+  "config_sha256": "d5e2f119e8565e5cfc1ec30a779d5a60aa367fae4a4da812d064716a3f05fb20",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "split": "grouped",
+  "n_folds": 4,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": false,
+  "num_classes": 5,
+  "UF1": 0.28290193069239095,
+  "UAR": 0.2968172914715205,
+  "ACC": 0.328125,
+  "per_class_f1": [
+    0.2608695652173913,
+    0.2,
+    0.21052631578947367,
+    0.3,
+    0.4431137724550898
+  ],
+  "per_class_recall": [
+    0.375,
+    0.16279069767441862,
+    0.23529411764705882,
+    0.2857142857142857,
+    0.42528735632183906
+  ],
+  "confusion_matrix": [
+    [
+      9,
+      3,
+      3,
+      1,
+      8
+    ],
+    [
+      10,
+      7,
+      4,
+      0,
+      22
+    ],
+    [
+      4,
+      1,
+      4,
+      3,
+      5
+    ],
+    [
+      4,
+      1,
+      2,
+      6,
+      8
+    ],
+    [
+      18,
+      15,
+      8,
+      9,
+      37
+    ]
+  ],
+  "n": 192,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb_muscle",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 4,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.1,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 1,
+    "cache_dir": "cache/frames128",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "201_expB_muscle_map",
+    "modality": "rgb",
+    "in_channels": 4,
+    "temporal_span": "onset_offset"
+  }
+}

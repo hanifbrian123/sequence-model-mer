@@ -1,0 +1,90 @@
+{
+  "name": "gabungan10_loso26",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-08-06T22:49:36.819610",
+  "num_classes": 5,
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "config_sha256": "2bbdfade729ff73885a3406f8620ab0c84d5623c579ea6fa962732ed386761ca",
+  "fusion_recipe": {
+    "members": [
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_47_r3d_auto_apex_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_74_r3d_lastk8_ep40_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_59_r3d_llrd_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_67_r3d_faceparse_full_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_77_r3d_au05_full_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_69_r3d_es_refit_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_89_r3d_regionattn_full_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_88_r2plus1d_full_s42_v2_dev_loso_all_p5",
+      "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_95_r3d_focus_energy_full_s42_v2_dev_loso_all_p5"
+    ],
+    "weights": [
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ]
+  },
+  "UF1": 0.7117743746936294,
+  "UAR": 0.7232469937469937,
+  "ACC": 0.6951219512195121,
+  "per_class_f1": [
+    0.6376811594202898,
+    0.7166666666666667,
+    0.6181818181818182,
+    0.9230769230769231,
+    0.6632653061224489
+  ],
+  "per_class_recall": [
+    0.6875,
+    0.6825396825396826,
+    0.6296296296296297,
+    0.96,
+    0.6565656565656566
+  ],
+  "confusion_matrix": [
+    [
+      22,
+      0,
+      1,
+      2,
+      7
+    ],
+    [
+      2,
+      43,
+      1,
+      0,
+      17
+    ],
+    [
+      3,
+      0,
+      17,
+      0,
+      7
+    ],
+    [
+      0,
+      0,
+      0,
+      24,
+      1
+    ],
+    [
+      10,
+      14,
+      9,
+      1,
+      65
+    ]
+  ],
+  "n": 246
+}

@@ -1,0 +1,111 @@
+{
+  "name": "iter_105_focus_rnn_nopretrain_full_s42_v2_dev_loso_all_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-08-07T02:47:03.236574",
+  "elapsed_sec": 5500.7141082286835,
+  "config_sha256": "7fecb181eaa07cd698f340080f34bc93454cb15ed5f3f0388fda823b141228b8",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "split": "loso_all",
+  "n_folds": 26,
+  "n_subjects": 26,
+  "fold_checkpoints_saved": true,
+  "num_classes": 5,
+  "UF1": 0.6147733661633854,
+  "UAR": 0.6497941317941318,
+  "ACC": 0.5934959349593496,
+  "per_class_f1": [
+    0.6075949367088608,
+    0.5806451612903226,
+    0.5714285714285714,
+    0.7636363636363637,
+    0.550561797752809
+  ],
+  "per_class_recall": [
+    0.75,
+    0.5714285714285714,
+    0.5925925925925926,
+    0.84,
+    0.494949494949495
+  ],
+  "confusion_matrix": [
+    [
+      24,
+      0,
+      0,
+      3,
+      5
+    ],
+    [
+      5,
+      36,
+      1,
+      2,
+      19
+    ],
+    [
+      5,
+      0,
+      16,
+      0,
+      6
+    ],
+    [
+      1,
+      1,
+      2,
+      21,
+      0
+    ],
+    [
+      12,
+      24,
+      10,
+      4,
+      49
+    ]
+  ],
+  "n": 246,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "resnet_gru",
+    "pretrained": false,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 6,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.0,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "iter_105_focus_rnn_nopretrain_full_s42",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "in_channels": 4,
+    "num_regions": 6,
+    "region_mask_dir": "cache/regionmask144",
+    "focus_channel": "region",
+    "region_attention": false,
+    "load_region_masks": true,
+    "gru_hidden": 256
+  }
+}

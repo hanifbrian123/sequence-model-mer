@@ -1,0 +1,30 @@
+{
+  "name": "200_expA_bias_replica",
+  "seed": 42,
+  "T": 16,
+  "img_size": 128,
+  "base_size": 144,
+  "modality": "rgb",
+  "temporal_span": "onset_offset",
+  "backbone": "r3d_18",
+  "pretrained": true,
+  "dropout": 0.5,
+  "epochs": 25,
+  "lr": 0.0001,
+  "weight_decay": 0.001,
+  "batch_size": 4,
+  "class_weighting": true,
+  "hflip": true,
+  "temporal_jitter": true,
+  "amp": true,
+  "cache_dir": "cache/frames128",
+  "index": "cache/index_emotion.csv",
+  "external_replica": true,
+  "class_names": [
+    "disgust",
+    "fear",
+    "happiness",
+    "sadness",
+    "surprise"
+  ]
+}

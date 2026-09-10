@@ -16,7 +16,7 @@ import shutil
 import numpy as np
 import pandas as pd
 
-from build_region_masks import REGION_NAMES
+from casme.tools.build_region_masks import REGION_NAMES
 
 
 def main():

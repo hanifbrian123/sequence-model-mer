@@ -1,0 +1,45 @@
+{
+  "time": "2026-07-23T14:33:29.891253",
+  "baseline": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_v2_dev_p5",
+  "candidate": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\fusions\\deployable_50full_50auto47",
+  "iterations": 10000,
+  "interval": 0.8,
+  "gate": {
+    "passed": true,
+    "min_uf1_delta": 0.005,
+    "min_probability": 0.8,
+    "max_secondary_drop": 0.01
+  },
+  "metrics": {
+    "UF1": {
+      "baseline": 0.6816450314669259,
+      "candidate": 0.7020969197325786,
+      "delta": 0.020451888265652696,
+      "ci": [
+        -0.006797136733798721,
+        0.04966382061190061
+      ],
+      "probability_improved": 0.8316
+    },
+    "UAR": {
+      "baseline": 0.7119666471239658,
+      "candidate": 0.7418392938570777,
+      "delta": 0.02987264673311185,
+      "ci": [
+        0.0004640003369768548,
+        0.06000258303097119
+      ],
+      "probability_improved": 0.9036
+    },
+    "ACC": {
+      "baseline": 0.6822916666666666,
+      "candidate": 0.6979166666666666,
+      "delta": 0.015625,
+      "ci": [
+        -0.011049723756906049,
+        0.04477611940298509
+      ],
+      "probability_improved": 0.7191
+    }
+  }
+}

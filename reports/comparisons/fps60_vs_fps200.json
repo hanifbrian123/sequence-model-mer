@@ -1,0 +1,45 @@
+{
+  "time": "2026-07-23T18:26:54.811361",
+  "baseline": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\robustness\\fps_auto_apex_s42_fps200",
+  "candidate": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\robustness\\fps_auto_apex_s42_fps60",
+  "iterations": 10000,
+  "interval": 0.8,
+  "gate": {
+    "passed": true,
+    "min_uf1_delta": 0.005,
+    "min_probability": 0.8,
+    "max_secondary_drop": 0.01
+  },
+  "metrics": {
+    "UF1": {
+      "baseline": 0.6706903407300457,
+      "candidate": 0.7112869667600424,
+      "delta": 0.040596626029996696,
+      "ci": [
+        0.012142237525515414,
+        0.06902463609821176
+      ],
+      "probability_improved": 0.9654
+    },
+    "UAR": {
+      "baseline": 0.7008422454787848,
+      "candidate": 0.7322423676768222,
+      "delta": 0.03140012219803734,
+      "ci": [
+        0.002923444976076638,
+        0.05727316611421032
+      ],
+      "probability_improved": 0.9189
+    },
+    "ACC": {
+      "baseline": 0.671875,
+      "candidate": 0.71875,
+      "delta": 0.046875,
+      "ci": [
+        0.021276595744680882,
+        0.07471264367816088
+      ],
+      "probability_improved": 0.9894
+    }
+  }
+}

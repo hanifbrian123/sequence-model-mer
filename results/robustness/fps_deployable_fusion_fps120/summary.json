@@ -1,0 +1,73 @@
+{
+  "name": "fps_deployable_fusion_fps120",
+  "role": "dev",
+  "complete": true,
+  "num_classes": 5,
+  "fps": 120.0,
+  "source_runs": [
+    "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_v2_dev_p5ck",
+    "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_47_r3d_auto_apex_s42_v2_dev_p5"
+  ],
+  "weights": [
+    0.5,
+    0.5
+  ],
+  "config_sha256": "4002ec38a4a47bceefcfeb620fd11079fc7aa1b8fdb046fc8dd3ed56a0e79443",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "fold_checkpoints_saved": false,
+  "UF1": 0.6729302807825441,
+  "UAR": 0.6981004270192439,
+  "ACC": 0.6770833333333334,
+  "per_class_f1": [
+    0.631578947368421,
+    0.6075949367088608,
+    0.5365853658536586,
+    0.8780487804878049,
+    0.7108433734939759
+  ],
+  "per_class_recall": [
+    0.75,
+    0.5581395348837209,
+    0.6470588235294118,
+    0.8571428571428571,
+    0.6781609195402298
+  ],
+  "confusion_matrix": [
+    [
+      18,
+      0,
+      1,
+      1,
+      4
+    ],
+    [
+      4,
+      24,
+      2,
+      0,
+      13
+    ],
+    [
+      3,
+      0,
+      11,
+      0,
+      3
+    ],
+    [
+      1,
+      1,
+      1,
+      18,
+      0
+    ],
+    [
+      7,
+      11,
+      9,
+      1,
+      59
+    ]
+  ],
+  "n": 192
+}

@@ -1,0 +1,45 @@
+{
+  "time": "2026-08-06T22:49:40.866672",
+  "baseline": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\iter_14_r3d_v2_dev_loso_all_p5",
+  "candidate": "D:\\AI-Projects\\casmeII-new-from-sequence-model\\experiments\\protocol_v2\\fusion10_loso26",
+  "iterations": 10000,
+  "interval": 0.8,
+  "gate": {
+    "passed": true,
+    "min_uf1_delta": 0.005,
+    "min_probability": 0.8,
+    "max_secondary_drop": 0.01
+  },
+  "metrics": {
+    "UF1": {
+      "baseline": 0.6901841948900772,
+      "candidate": 0.7117743746936294,
+      "delta": 0.021590179803552156,
+      "ci": [
+        0.008610402528834703,
+        0.03559596444134994
+      ],
+      "probability_improved": 0.9862
+    },
+    "UAR": {
+      "baseline": 0.6974529822029822,
+      "candidate": 0.7232469937469937,
+      "delta": 0.025794011544011508,
+      "ci": [
+        0.012880734483901712,
+        0.03982002465095288
+      ],
+      "probability_improved": 0.9973
+    },
+    "ACC": {
+      "baseline": 0.6707317073170732,
+      "candidate": 0.6951219512195121,
+      "delta": 0.024390243902438935,
+      "ci": [
+        0.011538461538461497,
+        0.037735849056603765
+      ],
+      "probability_improved": 0.9864
+    }
+  }
+}

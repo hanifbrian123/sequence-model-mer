@@ -14,5 +14,9 @@ runs/**/fold_checkpoints/
 experiments/**/fold_checkpoints/
 
 
+# Log antrean & stdout sekali pakai
+logs/
+!logs/summaries/CONSOLIDATION.txt
+
 # Other Repository
 fer/logs/

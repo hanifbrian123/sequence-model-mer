@@ -1,8 +1,0 @@
-[20:28:55] === QUEUE V16 START: Fase 2.5 saluran fokus (LOSO-21) ===
-[20:28:55] START iter_96_r3d_focus_region_full_s42 (loso_dev)
-[21:50:16] DONE  iter_96_r3d_focus_region_full_s42: FINAL dev: UF1=0.6394 UAR=0.6593 ACC=0.6354
-[21:50:16] START iter_95_r3d_focus_energy_full_s42 (loso_dev)
-[23:10:49] DONE  iter_95_r3d_focus_energy_full_s42: FINAL dev: UF1=0.6850 UAR=0.7058 ACC=0.6615
-[23:10:49] START iter_97_r3d_focus_region_apex_s42 (loso_dev)
-[00:34:05] DONE  iter_97_r3d_focus_region_apex_s42: FINAL dev: UF1=0.6642 UAR=0.6961 ACC=0.6667
-[00:34:05] === QUEUE V16 COMPLETE ===

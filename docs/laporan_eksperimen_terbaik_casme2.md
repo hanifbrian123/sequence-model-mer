@@ -12,7 +12,7 @@ Berikut adalah rekapitulasi performa model-model terbaik yang telah dikembangkan
 
 | Run | Model & Strategi | Protokol Split | Akurasi (ACC) | Macro-F1 (UF1) | Recall (UAR) | Specificity | Macro-AUC | Artefak Visual & Log |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| [`188`](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5) | **R3D-18 + 11-AU Multi-Task (Champion)** | **LOSO 26** (246 sampel) | **69,92%** | **0,7211** | **0,7378** | **91,70%** | **0,8949** | [Confusion Matrix](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/confusion_matrix.png) • [ROC Curve](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/roc_curve.png) • [Kurva Training](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/curve_training.png) • [Per-Fold CSV](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/per_fold.csv) • [Log](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/run.log) |
+| [`188`](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5) | **R3D-18 + 11-AU Multi-Task (Champion)** | **LOSO 26** (246 sampel) | **69,92%** | **0,7211** | **0,7378** | **91,70%** | **0,8949** | [Diagram Arsitektur](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/architecture.png) • [Confusion Matrix](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/confusion_matrix.png) • [ROC Curve](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/roc_curve.png) • [Kurva Training](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/curve_training.png) • [Per-Fold CSV](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/per_fold.csv) • [Log](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5/run.log) |
 | [`017`](../runs/017_r3d) | R3D-18 Pure TV-L1 Flow Baseline | **LOSO 26** (246 sampel) | **68,70%** | **0,7145** | **0,7207** | **91,04%** | **0,8948** | [Confusion Matrix](../runs/017_r3d/confusion_matrix.png) • [ROC Curve](../runs/017_r3d/roc_curve.png) • [Kurva Training](../runs/017_r3d/curve_training.png) • [Per-Fold CSV](../runs/017_r3d/per_fold.csv) • [Log](../runs/017_r3d/run.log) |
 | [`182`](../runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5) | R3D-18 + Facial Region Focus Attention | **LOSO 26** (246 sampel) | **69,51%** | **0,7121** | **0,7271** | **91,58%** | **0,8964** | [Confusion Matrix](../runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/confusion_matrix.png) • [ROC Curve](../runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/roc_curve.png) • [Kurva Training](../runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/curve_training.png) • [Per-Fold CSV](../runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/per_fold.csv) • [Log](../runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/run.log) |
 | [`203`](../runs/203_expD_flow_strain_v2_dev_loso_all_p5) | R3D-18 + Flow & Strain Tensor ($\varepsilon_{xx}, \varepsilon_{yy}$) | **LOSO 26** (246 sampel) | **68,29%** | **0,6938** | **0,7046** | **91,36%** | **0,8923** | [Confusion Matrix](../runs/203_expD_flow_strain_v2_dev_loso_all_p5/confusion_matrix.png) • [ROC Curve](../runs/203_expD_flow_strain_v2_dev_loso_all_p5/roc_curve.png) • [Kurva Training](../runs/203_expD_flow_strain_v2_dev_loso_all_p5/curve_training.png) • [Per-Fold CSV](../runs/203_expD_flow_strain_v2_dev_loso_all_p5/per_fold.csv) • [Log](../runs/203_expD_flow_strain_v2_dev_loso_all_p5/run.log) |
@@ -37,34 +37,12 @@ Model Juara menyelesaikan masalah ini melalui dua pilar:
 2. **Supervisi Ganda Terbimbing (Multi-Task Facial Action Units)**:
    Mikro-ekspresi tersusun atas kombinasi kontraksi unit otot spesifik (*Action Units* / AU menurut FACS). Model dilatih secara bersamaan untuk memprediksi emosi utama serta keberadaan 11 AU aktif (AU1, AU2, AU4, AU5, AU7, AU9, AU10, AU12, AU14, AU15, AU17).
 
-### B. Diagram Alur Arsitektur
+### B. Diagram Arsitektur Model
 
-```mermaid
-flowchart TD
-    subgraph Input ["Input Video Stream (16 Frames)"]
-        A["Video Klip Onset - Offset (L frame)"] --> B["Sampling Temporal Merata (T = 16)"]
-        B --> C["TV-L1 Optical Flow Relatif terhadap Onset Frame"]
-        C --> D["Tensor Aliran Optik: 3 Channel (u, v, Magnitude) - 16×128×128"]
-    end
+![Diagram Arsitektur R3D-18 Multi-Task Facial Action Units](architecture_r3d_multitask_au.png)
 
-    subgraph Backbone ["Spatiotemporal 3D CNN (R3D-18)"]
-        D --> E["Conv3d Stem: 3×3×3, Stride (1, 2, 2)"]
-        E --> F["ResNet Layer 1 (2 Blok Res3D - 64 Dim)"]
-        F --> G["ResNet Layer 2 (2 Blok Res3D - 128 Dim)"]
-        G --> H["ResNet Layer 3 (2 Blok Res3D - 256 Dim)"]
-        H --> I["ResNet Layer 4 (2 Blok Res3D - 512 Dim)"]
-        I --> J["Spatio-Temporal Adaptive Pooling (Dimensi: 512)"]
-    end
+*Gambar 1: Diagram arsitektur end-to-end model juara R3D-18 Multi-Task Facial Action Units (Run 188). Arsitektur dirancang dengan tiga tahapan terpadu: (1) **Stage 1: Input Stream** mengekstrak volume aliran optik diferensial TV-L1 ($16 \times 128 \times 128$) terhadap frame onset untuk mengeliminasi bias identitas statis; (2) **Stage 2: Spatiotemporal 3D CNN Backbone (R3D-18)** mengekstraksi hierarki representasi gerak spatiotemporal dari Conv3D Stem hingga Layer 4 dan mereduksinya menjadi vektor laten 512-dimensi melalui Adaptive Pooling & Shared Dropout ($p=0,5$); serta (3) **Stage 3: Multi-Task Dual Heads** yang membagi representasi laten ke Kepala Emosi Utama (5 kelas MEGC) dan Kepala Auxiliary 11 Action Units (FACS AU) untuk meregularisasi ruang fitur dengan dinamika kontraksi otot mikro.*
 
-    subgraph MultiTaskHead ["Dual Classification Head"]
-        J --> K["Dropout (p = 0.5)"]
-        K --> L["Primary Emotion Head: Linear(512 -> 5)"]
-        K --> M["Auxiliary AU Head: Linear(512 -> 11)"]
-        L --> N["Loss Emosi: Cross-Entropy (Class-Weighted + Label Smoothing 0.1)"]
-        M --> O["Loss AU: BCEWithLogits (Pos-Weighted 11 AU)"]
-        N & O --> P["Total Loss: L_total = L_emotion + 0.5 × L_AU"]
-    end
-```
 
 ### C. Formulasi Matematis Fungsi Objektif
 

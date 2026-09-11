@@ -1,0 +1,109 @@
+{
+  "name": "203_expD_flow_strain_v2_dev_loso_all_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-09-11T12:19:22.873052",
+  "elapsed_sec": 9207.440495491028,
+  "config_sha256": "52af5ded7ed92be8e51b3fa0bd4b99f92f25e8be1a23cbff4ca8a942236c87da",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "split": "loso_all",
+  "n_folds": 26,
+  "n_subjects": 26,
+  "fold_checkpoints_saved": false,
+  "num_classes": 5,
+  "UF1": 0.6937926413255361,
+  "UAR": 0.7046281866281866,
+  "ACC": 0.6829268292682927,
+  "per_class_f1": [
+    0.631578947368421,
+    0.703125,
+    0.5925925925925926,
+    0.875,
+    0.6666666666666666
+  ],
+  "per_class_recall": [
+    0.75,
+    0.7142857142857143,
+    0.5925925925925926,
+    0.84,
+    0.6262626262626263
+  ],
+  "confusion_matrix": [
+    [
+      24,
+      1,
+      0,
+      1,
+      6
+    ],
+    [
+      3,
+      45,
+      2,
+      0,
+      13
+    ],
+    [
+      5,
+      0,
+      16,
+      0,
+      6
+    ],
+    [
+      3,
+      0,
+      1,
+      21,
+      0
+    ],
+    [
+      9,
+      19,
+      8,
+      1,
+      62
+    ]
+  ],
+  "n": 246,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "batch_size": 8,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.1,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 1,
+    "cache_dir": "cache/flow128",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "dataset": "casme2",
+    "modality": "flow",
+    "flow_third": "both",
+    "in_channels": 4,
+    "temporal_span": "onset_offset",
+    "grad_accum": 2,
+    "loss": "focal",
+    "focal_gamma": 2.0,
+    "name": "203_expD_flow_strain"
+  }
+}

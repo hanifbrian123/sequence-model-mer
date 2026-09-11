@@ -1,0 +1,107 @@
+{
+  "name": "202_expC_gcngru_on_megc_v2_dev_loso_all_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-09-11T15:54:49.602091",
+  "elapsed_sec": 566.1334960460663,
+  "config_sha256": "43152b8d9a673209e94711401447afcd068bbb0882696552bcda9277818d2e00",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "split": "loso_all",
+  "n_folds": 26,
+  "n_subjects": 26,
+  "fold_checkpoints_saved": false,
+  "num_classes": 5,
+  "UF1": 0.17989803031032672,
+  "UAR": 0.2619172679172679,
+  "ACC": 0.17886178861788618,
+  "per_class_f1": [
+    0.22857142857142856,
+    0.0963855421686747,
+    0.09174311926605505,
+    0.3364485981308411,
+    0.14634146341463414
+  ],
+  "per_class_recall": [
+    0.25,
+    0.06349206349206349,
+    0.18518518518518517,
+    0.72,
+    0.09090909090909091
+  ],
+  "confusion_matrix": [
+    [
+      8,
+      4,
+      6,
+      10,
+      4
+    ],
+    [
+      13,
+      4,
+      25,
+      14,
+      7
+    ],
+    [
+      5,
+      5,
+      5,
+      9,
+      3
+    ],
+    [
+      3,
+      0,
+      3,
+      18,
+      1
+    ],
+    [
+      9,
+      7,
+      43,
+      31,
+      9
+    ]
+  ],
+  "n": 246,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 0,
+    "base_size": 128,
+    "input_mode": "rgb",
+    "backbone": "gcn_gru",
+    "pretrained": true,
+    "dropout": 0.3,
+    "epochs": 35,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 16,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.1,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 1,
+    "cache_dir": "cache/graph7ch_468",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "202_expC_gcngru_on_megc",
+    "in_channels": 7,
+    "num_nodes": 468,
+    "modality": "graph",
+    "gcn_hidden": 64,
+    "gru_hidden": 64,
+    "fc_hidden": 32
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "202_expC_gcngru_on_megc",
+  "seed": 42,
+  "T": 16,
+  "img_size": 0,
+  "in_channels": 7,
+  "num_nodes": 468,
+  "modality": "graph",
+  "backbone": "gcn_gru",
+  "gcn_hidden": 64,
+  "gru_hidden": 64,
+  "fc_hidden": 32,
+  "dropout": 0.3,
+  "epochs": 35,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "batch_size": 16,
+  "class_weighting": true,
+  "label_smoothing": 0.1,
+  "amp": true,
+  "cache_dir": "cache/graph7ch_468",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ]
+}

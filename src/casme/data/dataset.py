@@ -338,6 +338,19 @@ def prepare_seq_array(arr, sample, cfg, train=False, view=None, region=None):
     if cfg.get("modality") == "features":
         clip = arr if arr.shape[0] == cfg.get("T", 16) else arr[indices]
         return torch.from_numpy(clip.copy()).float()
+    if cfg.get("modality") == "graph":
+        if arr.ndim == 3 and arr.shape[0] == 7 and arr.shape[1] == cfg.get("T", 16) and arr.shape[2] == 468:
+            return torch.from_numpy(arr.copy()).float()
+        num_nodes = int(cfg.get("num_nodes", 468))
+        lm = arr[indices, :num_nodes, :2].astype(np.float32)
+        anchor = lm[0:1]
+        glob_disp = lm - anchor
+        temp_disp = np.zeros_like(lm)
+        temp_disp[1:] = lm[1:] - lm[:-1]
+        mag = np.sqrt(glob_disp[..., 0] ** 2 + glob_disp[..., 1] ** 2)[..., None]
+        feat = np.concatenate([lm, glob_disp, temp_disp, mag], axis=-1)
+        feat = np.transpose(feat, (2, 0, 1)).astype(np.float32)
+        return torch.from_numpy(feat.copy()).float()
     clip = arr[indices]
     height, width = clip.shape[1], clip.shape[2]
     size = cfg["img_size"]
@@ -426,7 +439,7 @@ class SeqDataset(Dataset):
         self.train = train
         self.view = view or {}
         self.T = cfg["T"]
-        self.s = cfg["img_size"]
+        self.s = cfg.get("img_size", 0)
         self.input_mode = cfg.get("input_mode", "rgb")
         self.modality = cfg.get("modality", "rgb")
         self.flow_clip = cfg.get("flow_clip", 3.0)

@@ -379,5 +379,17 @@ def build_model(cfg, num_classes):
             dim_feedforward=int(cfg.get("dim_feedforward", 1024)),
             dropout=float(cfg.get("dropout", 0.3)),
         )
+    if name == "gcn_gru":
+        from casme.models.gcn_gru import GCNGRUClassifier
+        return GCNGRUClassifier(
+            num_classes=num_classes,
+            num_nodes=int(cfg.get("num_nodes", 468)),
+            in_channels=int(cfg.get("in_channels", 7)),
+            num_frames=int(cfg.get("T", 16)),
+            gcn_hidden=int(cfg.get("gcn_hidden", 64)),
+            gru_hidden=int(cfg.get("gru_hidden", 64)),
+            fc_hidden=int(cfg.get("fc_hidden", 32)),
+            dropout=float(cfg.get("dropout", 0.3)),
+        )
     raise ValueError(f"unknown backbone {name}")
 

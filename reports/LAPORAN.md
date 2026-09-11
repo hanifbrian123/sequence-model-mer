@@ -1,6 +1,6 @@
 # Laporan Eksperimen CASME II — Klasifikasi Micro-Expression (5 Kelas)
 
-Dibuat otomatis dari hasil eksperimen pada **10 September 2026, 17:01**.
+Dibuat otomatis dari hasil eksperimen pada **11 September 2026, 11:26**.
 Regenerasi laporan: `python -m casme.reporting.report` atau `bash scripts/rebuild_reports.sh`.
 
 Seluruh data angka terpusat di `results/results.csv` (satu baris per run). Dokumen ini adalah satu-satunya file laporan resmi proyek; narasi disunting di `docs/narasi.md`.
@@ -69,7 +69,7 @@ Gate promosi kandidat: **paired subject-bootstrap 10.000 iterasi**, minimum effe
 
 ## 4. Semua Run Sekilas (Master Progression Table)
 
-Daftar lengkap seluruh **196 run** eksperimen yang tercatat di `runs/` dan `results/results.csv`, diurutkan secara numerik dari `000_` s.d. selesai:
+Daftar lengkap seluruh **198 run** eksperimen yang tercatat di `runs/` dan `results/results.csv`, diurutkan secara numerik dari `000_` s.d. selesai:
 
 | Run | Protokol | Split | Backbone | UF1 | UAR | ACC | Epochs | Waktu Selesai |
 |---|---|---|---|---|---|---|---|---|
@@ -269,6 +269,8 @@ Daftar lengkap seluruh **196 run** eksperimen yang tercatat di `runs/` dan `resu
 | `194_resnetgru_nopretrain_apex_s42_v2_dev_loso_all_p5` | protocol_v2 | LOSO 26 | resnet_gru | 0,6904 | 0,7248 | 0,6545 | 25 | 2026-08-07 |
 | `195_focus_rnn_nopretrain_full_s42_v2_dev_loso_all_p5` | protocol_v2 | LOSO 26 | resnet_gru | 0,6148 | 0,6498 | 0,5935 | 25 | 2026-08-07 |
 | `196_focus_rnn_nopretrain_es_full_s42_v2_dev_loso_all_p5` | protocol_v2 | LOSO 26 | resnet_gru | 0,5679 | 0,6047 | 0,5569 | 60 | 2026-08-07 |
+| `200_expA_flow_on_replica_v2_dev_loso_all_p5` | protocol_v2 | LOSO 26 | r3d_18 | 0,5389 | 0,5415 | 0,8833 | 25 | 2026-09-11 |
+| `201_expB_vivit_on_megc_v2_dev_loso_all_p5` | protocol_v2 | LOSO 26 | cnn_temporal_vivit | 0,2093 | 0,2267 | 0,2805 | 30 | 2026-09-11 |
 
 ---
 
@@ -298,7 +300,7 @@ Cabang eksperimen dan pendekatan yang **telah dibuktikan tidak efektif / ditutup
 
 ## 7. Statistik Repositori & Prosedur Reproduksi
 
-- **Total Run Tercatat:** 196 eksperimen mandiri (tersimpan di `runs/` dan terindeks di `results/results.csv`).
+- **Total Run Tercatat:** 198 eksperimen mandiri (tersimpan di `runs/` dan terindeks di `results/results.csv`).
 - **Struktur Repositori:** Bersih dan terstandarisasi penuh (`configs/NNN_*.json`, `runs/NNN_*/`, `results/results.csv`, `reports/LAPORAN.md`).
 - **Pemeriksaan Integritas:** Jalankan `bash scripts/check.sh` untuk memverifikasi struktur dan unittests.
 - **Regenerasi Hasil & Laporan:** Jalankan `bash scripts/rebuild_reports.sh` untuk menyusun ulang tabel dan laporan secara deterministik tanpa training ulang.

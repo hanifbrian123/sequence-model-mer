@@ -1,0 +1,105 @@
+{
+  "name": "200_expA_flow_on_replica_v2_dev_loso_all_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-09-11T11:10:09.604475",
+  "elapsed_sec": 4929.544307470322,
+  "config_sha256": "5b054512f37156ea26a268c26d087d2a211b5648432048b9ad2c89006677a197",
+  "protocol_samples_sha256": "fe8798632483933c3720c59b136077e7052e88ca25e47dd8db92a2b8923bb20a",
+  "split": "loso_all",
+  "n_folds": 21,
+  "n_subjects": 21,
+  "fold_checkpoints_saved": false,
+  "num_classes": 5,
+  "UF1": 0.5389462941701748,
+  "UAR": 0.5415039682539683,
+  "ACC": 0.8833333333333333,
+  "per_class_f1": [
+    0.8656716417910447,
+    0.905982905982906,
+    0.0,
+    0.9230769230769231,
+    0.0
+  ],
+  "per_class_recall": [
+    0.90625,
+    0.8412698412698413,
+    0.0,
+    0.96,
+    0.0
+  ],
+  "confusion_matrix": [
+    [
+      29,
+      1,
+      0,
+      2,
+      0
+    ],
+    [
+      5,
+      53,
+      2,
+      1,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      24,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "n": 120,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 128,
+    "base_size": 144,
+    "input_mode": "rgb",
+    "backbone": "r3d_18",
+    "pretrained": true,
+    "dropout": 0.5,
+    "epochs": 25,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 4,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.1,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 5,
+    "cache_dir": "cache/flow144",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "disgust",
+      "fear",
+      "happiness",
+      "sadness",
+      "surprise"
+    ],
+    "name": "200_expA_flow_on_replica",
+    "modality": "flow",
+    "temporal_span": "onset_offset",
+    "flow_clip": 3.0,
+    "external_replica": true
+  }
+}

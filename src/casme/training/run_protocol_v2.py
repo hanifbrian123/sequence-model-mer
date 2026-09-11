@@ -331,7 +331,7 @@ def main():
     with open(os.path.join(output_dir, "summary.json"), "w", encoding="utf-8") as handle:
         json.dump(summary, handle, indent=2)
 
-    ledger_path = os.path.join(REPO, "results_protocol_v2.csv")
+    ledger_path = os.path.join(REPO, "results", "results_protocol_v2.csv")
     ledger_row = {
         "name": name, "role": args.role, "complete": complete,
         "UF1": metrics["UF1"], "UAR": metrics["UAR"], "ACC": metrics["ACC"],

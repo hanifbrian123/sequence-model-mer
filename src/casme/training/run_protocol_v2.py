@@ -146,7 +146,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--role", choices=("dev", "audit"), default="dev")
-    parser.add_argument("--protocol", default="protocols/accuracy_v5.json")
+    parser.add_argument("--protocol", default="configs/protocols/accuracy_v5.json")
     parser.add_argument("--lock", default="")
     parser.add_argument("--tag", default="")
     parser.add_argument(
@@ -172,7 +172,7 @@ def main():
     split_tag = "" if args.split == "grouped" else f"_{args.split}"
     name = (f"{stem}_v2_{args.role}{split_tag}"
             + (f"_{args.tag}" if args.tag else ""))
-    output_dir = os.path.join(REPO, "experiments", "protocol_v2", name)
+    output_dir = os.path.join(REPO, "runs", name)
     os.makedirs(output_dir, exist_ok=True)
     log_file = open(os.path.join(output_dir, "run.log"), "w", encoding="utf-8")
 
@@ -188,8 +188,11 @@ def main():
     log(f"device: {device} ({torch.cuda.get_device_name(0) if device == 'cuda' else 'cpu'})")
     log(f"platform: {platform.platform()} | torch {torch.__version__}")
     samples, arrays = _load_problem(cfg, log)
-    protocol_path = (args.protocol if os.path.isabs(args.protocol)
-                     else os.path.join(REPO, args.protocol))
+    if cfg.get("external_replica", False) and args.protocol == "configs/protocols/accuracy_v5.json":
+        protocol_path = os.path.join(REPO, "configs/protocols/external_replica_120.json")
+    else:
+        protocol_path = (args.protocol if os.path.isabs(args.protocol)
+                         else os.path.join(REPO, args.protocol))
     protocol = load_or_create_protocol(
         samples, len(cfg["class_names"]), protocol_path)
     audit_subjects, dev_subjects, dev_folds = protocol_subject_sets(protocol)

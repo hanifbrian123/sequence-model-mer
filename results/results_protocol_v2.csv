@@ -1,0 +1,2 @@
+name,role,complete,UF1,UAR,ACC,split,n_folds,n_subjects,elapsed_sec,config_sha256,time
+202_expC_gcngru_on_megc_v2_dev_loso_all_p5,dev,True,0.17989803031032672,0.2619172679172679,0.17886178861788618,loso_all,26,26,566.1334960460663,43152b8d9a673209e94711401447afcd068bbb0882696552bcda9277818d2e00,2026-09-11T15:54:49.603115

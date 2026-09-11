@@ -1,0 +1,28 @@
+{
+  "name": "201_expB_vivit_on_megc",
+  "seed": 42,
+  "T": 16,
+  "feature_dim": 2048,
+  "modality": "features",
+  "backbone": "cnn_temporal_vivit",
+  "d_model": 512,
+  "nhead": 8,
+  "num_layers": 4,
+  "dim_feedforward": 1024,
+  "dropout": 0.3,
+  "epochs": 30,
+  "lr": 0.0001,
+  "weight_decay": 0.001,
+  "batch_size": 8,
+  "class_weighting": true,
+  "label_smoothing": 0.1,
+  "amp": true,
+  "cache_dir": "cache/features_resnet50",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ]
+}

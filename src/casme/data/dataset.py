@@ -342,6 +342,12 @@ def prepare_seq_array(arr, sample, cfg, train=False, view=None, region=None):
                           mode=view.get("crop", "center"))
     flip = (train and cfg.get("hflip", True) and np.random.rand() < 0.5) \
         if train else bool(view.get("flip", False))
+    if cfg.get("modality", "rgb") == "landmarks":
+        output = clip  # (T, 478, 3)
+        # We need to return (C, T, V). So we just return torch tensor (3, T, 478)
+        # skip resize and flip for now, or just return here directly
+        return torch.from_numpy(np.transpose(output, (2, 0, 1)).copy()).float()
+        
     if cfg.get("modality", "rgb") == "flow":
         output = build_flow(
             clip, top, left, size, flip, cfg.get("flow_clip", 3.0),

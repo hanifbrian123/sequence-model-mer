@@ -1,0 +1,31 @@
+{
+  "dataset": "casme2",
+  "T": 16,
+  "img_size": 128,
+  "base_size": 144,
+  "modality": "flow",
+  "flow_third": "both",
+  "in_channels": 4,
+  "temporal_span": "onset_offset",
+  "backbone": "r3d_18",
+  "pretrained": true,
+  "dropout": 0.5,
+  "epochs": 25,
+  "lr": 0.0003,
+  "weight_decay": 0.0001,
+  "batch_size": 8,
+  "grad_accum": 2,
+  "loss": "focal",
+  "focal_gamma": 2.0,
+  "label_smoothing": 0.1,
+  "seed": 42,
+  "cache_dir": "cache/flow128",
+  "name": "203_expD_flow_strain",
+  "class_names": [
+    "happiness",
+    "disgust",
+    "repression",
+    "surprise",
+    "others"
+  ]
+}

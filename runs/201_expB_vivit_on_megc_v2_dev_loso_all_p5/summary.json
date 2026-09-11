@@ -1,0 +1,107 @@
+{
+  "name": "201_expB_vivit_on_megc_v2_dev_loso_all_p5",
+  "role": "dev",
+  "complete": true,
+  "time": "2026-09-11T11:26:05.549537",
+  "elapsed_sec": 942.4443759918213,
+  "config_sha256": "b462b904238aea803bee3d7fbe9b31a07fae7eef00296ae60cfa68cb6f860930",
+  "protocol_samples_sha256": "e34f981abd57cf3f9d476c75c0494d46acb19d2b8af87efb13a17278ceb85c8f",
+  "split": "loso_all",
+  "n_folds": 26,
+  "n_subjects": 26,
+  "fold_checkpoints_saved": false,
+  "num_classes": 5,
+  "UF1": 0.20931630355422284,
+  "UAR": 0.2267323232323232,
+  "ACC": 0.2804878048780488,
+  "per_class_f1": [
+    0.3076923076923077,
+    0.24778761061946902,
+    0.0,
+    0.08695652173913043,
+    0.40414507772020725
+  ],
+  "per_class_recall": [
+    0.4375,
+    0.2222222222222222,
+    0.0,
+    0.08,
+    0.3939393939393939
+  ],
+  "confusion_matrix": [
+    [
+      14,
+      8,
+      2,
+      1,
+      7
+    ],
+    [
+      18,
+      14,
+      9,
+      1,
+      21
+    ],
+    [
+      12,
+      5,
+      0,
+      1,
+      9
+    ],
+    [
+      3,
+      0,
+      2,
+      2,
+      18
+    ],
+    [
+      12,
+      23,
+      9,
+      16,
+      39
+    ]
+  ],
+  "n": 246,
+  "config": {
+    "seed": 42,
+    "T": 16,
+    "img_size": 112,
+    "base_size": 128,
+    "input_mode": "rgb",
+    "backbone": "cnn_temporal_vivit",
+    "pretrained": true,
+    "dropout": 0.3,
+    "epochs": 30,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "batch_size": 8,
+    "class_weighting": true,
+    "label_smoothing": 0.1,
+    "hflip": true,
+    "color_jitter": 0.1,
+    "temporal_jitter": true,
+    "amp": true,
+    "eval_last_k": 3,
+    "tta": 1,
+    "cache_dir": "cache/features_resnet50",
+    "index": "cache/index_emotion.csv",
+    "class_names": [
+      "happiness",
+      "disgust",
+      "repression",
+      "surprise",
+      "others"
+    ],
+    "name": "201_expB_vivit_on_megc",
+    "feature_dim": 2048,
+    "modality": "features",
+    "d_model": 512,
+    "nhead": 8,
+    "num_layers": 4,
+    "dim_feedforward": 1024
+  }
+}

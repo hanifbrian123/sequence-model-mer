@@ -3,7 +3,7 @@ private/
 __pycache__/
 cache/
 .vscode/
-models/
+/models/
 AGENTS.md
 
 # Model weights: 132 MB per checkpoint, above GitHub's 100 MB hard limit.

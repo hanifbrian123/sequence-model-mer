@@ -60,7 +60,7 @@ for stem in "${stems[@]}"; do
   fi
 
   log "MULAI  ${stem}"
-  $PY -m casme.training.run_protocol_v2 --config "configs/${stem}.json" --role dev --split loso_all --break_audit_seal --tag p5 \
+  $PY src/casme/training/run_protocol_v2.py --config "configs/${stem}.json" --role dev --split loso_all --break_audit_seal --tag p5 \
       > "logs/runs/${stem}_stdout.log" 2>&1 || true
 
   if [ -f "${out}/summary.json" ] && grep -q '"complete": true' "${out}/summary.json" 2>/dev/null; then

@@ -1,0 +1,1757 @@
+================================================================================
+DETAILS FOR: ViViT_Training_Testing_LOSO.ipynb
+================================================================================
+
+--- Cell 0 [markdown] ---
+  src: # 🧠 ViViT Micro-Expression Recognition — Leave-One-Subject-Out (LOSO) Cross-Validation
+  src: Pipeline pengujian **Leave-One-Subject-Out (LOSO) Cross-Validation** terakselerasi **Fast Precomputed CNN-ViViT** khusus untuk dataset **CASME II**.
+  src: ### 🌟 Perbaikan Utama Pipeline:
+  src: 1. **True 16-Frame Temporal Sequence**: Setiap klip mikro-ekspresi di-*sample* secara seragam menjadi **16 frame temporal berurutan** (bukan duplikasi frame tunggal).
+  src: 2. **Subject-Aware Isolation (Zero Data Leakage)**: Pemisahan data per-subjek manusia (`sub01` s/d `sub26`) secara ketat tanpa kebocoran antar-fold.
+  src: 3. **Konfigurasi Label Fleksibel**: Mendukung **5 Kelas Standar** (`disgust`, `fear`, `happiness`, `sadness`, `surprise`) maupun **7 Kelas Lengkap CASME II** (`disgust`, `fear`, `happiness`, `others`, `repression`, `sadness`, `surprise`).
+  src: 4. **Feature-Level SMOTE Balancing**: Penyeimbangan kelas minoritas secara on-the-fly *hanya* pada fold training.
+  src: 5. **Standar Evaluasi Benchmark MEGC**:
+  ... (4 more lines)
+
+--- Cell 2 [code] ---
+  src: %load_ext autoreload
+  src: %autoreload 2
+  src: import os
+  src: import sys
+  src: import time
+  src: import json
+  src: import glob
+  src: import re
+  ... (47 more lines)
+  >>> OUTPUT:
+    ============================================================
+    Project Root   : D:\Programming\Gravity\emotion Detection
+    PyTorch Version: 2.5.1+cu121
+    Device Target  : cuda
+    GPU Name       : NVIDIA GeForce RTX 4060
+    VRAM           : 8.0 GB (Free: 6.9 GB)
+    ============================================================
+
+--- Cell 3 [markdown] ---
+  src: ---
+  src: ## Step 2: Konfigurasi Hyperparameters, Label & Mode LOSO
+  src: Pilih opsi kelas yang ingin digunakan:
+  src: - `EMOTION_MODE = "5-class"`: `["disgust", "fear", "happiness", "sadness", "surprise"]`
+  src: - `EMOTION_MODE = "7-class"`: `["disgust", "fear", "happiness", "others", "repression", "sadness", "surprise"]`
+
+--- Cell 4 [code] ---
+  src: # ============================================================
+  src: #  HYPERPARAMETERS & LOSO CONFIGURATION
+  src: # ============================================================
+  src: SEED = 42
+  src: def set_seed(seed=42):
+  src:     random.seed(seed)
+  src:     np.random.seed(seed)
+  src:     torch.manual_seed(seed)
+  ... (54 more lines)
+  >>> OUTPUT:
+    ============================================================
+                  KONFIGURASI LOSO CROSS-VALIDATION
+    ============================================================
+      Dataset Target      : CASME2 (D:\Programming\Gravity\emotion Detection\train/CASME2)
+      Mode Emosi          : 5-class (5 Kelas: ['disgust', 'fear', 'happiness', 'sadness', 'surprise'])
+      Mode Akselerasi     : ⚡ PRECOMPUTED CNN (RESNET50)
+      LOSO Mode           : all
+      Frame Sequence      : 16 Frame per Sekuens Mikro-Ekspresi
+      Epochs per Fold     : 25
+      SMOTE Balancing     : True (Jitter: 0.02)
+    ============================================================
+
+--- Cell 6 [code] ---
+  src: # ============================================================
+  src: #  BUILD 16-FRAME SEQUENCE DATASET FROM CASME2
+  src: # ============================================================
+  src: CASME2_DIR = os.path.join(PROJECT_ROOT, "train", "CASME2")
+  src: EXCEL_PATH = os.path.join(PROJECT_ROOT, "train/New-Datasets/Onset_Apex_Files/CASME2/CASME2-coding-20140508.xlsx")
+  src: # 1. Load Excel Metadata CASME II jika ada
+  src: excel_sequences_by_emotion = defaultdict(list)
+  src: if os.path.exists(EXCEL_PATH):
+  ... (65 more lines)
+  >>> OUTPUT:
+    ✅ Excel CASME II Coding dimuat: 255 sekuens teranotasi
+    
+    🎯 TOTAL SEKUEN MIKRO-EKSPRESI DITEMUKAN: 87 klip
+    🎯 TOTAL SUBJEK TERDETEKSI             : 17 subjek (sub01 s/d sub19)
+    🎯 FRAME PER SEKUEN                   : 16 frame
+    
+    Distribusi Sekuens per Kelas Emosi:
+      - disgust     :  41 klip video
+      - fear        :   2 klip video
+      - happiness   :  24 klip video
+      - sadness     :   3 klip video
+      - surprise    :  17 klip video
+
+--- Cell 8 [code] ---
+  src: # ============================================================
+  src: #  VISUALISASI DISTRIBUSI SEKUEN VIDEO (16-FRAME KLIP)
+  src: # ============================================================
+  src: sub_clip_counts = Counter([s["subject_id"] for s in sequences_meta])
+  src: emo_clip_counts = Counter([s["emotion"] for s in sequences_meta])
+  src: fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 5))
+  src: # 1. Plot Subjek (Jumlah Klip Video)
+  src: sorted_subs = sorted(sub_clip_counts.keys())
+  ... (17 more lines)
+  >>> OUTPUT:
+    <Figure size 1800x500 with 2 Axes>
+
+--- Cell 9 [markdown] ---
+  src: ---
+  src: ## Step 4: Ekstraksi Fitur Spasial CNN (16 Frame per Sekuens)
+  src: Ekstraksi representasi fitur spasial ResNet-50 untuk setiap 16 frame pada semua klip mikro-ekspresi. Fitur disimpan ke file cache `.pt` agar training transformer LOSO dapat berjalan super cepat (~1-2 menit untuk 26 fold).
+
+--- Cell 10 [code] ---
+  src: # ============================================================
+  src: #  PRECOMPUTE CNN FEATURES FOR 16-FRAME SEQUENCES
+  src: # ============================================================
+  src: os.makedirs(CACHE_DIR, exist_ok=True)
+  src: cache_file = os.path.join(CACHE_DIR, f"casme2_sequences_{EMOTION_MODE}_{CNN_BACKBONE}_{NUM_FRAMES}f.pt")
+  src: def get_feature_extractor(backbone_name="resnet50"):
+  src:     if backbone_name == "resnet50":
+  src:         weights = models.ResNet50_Weights.DEFAULT
+  ... (57 more lines)
+  >>> OUTPUT:
+    
+    📦 Memuat cache fitur dari: D:\Programming\Gravity\emotion Detection\outputs/cached_features\casme2_sequences_5-class_resnet50_16f.pt
+    📊 Tensor Fitur Sekuens: (87, 16, 2048) (Clips, Frames, FeatDim)
+    📊 Tensor Label        : (87,)
+
+--- Cell 11 [markdown] ---
+  src: ---
+  src: ## Step 5: Dataset Classes & Sequence-Level SMOTE
+
+--- Cell 12 [code] ---
+  src: class SequenceCachedDataset(Dataset):
+  src:     """Dataset fitur temporal sequence [16, feat_dim] per klip mikro-ekspresi."""
+  src:     def __init__(self, features, labels, subject_ids):
+  src:         self.features = features.float() # [N, 16, feat_dim]
+  src:         self.labels = labels.long()
+  src:         self.subject_ids = subject_ids
+  src:     def __len__(self):
+  src:         return len(self.labels)
+  ... (43 more lines)
+  >>> OUTPUT:
+    ✅ Dataset Sekuens Siap: Total 87 klip mikro-ekspresi
+
+--- Cell 13 [markdown] ---
+  src: ---
+  src: ## Step 6: Model Factory & Helper Functions
+
+--- Cell 14 [code] ---
+  src: def create_fold_model():
+  src:     """Membuat instance CNNTemporalViViT baru di setiap fold LOSO."""
+  src:     model = CNNTemporalViViT(
+  src:         feature_dim=feat_dim,
+  src:         num_classes=NUM_CLASSES,
+  src:         num_frames=NUM_FRAMES,
+  src:         d_model=512,
+  src:         nhead=8,
+  ... (64 more lines)
+  >>> OUTPUT:
+    ✅ Model Factory & Training Functions Siap!
+
+--- Cell 15 [markdown] ---
+  src: ---
+  src: ## Step 7: Leave-One-Subject-Out (LOSO) Training Loop 🚀
+  src: Menjalankan pengujian 26 Fold LOSO secara terisolasi:
+  src: 1. Di setiap fold, seluruh sekuens video milik subjek target dikeluarkan sebagai **Test Set Murni**.
+  src: 2. Sekuens dari sisa 25 subjek dilatih dan diseimbangkan menggunakan SMOTE.
+  src: 3. Dilakukan evaluasi metrik objektif tanpa kebocoran data (*zero leakage*).
+
+--- Cell 16 [code] ---
+  src: # Tentukan Subjek yang Dievaluasi
+  src: test_subjects_list = all_subjects if LOSO_MODE == "all" else [s for s in SELECTED_TEST_SUBJECTS if s in all_subjects]
+  src: print(f"\nMemulai LOSO Cross-Validation ({len(test_subjects_list)} Fold Subjek)...")
+  src: print("=" * 85)
+  src: loso_results = {
+  src:     "subject": [],
+  src:     "test_clips": [],
+  src:     "accuracy": [],
+  ... (95 more lines)
+  >>> OUTPUT:
+    
+    Memulai LOSO Cross-Validation (17 Fold Subjek)...
+    =====================================================================================
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  1/17] Subject SUB01 | Test:  3 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  5.8s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  2/17] Subject SUB02 | Test:  4 klip | Acc: 0.7500 ( 75.0%) | F1: 0.7333 | UF1: 0.7333 | Time:  5.2s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  3/17] Subject SUB03 | Test:  5 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.7s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  4/17] Subject SUB04 | Test:  3 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.6s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  5/17] Subject SUB05 | Test:  7 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  5.0s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  6/17] Subject SUB06 | Test:  4 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  5.1s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  7/17] Subject SUB07 | Test:  5 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.6s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  8/17] Subject SUB09 | Test:  6 klip | Acc: 0.8333 ( 83.3%) | F1: 0.4545 | UF1: 0.4545 | Time:  4.9s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD  9/17] Subject SUB10 | Test:  1 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  5.0s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 10/17] Subject SUB11 | Test:  4 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.4s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 11/17] Subject SUB12 | Test: 11 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.2s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 12/17] Subject SUB13 | Test:  2 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.8s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 13/17] Subject SUB14 | Test:  3 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.7s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 14/17] Subject SUB15 | Test:  3 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.7s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 15/17] Subject SUB16 | Test:  2 klip | Acc: 1.0000 (100.0%) | F1: 1.0000 | UF1: 1.0000 | Time:  4.8s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 16/17] Subject SUB17 | Test: 22 klip | Acc: 0.9091 ( 90.9%) | F1: 0.6580 | UF1: 0.6580 | Time:  3.4s
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+      ▶️ [FOLD 17/17] Subject SUB19 | Test:  2 klip | Acc: 0.5000 ( 50.0%) | F1: 0.3333 | UF1: 0.3333 | Time:  4.7s
+    =====================================================================================
+    ✅ LOSO CROSS-VALIDATION SELESAI (17 Subjek, Total Waktu: 1.34 Menit)
+    =====================================================================================
+
+--- Cell 17 [markdown] ---
+  src: ---
+  src: ## Step 7.1: Pengujian Merata (Balanced Evaluation: 2 Klip Video per Label Kelas) ⚖️
+  src: Pengujian khusus dengan **dataset uji seimbang (Balanced Test Set)** di mana setiap label kelas memiliki **tepat 2 klip video** yang diuji secara adil:
+  src: 1. Memisahkan 2 klip video dari setiap kelas emosi (`disgust`, `fear`, `happiness`, `sadness`, `surprise`) sebagai Test Set.
+  src: 2. Melatih model pada sisa klip video training dengan penyeimbangan SMOTE.
+  src: 3. Menguji dan menampilkan metrik performa, tabel detail prediksi per klip, serta visualisasi grafik evaluasi.
+
+--- Cell 18 [code] ---
+  src: # ============================================================
+  src: #  PENGUJIAN MERATA: TEPAT 2 KLIP VIDEO PER LABEL KELAS
+  src: # ============================================================
+  src: print("=" * 75)
+  src: print("  MEMULAI PENGUJIAN MERATA (BALANCED EVALUATION: 2 KLIP / KELAS)")
+  src: print("=" * 75)
+  src: # 1. Kumpulkan indeks per kelas
+  src: class_to_indices = defaultdict(list)
+  ... (134 more lines)
+  >>> OUTPUT:
+    ===========================================================================
+      MEMULAI PENGUJIAN MERATA (BALANCED EVALUATION: 2 KLIP / KELAS)
+    ===========================================================================
+    🎯 Total Sampel Training : 77 klip
+    🎯 Total Sampel Test     : 10 klip (2 klip/kelas)
+    
+    Distribusi Sampel Test Merata:
+      - disgust     : 2 klip video uji
+      - fear        : 2 klip video uji
+      - happiness   : 2 klip video uji
+      - sadness     : 2 klip video uji
+      - surprise    : 2 klip video uji
+    
+    Melatih model untuk pengujian seimbang...
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+    ===========================================================================
+      HASIL EVALUASI MERATA (2 KLIP VIDEO / KELAS)
+    ===========================================================================
+      🎯 Accuracy   : 0.6000 (60.0%)
+      🎯 Macro F1   : 0.4933
+      🎯 Weighted F1: 0.4933
+    ===========================================================================
+    
+    --- Tabel Detail Prediksi 2 Klip per Kelas ---
+    
+              Clip ID Subject True Label Pred Label Confidence  Status
+      disgust_clip010   sub05    disgust    disgust      96.7% ✅ BENAR
+      disgust_clip004   sub03    disgust    disgust      95.8% ✅ BENAR
+         fear_clip001   sub09       fear  happiness      92.3% ❌ SALAH
+         fear_clip002   sub10       fear    sadness      48.0% ❌ SALAH
+    ... (21 lines truncated, last line: )
+    <Figure size 1800x500 with 3 Axes>
+
+--- Cell 20 [code] ---
+  src: # ============================================================
+  src: #  PERHITUNGAN METRIK BENCHMARK GLOBAL
+  src: # ============================================================
+  src: y_true = np.array(all_global_labels)
+  src: y_pred = np.array(all_global_preds)
+  src: global_acc = accuracy_score(y_true, y_pred)
+  src: global_macro_f1 = f1_score(y_true, y_pred, average="macro", zero_division=0)
+  src: global_weighted_f1 = f1_score(y_true, y_pred, average="weighted", zero_division=0)
+  ... (57 more lines)
+  >>> OUTPUT:
+    =================================================================
+      HASIL EVALUASI GLOBAL LEAVE-ONE-SUBJECT-OUT (LOSO)
+    =================================================================
+      Total Klip Teruji       : 87 klip video mikro-ekspresi
+      Total Subjek Dievaluasi : 17
+      🎯 Overall Accuracy     : 0.9425 (94.25%)
+      🎯 Macro F1-Score        : 0.7088
+      🎯 Weighted F1-Score     : 0.9241
+      🎯 UF1 (Unweighted F1)   : 0.7088
+      🎯 UAR (Balanced Recall) : 0.6882
+    =================================================================
+    
+    --- Classification Report (Global LOSO) ---
+    
+                  precision    recall  f1-score   support
+    ... (11 lines truncated, last line: )
+    <Figure size 1800x500 with 2 Axes>
+
+--- Cell 21 [markdown] ---
+  src: ---
+  src: ## Step 9: Global Confusion Matrix, ROC Curves & Per-Subject Breakdown
+
+--- Cell 22 [code] ---
+  src: # ============================================================
+  src: #  GLOBAL CONFUSION MATRIX, ROC CURVES & PER-SUBJECT BAR CHART
+  src: # ============================================================
+  src: from sklearn.preprocessing import label_binarize
+  src: from sklearn.metrics import roc_curve, auc
+  src: fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
+  src: # 1. Confusion Matrix
+  src: cm = confusion_matrix(y_true, y_pred, labels=present_classes)
+  ... (21 more lines)
+  >>> OUTPUT:
+    <Figure size 1800x700 with 3 Axes>
+
+--- Cell 23 [markdown] ---
+  src: ---
+  src: ## Step 10: Simpan Laporan Hasil LOSO 📦
+
+--- Cell 24 [code] ---
+  src: # ============================================================
+  src: #  EXPORT HASIL LOSO KE JSON & CSV
+  src: # ============================================================
+  src: os.makedirs(LOG_DIR, exist_ok=True)
+  src: timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+  src: output_json_path = os.path.join(LOG_DIR, f"vivit_loso_casme2_{EMOTION_MODE}_{CNN_BACKBONE}_{timestamp}.json")
+  src: output_csv_path  = os.path.join(LOG_DIR, f"vivit_loso_casme2_{EMOTION_MODE}_{CNN_BACKBONE}_{timestamp}.csv")
+  src: # Simpan CSV Tabel
+  ... (31 more lines)
+  >>> OUTPUT:
+    ✅ Tabel CSV LOSO berhasil disimpan ke : D:\Programming\Gravity\emotion Detection\outputs\logs\vivit_loso_casme2_5-class_resnet50_20260818_222111.csv
+    ✅ Laporan JSON LOSO berhasil disimpan ke: D:\Programming\Gravity\emotion Detection\outputs\logs\vivit_loso_casme2_5-class_resnet50_20260818_222111.json
+    
+    ============================================================
+      RINGKASAN BENCHMARK LOSO CASME II (5-CLASS)
+    ============================================================
+      Overall Accuracy : 0.9425 (94.25%)
+      UF1 Score        : 0.7088
+      UAR Score        : 0.6882
+      Waktu Eksekusi   : 1.34 Menit
+    ============================================================
+================================================================================
+DETAILS FOR: ViViT_Training_Testing_LOSO copy.ipynb
+================================================================================
+
+--- Cell 0 [markdown] ---
+  src: # ViViT Micro-Expression Recognition — Leave-One-Subject-Out (LOSO) Cross-Validation
+  src: ### **Leave-One-Subject-Out (LOSO) Cross-Validation** khusus untuk dataset **CASME II / CASME 3**.
+  src: ### 🌟 Fitur Utama:
+  src: 1. **Subject-Aware Splitting**: Mencegah *subject data leakage* dengan memastikan subjek pada Test Set belum pernah dilihat sama sekali oleh model saat training.
+  src: 2. **SMOTE + Gaussian Jittering on Train Folds**: Mengatasi ketidakseimbangan kelas minoritas secara on-the-fly di setiap fold training.
+  src: 3. **Pretrained ViViT Backbone (Google ViViT-B/16x2 Kinetics-400)** dengan interpolasi temporal positional embedding adaptif.
+  src: 4. **Standar Benchmark Metrics (MEGC)**:
+  src:    - **UF1 (Unweighted F1-Score)**
+  ... (4 more lines)
+
+--- Cell 2 [code] ---
+  src: import os
+  src: import sys
+  src: # Prevent TensorFlow DLL conflict on Windows
+  src: os.environ["USE_TF"] = "0"
+  src: os.environ["TRANSFORMERS_NO_TF"] = "1"
+  src: os.environ["USE_TORCH"] = "1"
+  src: # Set project root
+  src: PROJECT_ROOT = os.path.abspath(os.path.join(os.getcwd(), ".."))
+  ... (37 more lines)
+  >>> OUTPUT:
+    ============================================================
+    PyTorch Version : 2.5.1+cu121
+    CUDA Available  : True
+    GPU Device Name : NVIDIA GeForce RTX 4060
+    GPU Memory      : 8.0 GB
+    Target Device   : cuda
+    ============================================================
+
+--- Cell 3 [markdown] ---
+  src: ---
+  src: ## Step 2: Konfigurasi Hyperparameters & Mode LOSO
+
+--- Cell 4 [code] ---
+  src: # ============================================================
+  src: #  HYPERPARAMETERS — Sesuaikan kebutuhan eksperimen
+  src: # ============================================================
+  src: SEED = 42
+  src: def set_seed(seed=42):
+  src:     random.seed(seed)
+  src:     np.random.seed(seed)
+  src:     torch.manual_seed(seed)
+  ... (41 more lines)
+  >>> OUTPUT:
+    ============================================================
+      KONFIGURASI LOSO CROSS-VALIDATION
+    ============================================================
+      Target Dataset   : CASME2
+      LOSO Mode        : all
+      Epochs per Fold  : 15 (Freeze: 3, Unfreeze: 4 layers)
+      Effective Batch  : 16
+      Learning Rate    : 5e-05
+      SMOTE + Jitter   : True (Jitter Std: 0.02)
+    ============================================================
+
+--- Cell 5 [markdown] ---
+  src: ---
+  src: ## Step 3: Subject-Aware Dataset Builder
+
+--- Cell 6 [code] ---
+  src: # ============================================================
+  src: #  SUBJECT-AWARE DATASET CLASS UNTUK CASME II & CASME 3
+  src: # ============================================================
+  src: class SubjectAwareVideoDataset(Dataset):
+  src:     """
+  src:     Dataset yang memuat gambar mikro-ekspresi beserta Subject ID untuk LOSO.
+  src:     """
+  src:     def __init__(self, image_paths, labels, subject_ids, transform=None, num_frames=16, is_train=True):
+  ... (72 more lines)
+  >>> OUTPUT:
+    ✅ Berhasil memuat 8497 sampel dari CASME2
+    🎯 Total Subjek Ditemukan: 26 subjek (sub01 s/d sub26)
+
+--- Cell 7 [code] ---
+  src: # ============================================================
+  src: #  VISUALISASI SEBARAN SAMPEL PER SUBJEK
+  src: # ============================================================
+  src: sub_counter = Counter(full_subject_dataset.subject_ids)
+  src: sorted_subs = sorted(sub_counter.keys())
+  src: sub_counts = [sub_counter[s] for s in sorted_subs]
+  src: fig, ax = plt.subplots(figsize=(14, 5))
+  src: bars = ax.bar(sorted_subs, sub_counts, color="#4D96FF", edgecolor="black", alpha=0.85)
+  ... (11 more lines)
+  >>> OUTPUT:
+    <Figure size 1400x500 with 1 Axes>
+
+--- Cell 8 [markdown] ---
+  src: ---
+  src: ## Step 4: Model Builder & Training Functions
+
+--- Cell 9 [code] ---
+  src: # ============================================================
+  src: #  BUILD FRESH VIVIT MODEL PER FOLD
+  src: # ============================================================
+  src: def create_vivit_model():
+  src:     """
+  src:     Inisialisasi model ViViT bersih dari pretrained Kinetics-400
+  src:     dengan interpolasi temporal otomatis.
+  src:     """
+  ... (71 more lines)
+  >>> OUTPUT:
+    Training & evaluation helper functions defined!
+
+--- Cell 10 [markdown] ---
+  src: ---
+  src: ## Step 5: LOSO Cross-Validation Training Loop 🚀
+  src: Pada tahap ini, model dilatih dan diuji untuk setiap subjek secara independen menggunakan skema **Leave-One-Subject-Out**.
+
+--- Cell 11 [code] ---
+  src: # Tentukan list subjek yang akan dievaluasi
+  src: if LOSO_MODE == "all":
+  src:     test_subjects_list = all_subjects
+  src: else:
+  src:     test_subjects_list = [s for s in SELECTED_TEST_SUBJECTS if s in all_subjects]
+  src: train_transform = get_train_transforms(IMAGE_SIZE)
+  src: val_transform = get_val_transforms(IMAGE_SIZE)
+  src: print(f"\nMemulai LOSO Cross-Validation pada {len(test_subjects_list)} Fold Subjek: {test_subjects_list}")
+  ... (80 more lines)
+  >>> OUTPUT:
+    
+    Memulai LOSO Cross-Validation pada 26 Fold Subjek: ['sub01', 'sub02', 'sub03', 'sub04', 'sub05', 'sub06', 'sub07', 'sub08', 'sub09', 'sub10', 'sub11', 'sub12', 'sub13', 'sub14', 'sub15', 'sub16', 'sub17', 'sub18', 'sub19', 'sub20', 'sub21', 'sub22', 'sub23', 'sub24', 'sub25', 'sub26']
+    ================================================================================
+    
+    ▶️ [FOLD  1/26] Test Subject: SUB01
+    --------------------------------------------------------------------------------
+    
+    [SMOTE + Jitter] Dataset Balancing Report (Jitter Std: 0.02, Alpha: 0.5):
+      [0] anger       :      0 asli +      0 sintetis ->      0 total
+      [1] disgust     :  4,142 asli +      0 sintetis ->  4,142 total
+      [2] fear        :    127 asli +  4,015 sintetis ->  4,142 total
+      [3] happiness   :  2,351 asli +  1,791 sintetis ->  4,142 total
+      [4] neutral     :      0 asli +      0 sintetis ->      0 total
+      [5] sadness     :    265 asli +  3,877 sintetis ->  4,142 total
+      [6] surprise    :  1,573 asli +  2,569 sintetis ->  4,142 total
+    ... (3 lines truncated, last line:   [MODEL] Loading pretrained ViViT from google/vivit-b-16x2-kinetics400...)
+    Loading weights:   0%|          | 0/198 [00:00<?, ?it/s]
+    [transformers] [1mVivitModel LOAD REPORT[0m from: google/vivit-b-16x2-kinetics400
+    Key                 | Status     | 
+    --------------------+------------+-
+    classifier.weight   | UNEXPECTED | 
+    classifier.bias     | UNEXPECTED | 
+    pooler.dense.weight | MISSING    | 
+    pooler.dense.bias   | MISSING    | 
+    
+    Notes:
+    - UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    - MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+      [MODEL] Interpolating temporal positional embeddings from 32 frames to 16 frames...
+      [MODEL] Backbone frozen. Trainable: 301,063/88,332,295 (0.3%)
+    
+    [CLASS WEIGHTS] Distribusi label:
+      anger       :      0 sampel -> weight 1208.2858
+      disgust     :   4142 sampel -> weight 0.2917
+      fear        :    127 sampel -> weight 9.5141
+      happiness   :   2351 sampel -> weight 0.5139
+      neutral     :      0 sampel -> weight 1208.2858
+      sadness     :    265 sampel -> weight 4.5596
+      surprise    :   1573 sampel -> weight 0.7681
+      [MODEL] Backbone frozen. Trainable: 301,063/88,332,295 (0.3%)
+      [MODEL] Trainable: 301,063/88,332,295 (0.3%)
+
+--- Cell 13 [code] ---
+  src: # ============================================================
+  src: #  PERHITUNGAN METRIK BENCHMARK GLOBAL
+  src: # ============================================================
+  src: y_true = np.array(all_global_labels)
+  src: y_pred = np.array(all_global_preds)
+  src: global_acc = accuracy_score(y_true, y_pred)
+  src: global_macro_f1 = f1_score(y_true, y_pred, average="macro", zero_division=0)
+  src: global_uar = recall_score(y_true, y_pred, average="macro", zero_division=0)  # UAR = Balanced Recall
+  ... (18 more lines)
+
+--- Cell 14 [code] ---
+  src: # ============================================================
+  src: #  GLOBAL CONFUSION MATRIX
+  src: # ============================================================
+  src: cm = confusion_matrix(y_true, y_pred, labels=present_classes)
+  src: fig, ax = plt.subplots(figsize=(10, 8))
+  src: disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=target_names)
+  src: disp.plot(ax=ax, cmap="Blues", values_format="d", xticks_rotation=45)
+  src: ax.set_title(f"Confusion Matrix LOSO — UF1: {global_uf1:.4f} | UAR: {global_uar:.4f}", fontsize=14, fontweight="bold")
+  ... (2 more lines)
+
+--- Cell 16 [code] ---
+  src: # ============================================================
+  src: #  TABEL & PLOT PERFORMA PER SUBJEK
+  src: # ============================================================
+  src: df_results = pd.DataFrame(loso_results)
+  src: print("--- Tabel Hasil Evaluasi per Subjek ---\n")
+  src: print(df_results.to_string(index=False))
+  src: # Visualisasi bar chart akurasi & F1 per subjek
+  src: x = np.arange(len(df_results))
+  ... (16 more lines)
+
+--- Cell 17 [markdown] ---
+  src: ---
+  src: ## Step 8: Simpan Laporan Hasil LOSO
+
+--- Cell 18 [code] ---
+  src: # Simpan hasil LOSO ke JSON
+  src: timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+  src: output_json_path = os.path.join(LOG_DIR, f"vivit_loso_{TARGET_DATASET}_{timestamp}.json")
+  src: save_data = {
+  src:     "dataset": TARGET_DATASET,
+  src:     "timestamp": timestamp,
+  src:     "metrics": {
+  src:         "accuracy": float(global_acc),
+  ... (10 more lines)
+================================================================================
+DETAILS FOR: ViViT_Training_Testing copy.ipynb
+================================================================================
+
+--- Cell 0 [markdown] ---
+  src: # ViViT Micro-Expression Recognition — Training & Testing Pipeline
+  src: Notebook ini mengintegrasikan model **ViViT (Video Vision Transformer)** untuk deteksi emosi mikro menggunakan dataset:
+  src: - **CASME2** — Micro-expression dataset (7 kelas / 5 kelas aktif)
+  src: - **dataset_img1** — CK+, FER2013, Micro_Expressions
+  src: - **dataset_img2** — CK+, FER2013
+  src: - **New-Datasets** — Magnified/Cropped (CASME2, CASME3, DFME, SAMM, SMIC)
+  src: ### 🌟 Fitur Utama:
+  src: 1. **Pretrained Backbone**: Transfer learning dari `google/vivit-b-16x2-kinetics400` dengan adaptasi temporal positional embedding.
+  ... (4 more lines)
+
+--- Cell 2 [code] ---
+  src: import os
+  src: import sys
+  src: from pathlib import Path
+  src: # Prevent TensorFlow DLL conflict on Windows
+  src: os.environ["USE_TF"] = "0"
+  src: os.environ["TRANSFORMERS_NO_TF"] = "1"
+  src: os.environ["USE_TORCH"] = "1"
+  src: os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+  ... (50 more lines)
+  >>> OUTPUT:
+    ============================================================
+    Project Root   : D:\Programming\Gravity\emotion Detection
+    PyTorch Version: 2.5.1+cu121
+    Device Target  : cuda
+    GPU Name       : NVIDIA GeForce RTX 4060
+    VRAM           : 8.0 GB (Free: 6.9 GB)
+    ============================================================
+
+--- Cell 3 [code] ---
+  src: # Reproducibility Seed
+  src: SEED = 42
+  src: def set_seed(seed=42):
+  src:     random.seed(seed)
+  src:     np.random.seed(seed)
+  src:     torch.manual_seed(seed)
+  src:     torch.cuda.manual_seed_all(seed)
+  src:     torch.backends.cudnn.deterministic = True
+  ... (3 more lines)
+  >>> OUTPUT:
+    Seed: 42 (Reproducibility set)
+
+--- Cell 5 [code] ---
+  src: # ============================================================
+  src: #  HYPERPARAMETERS ViViT
+  src: # ============================================================
+  src: SELECTED_DATASETS = ["casme2"]
+  src: # Training Parameters
+  src: EPOCHS          = 100       # Jumlah epoch training
+  src: BATCH_SIZE      = 4        # Batch size (ViViT memerlukan memori temporal besar)
+  src: LEARNING_RATE   = 5e-5     # Learning rate optimal untuk fine-tuning ViT
+  ... (28 more lines)
+  >>> OUTPUT:
+    ============================================================
+      KONFIGURASI TRAINING ViViT
+    ============================================================
+      Datasets        : ['casme2']
+      Epochs          : 100 (Patience: 10)
+      Effective Batch : 16 (Batch=4, Accum=4)
+      Learning Rate   : 5e-05 | Weight Decay: 0.05
+      Input Dimension : [3, 16, 224, 224]
+      SMOTE Balancing : True (Jitter Std: 0.02)
+      Mixed Precision : True
+    ============================================================
+
+--- Cell 6 [markdown] ---
+  src: ---
+  src: ## Step 3: Load & Explore Datasets
+
+--- Cell 7 [code] ---
+  src: # Tampilkan mapping kelas & cek ketersediaan folder dataset
+  src: print("UNIFIED CLASSES (7 kelas):")
+  src: for idx, cls in enumerate(UNIFIED_CLASSES):
+  src:     print(f"  [{idx}] {cls}")
+  src: print(f"\nDataset Paths Status:")
+  src: for key in SELECTED_DATASETS:
+  src:     path = DATASET_PATHS.get(key, "NOT FOUND")
+  src:     exists = os.path.isdir(path) if isinstance(path, str) else False
+  ... (2 more lines)
+  >>> OUTPUT:
+    UNIFIED CLASSES (7 kelas):
+      [0] anger
+      [1] disgust
+      [2] fear
+      [3] happiness
+      [4] neutral
+      [5] sadness
+      [6] surprise
+    
+    Dataset Paths Status:
+      [✅ OK] casme2: D:\Programming\Gravity\emotion Detection\train\CASME2
+
+--- Cell 8 [code] ---
+  src: # Build dataset gabungan dengan augmentasi data latih
+  src: print("Loading base pixel datasets...")
+  src: train_transform = get_train_transforms(IMAGE_SIZE)
+  src: full_dataset = build_combined_dataset(
+  src:     dataset_keys=SELECTED_DATASETS,
+  src:     dataset_paths=DATASET_PATHS,
+  src:     transform=train_transform,
+  src:     num_frames=NUM_FRAMES,
+  ... (2 more lines)
+  >>> OUTPUT:
+    Loading base pixel datasets...
+    [DATASET] Loading CASME2 dari: D:\Programming\Gravity\emotion Detection\train\CASME2
+      [INFO] Kelas diskip di casme2: ['others', 'repression']
+      -> 8497 gambar dimuat (5 kelas)
+    
+    [COMBINED] Total samples: 8497
+    ✅ Total Sampel Dataset: 8497 video/gambar
+
+--- Cell 9 [code] ---
+  src: # Pembagian Train / Validation Split (80/20)
+  src: total = len(full_dataset)
+  src: val_size = int(total * VAL_SPLIT)
+  src: train_size = total - val_size
+  src: train_dataset, val_dataset = random_split(
+  src:     full_dataset, [train_size, val_size],
+  src:     generator=torch.Generator().manual_seed(SEED)
+  src: )
+  ... (2 more lines)
+  >>> OUTPUT:
+    Train Samples : 6798 (80%)
+    Val Samples   : 1699 (20%)
+
+--- Cell 11 [code] ---
+  src: # ============================================================
+  src: #  APLIKASIKAN SMOTE + GAUSSIAN JITTERING PADA DATA LATIH
+  src: # ============================================================
+  src: if USE_SMOTE:
+  src:     print("Memproses penyeimbangan data latih via SMOTE + Gaussian Jittering...")
+  src:     train_dataset_balanced = SMOTEJitterDataset(
+  src:         train_dataset,
+  src:         num_classes=NUM_CLASSES,
+  ... (9 more lines)
+  >>> OUTPUT:
+    Memproses penyeimbangan data latih via SMOTE + Gaussian Jittering...
+    
+    [SMOTE + Jitter] Dataset Balancing Report (Jitter Std: 0.02, Alpha: 0.5):
+      [0] anger       :      0 asli +      0 sintetis ->      0 total
+      [1] disgust     :  3,315 asli +      0 sintetis ->  3,315 total
+      [2] fear        :     98 asli +  3,217 sintetis ->  3,315 total
+      [3] happiness   :  1,908 asli +  1,407 sintetis ->  3,315 total
+      [4] neutral     :      0 asli +      0 sintetis ->      0 total
+      [5] sadness     :    214 asli +  3,101 sintetis ->  3,315 total
+      [6] surprise    :  1,263 asli +  2,052 sintetis ->  3,315 total
+      [SUMMARY] Total training samples: 6,798 -> 16,575 (SMOTE Balanced)
+    
+    ✅ Berhasil menyeimbangkan dataset latih: 6798 -> 16575 sampel
+
+--- Cell 12 [code] ---
+  src: # Visualisasi Distribusi Kelas: Sebelum vs Sesudah SMOTE
+  src: raw_train_labels = []
+  src: if hasattr(train_dataset, 'indices'):
+  src:     for idx in train_dataset.indices:
+  src:         _, lbl = train_dataset.dataset[idx]
+  src:         raw_train_labels.append(lbl.item() if isinstance(lbl, torch.Tensor) else int(lbl))
+  src: else:
+  src:     raw_train_labels = [full_dataset[i][1] for i in range(len(train_dataset))]
+  ... (22 more lines)
+  >>> OUTPUT:
+    <Figure size 1100x500 with 1 Axes>
+
+--- Cell 13 [code] ---
+  src: # Cek satu sampel data
+  src: sample_video, sample_label = train_dataset_balanced[0]
+  src: label_val = sample_label.item() if isinstance(sample_label, torch.Tensor) else int(sample_label)
+  src: print(f"Sample video tensor shape : {sample_video.shape}")
+  src: print(f"  [Channels={sample_video.shape[0]}, Frames={sample_video.shape[1]}, H={sample_video.shape[2]}, W={sample_video.shape[3]}]")
+  src: print(f"Sample label              : {label_val} ({IDX_TO_CLASS[label_val]})")
+  >>> OUTPUT:
+    Sample video tensor shape : torch.Size([3, 16, 224, 224])
+      [Channels=3, Frames=16, H=224, W=224]
+    Sample label              : 1 (disgust)
+
+--- Cell 15 [code] ---
+  src: train_loader = DataLoader(
+  src:     train_dataset_balanced,
+  src:     batch_size=BATCH_SIZE,
+  src:     shuffle=True,
+  src:     num_workers=NUM_WORKERS,
+  src:     pin_memory=True,
+  src:     drop_last=True,
+  src: )
+  ... (10 more lines)
+  >>> OUTPUT:
+    Train batches: 4143 (Total: 16575 sampel)
+    Val batches  : 425 (Total: 1699 sampel)
+    Batch size   : 4
+
+--- Cell 16 [markdown] ---
+  src: ---
+  src: ## Step 5: Build Model ViViT
+
+--- Cell 17 [code] ---
+  src: model = ViViTMLP(
+  src:     num_classes=NUM_CLASSES,
+  src:     num_frames=NUM_FRAMES,
+  src:     patch_size=PATCH_SIZE,
+  src:     in_channels=IN_CHANNELS,
+  src:     image_size=IMAGE_SIZE,
+  src:     dropout=DROPOUT,
+  src: ).to(DEVICE)
+  ... (6 more lines)
+  >>> OUTPUT:
+      [MODEL] Loading pretrained ViViT from google/vivit-b-16x2-kinetics400...
+    Loading weights:   0%|          | 0/198 [00:00<?, ?it/s]
+    [transformers] [1mVivitModel LOAD REPORT[0m from: google/vivit-b-16x2-kinetics400
+    Key                 | Status     | 
+    --------------------+------------+-
+    classifier.weight   | UNEXPECTED | 
+    classifier.bias     | UNEXPECTED | 
+    pooler.dense.weight | MISSING    | 
+    pooler.dense.bias   | MISSING    | 
+    
+    Notes:
+    - UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    - MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+      [MODEL] Interpolating temporal positional embeddings from 32 frames to 16 frames...
+      [MODEL] Backbone frozen. Trainable: 301,063/88,332,295 (0.3%)
+    Model: ViViTMLP
+      Num Classes:        7
+      Input:              [3, 16, 224, 224]
+      Total Parameters:   88,332,295
+      Trainable Params:   301,063
+      Device:             cuda
+
+--- Cell 18 [code] ---
+  src: # Sanity check: forward pass dengan dummy tensor
+  src: with torch.no_grad():
+  src:     dummy = torch.randn(1, IN_CHANNELS, NUM_FRAMES, IMAGE_SIZE, IMAGE_SIZE).to(DEVICE)
+  src:     out = model(dummy)
+  src:     print(f"✅ Forward pass OK!")
+  src:     print(f"  Input:  {dummy.shape}")
+  src:     print(f"  Output: {out.shape} (logits untuk {NUM_CLASSES} kelas)")
+  src:     del dummy, out
+  ... (1 more lines)
+  >>> OUTPUT:
+    ✅ Forward pass OK!
+      Input:  torch.Size([1, 3, 16, 224, 224])
+      Output: torch.Size([1, 7]) (logits untuk 7 kelas)
+
+--- Cell 20 [code] ---
+  src: # Hitung bobot kelas untuk mengatasi ketidakseimbangan kelas
+  src: class_weights = None if USE_SMOTE else compute_class_weights(train_dataset).to(DEVICE)
+  src: criterion = nn.CrossEntropyLoss(weight=class_weights, label_smoothing=0.0)
+  src: # Optimizer AdamW
+  src: LEARNING_RATE = 5e-5
+  src: optimizer = torch.optim.AdamW(
+  src:     filter(lambda p: p.requires_grad, model.parameters()),
+  src:     lr=LEARNING_RATE,
+  ... (13 more lines)
+  >>> OUTPUT:
+    Loss:       CrossEntropyLoss (weighted, smoothing=0.05)
+    Optimizer:  AdamW (lr=5e-05, wd=0.05)
+    Scheduler:  CosineAnnealingLR (T_max=100)
+    AMP:        Enabled
+    Grad Accum: 4 steps (effective batch=16)
+
+--- Cell 22 [code] ---
+  src: def train_one_epoch(model, dataloader, criterion, optimizer, device, scaler, grad_accum_steps, use_amp):
+  src:     """Menjalankan satu epoch training dengan ViViT."""
+  src:     model.train()
+  src:     running_loss = 0.0
+  src:     all_preds, all_labels = [], []
+  src:     num_batches = 0
+  src:     optimizer.zero_grad()
+  src:     for batch_idx, (videos, labels) in enumerate(dataloader):
+  ... (75 more lines)
+  >>> OUTPUT:
+    Training & validation functions defined!
+
+--- Cell 24 [code] ---
+  src: # Inisialisasi State Training
+  src: timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+  src: run_name = f"vivit_{'_'.join(SELECTED_DATASETS)}_{timestamp}"
+  src: os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+  src: best_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_best.pth")
+  src: history = {
+  src:     "train_loss": [], "train_acc": [], "train_f1": [],
+  src:     "val_loss": [], "val_acc": [], "val_f1": [],
+  ... (70 more lines)
+  >>> OUTPUT:
+    Run Identifier   : vivit_casme2_20260818_052603
+    Checkpoint Target: D:\Programming\Gravity\emotion Detection\outputs\checkpoints\vivit_casme2_20260818_052603_best.pth
+    
+    Memulai training selama 100 epochs...
+    ==========================================================================================
+    Epoch [ 1/100] | Train Loss: 1.0764 Acc: 0.6049 F1: 0.5022 | Val Loss: 0.8365 Acc: 0.6780 F1: 0.6014 | LR: 5.00e-05 | 1304.4s 🔥 [BEST]
+
+--- Cell 26 [code] ---
+  src: fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+  src: epochs_range = range(1, len(history['train_loss']) + 1)
+  src: # 1. Loss Curve
+  src: axes[0, 0].plot(epochs_range, history['train_loss'], 'b-', label='Train Loss', linewidth=2)
+  src: axes[0, 0].plot(epochs_range, history['val_loss'], 'r-', label='Val Loss', linewidth=2)
+  src: axes[0, 0].set_title('Loss Curve', fontsize=13, fontweight='bold')
+  src: axes[0, 0].set_xlabel('Epoch')
+  src: axes[0, 0].set_ylabel('Loss')
+  ... (28 more lines)
+
+--- Cell 28 [markdown] ---
+  src: ---
+  src: ## Step 10: Testing, Comprehensive Evaluation & ROC Curves 🧪
+  src: Memuat model checkpoint terbaik (`_best.pth`) dan melakukan evaluasi mendalam pada validation set.
+
+--- Cell 29 [code] ---
+  src: # Load best model checkpoint
+  src: print(f"Loading best model: {best_path}")
+  src: checkpoint = torch.load(best_path, map_location=DEVICE, weights_only=False)
+  src: model.load_state_dict(checkpoint["model_state_dict"])
+  src: model.eval()
+  src: print(f"  Loaded from epoch: {checkpoint['epoch']}")
+  src: print(f"  Best Val F1      : {checkpoint['best_f1']:.4f}")
+  src: print(f"  Val Accuracy     : {checkpoint['val_acc']:.4f}")
+
+--- Cell 30 [code] ---
+  src: # ============================================================
+  src: #  EVALUASI VALIDATION SET + OUTPUT PROBABILITAS
+  src: # ============================================================
+  src: print("Evaluating on validation set...\n")
+  src: val_loss, val_acc, val_f1, all_preds, all_labels, all_probs = validate(
+  src:     model, val_loader, criterion, DEVICE, USE_AMP, return_probs=True
+  src: )
+  src: print(f"{'='*50}")
+  ... (7 more lines)
+
+--- Cell 31 [code] ---
+  src: # Classification Report
+  src: present_labels = sorted(set(all_labels.tolist()) | set(all_preds.tolist()))
+  src: target_names = [UNIFIED_CLASSES[i] for i in present_labels]
+  src: print("\n--- Classification Report ---\n")
+  src: report_dict = classification_report(
+  src:     all_labels, all_preds,
+  src:     labels=present_labels,
+  src:     target_names=target_names,
+  ... (10 more lines)
+
+--- Cell 32 [code] ---
+  src: # Confusion Matrix Display
+  src: cm = confusion_matrix(all_labels, all_preds, labels=present_labels)
+  src: fig, ax = plt.subplots(1, 1, figsize=(10, 8))
+  src: disp = ConfusionMatrixDisplay(
+  src:     confusion_matrix=cm,
+  src:     display_labels=target_names
+  src: )
+  src: disp.plot(ax=ax, cmap='Blues', values_format='d', xticks_rotation=45)
+  ... (3 more lines)
+
+--- Cell 34 [markdown] ---
+  src: ---
+  src: ## Step 11: Testing pada Dataset Terpisah dengan Standarisasi Frame Gambar 🧪
+  src: Evaluasi model pada dataset eksternal/terpisah (misalnya **CK+**, **FER2013**, **DFME**, **SAMM**, atau **SMIC**).
+  src: ### 🛠️ Standarisasi Preprocessing untuk Mengatasi Domain Shift:
+  src: 1. **CLAHE (Contrast Limited Adaptive Histogram Equalization)**: Meratakan pencahayaan lokal tanpa noise berlebih.
+  src: 2. **Aspect-Preserving Symmetric Padding**: Menjaga rasio geometris mata-hidung-mulut (mencegah wajah gepeng/terdistorsi).
+  src: 3. **Bicubic Anti-Aliasing Rescaling**: Menjaga detail mikro wajah pada resolusi $224 \times 224$.
+  src: 4. **ImageNet Intensity Normalization**: Menyelaraskan distribusi piksel dengan model ViViT pretrained.
+
+--- Cell 35 [code] ---
+  src: # ============================================================
+  src: #  1. PILIH DATASET TEST & AKTIFKAN STANDARISASI FRAME
+  src: # ============================================================
+  src: # Contoh pilihan dataset eksternal:
+  src: # - ["ck_plus_img2", "fer2013_img2"]
+  src: # - ["dfme_testa", "dfme_testb"]
+  src: # - ["micro_expr_img1_test"]
+  src: # - ["samm"]
+  ... (29 more lines)
+
+--- Cell 36 [code] ---
+  src: # ============================================================
+  src: #  2. VISUALISASI KOMPARASI: GAMBAR ASLI vs STANDARISASI FRAME
+  src: # ============================================================
+  src: if test_loader is not None and len(test_dataset) > 0:
+  src:     sample_vid, sample_lbl = test_dataset[0]
+  src:     lbl_idx = sample_lbl.item() if isinstance(sample_lbl, torch.Tensor) else int(sample_lbl)
+  src:     # Ambil frame tengah (frame ke-0)
+  src:     frame_tensor = sample_vid[:, 0, :, :].clone().cpu()
+  ... (19 more lines)
+
+--- Cell 37 [code] ---
+  src: # ============================================================
+  src: #  3. EVALUASI AKURASI & METRIK PADA DATASET TERPISAH
+  src: # ============================================================
+  src: if test_loader is not None:
+  src:     print("Evaluating on standardized external test set...\n")
+  src:     test_loss, test_acc, test_f1, test_preds, test_labels, test_probs = validate(
+  src:         model, test_loader, criterion, DEVICE, USE_AMP, return_probs=True
+  src:     )
+  ... (27 more lines)
+
+--- Cell 38 [markdown] ---
+  src: ---
+  src: ## Step 12: Export & Save Final Model
+
+--- Cell 39 [code] ---
+  src: # Save final model checkpoint
+  src: final_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_final.pth")
+  src: torch.save({
+  src:     "model_state_dict": model.state_dict(),
+  src:     "config": {
+  src:         "num_classes": NUM_CLASSES,
+  src:         "num_frames": NUM_FRAMES,
+  src:         "in_channels": IN_CHANNELS,
+  ... (10 more lines)
+
+--- Cell 40 [code] ---
+  src: # Ringkasan Akhir Pipeline
+  src: print("\n" + "=" * 60)
+  src: print("  RINGKASAN TRAINING & TESTING ViViT")
+  src: print("=" * 60)
+  src: print(f"  Model            : ViViTMLP ({model.get_num_params():,d} params)")
+  src: print(f"  Datasets         : {SELECTED_DATASETS}")
+  src: print(f"  Total Train Data : {len(train_dataset_balanced):,} (Balanced)")
+  src: print(f"  Total Val Data   : {len(val_dataset):,}")
+  ... (6 more lines)
+================================================================================
+DETAILS FOR: ViViT_Training_Testing.ipynb
+================================================================================
+
+--- Cell 0 [markdown] ---
+  src: # 🧠 ViViT Micro-Expression Recognition — Training & Testing Pipeline
+  src: Notebook ini mengintegrasikan pipeline **ViViT (Video Vision Transformer)** dan **Fast Precomputed CNN-ViViT** untuk pengenalan emosi mikro:
+  src: - **CASME2** — Micro-expression dataset (7 kelas / 5 kelas aktif)
+  src: - **dataset_img1** — CK+, FER2013, Micro_Expressions
+  src: - **dataset_img2** — CK+, FER2013
+  src: - **New-Datasets** — Magnified/Cropped (CASME2, CASME3, DFME, SAMM, SMIC)
+  src: ### 🌟 Fitur Utama Pipeline:
+  src: 1. **Ultra-Fast Precomputed CNN Mode**: Ekstraksi fitur spasial via ResNet-50/18 untuk akselerasi training hingga **>300x (~2-5 detik/epoch)**.
+  ... (4 more lines)
+
+--- Cell 2 [code] ---
+  src: %load_ext autoreload
+  src: %autoreload 2
+  src: import os
+  src: import sys
+  src: from pathlib import Path
+  src: # Prevent TensorFlow DLL conflict on Windows
+  src: os.environ["USE_TF"] = "0"
+  src: os.environ["TRANSFORMERS_NO_TF"] = "1"
+  ... (50 more lines)
+  >>> OUTPUT:
+    ============================================================
+    Project Root   : D:\Programming\Gravity\emotion Detection
+    PyTorch Version: 2.5.1+cu121
+    Device Target  : cuda
+    GPU  Name       : NVIDIA GeForce RTX 4060
+    VRAM           : 8.0 GB (Free: 6.9 GB)
+    ============================================================
+
+--- Cell 3 [code] ---
+  src: # Setup Reproducibility Seed
+  src: SEED = 42
+  src: def set_seed(seed=42):
+  src:     random.seed(seed)
+  src:     np.random.seed(seed)
+  src:     torch.manual_seed(seed)
+  src:     torch.cuda.manual_seed_all(seed)
+  src:     torch.backends.cudnn.deterministic = True
+  ... (3 more lines)
+  >>> OUTPUT:
+    ✅ Random Seed locked: 42
+
+--- Cell 5 [code] ---
+  src: # ============================================================
+  src: #  HYPERPARAMETERS & TRAINING CONFIGURATION
+  src: # ============================================================
+  src: # Mode Training
+  src: USE_PRECOMPUTED_CNN = True         # True = Ultra-Fast CNN Features, False = Raw 3D-ViViT
+  src: CNN_BACKBONE        = "resnet50"   # "resnet50", "resnet18", "efficientnet_b0", "mobilenet_v3_large"
+  src: CACHE_DIR           = "outputs/cached_features"
+  src: # Dataset yang digunakan
+  ... (35 more lines)
+  >>> OUTPUT:
+    ============================================================
+                  KONFIGURASI PIPELINE VIVIT
+    ============================================================
+      Mode Training       : ⚡ PRECOMPUTED CNN (RESNET50)
+      Selected Datasets   : ['casme2', 'micro_expr_img1_train', 'ck_plus_img2', 'fer2013_img1']
+      Epochs / Batch Size : 40 epochs / Batch 64
+      Learning Rate       : 0.0005
+      Sequence Frames     : 16
+      SMOTE Balancing     : True
+      Mixed Precision AMP : True
+    ============================================================
+
+--- Cell 6 [markdown] ---
+  src: ---
+  src: ## Step 3: Load Datasets & Feature Precomputation
+  src: Memuat dataset sesuai mode yang dipilih. Jika memilih mode **Precomputed CNN**, script akan otomatis mengekstrak representasi fitur jika cache `.pt` belum tersedia.
+
+--- Cell 7 [code] ---
+  src: # Validasi Path Dataset
+  src: print("Dataset Paths Status:")
+  src: for key in SELECTED_DATASETS:
+  src:     path = DATASET_PATHS.get(key, "NOT FOUND")
+  src:     status = "✅ OK" if os.path.isdir(str(path)) else "❌ MISSING"
+  src:     print(f"  [{status}] {key:22s}: {path}")
+  src: # ============================================================
+  src: # LOAD DATASET (PRECOMPUTED CNN vs RAW PIXEL)
+  ... (57 more lines)
+  >>> OUTPUT:
+    Dataset Paths Status:
+      [✅ OK] casme2                : D:\Programming\Gravity\emotion Detection\train\CASME2
+      [✅ OK] micro_expr_img1_train : D:\Programming\Gravity\emotion Detection\train\dataset_img1\Micro_Expressions\train
+      [✅ OK] ck_plus_img2          : D:\Programming\Gravity\emotion Detection\train\dataset_img2\MicroExpression\ck+\ck+
+      [✅ OK] fer2013_img1          : D:\Programming\Gravity\emotion Detection\train\dataset_img1\MicroExpression\fer2013\fer2013\Training
+    [INFO] Mengekstrak fitur resnet50 untuk dataset 'micro_expr_img1_train'...
+    ======================================================================
+      EKSTRAKSI FITUR CNN: MICRO_EXPR_IMG1_TRAIN -> RESNET50
+      Target File : outputs/cached_features\micro_expr_img1_train_resnet50_features.pt
+      Device      : cuda
+    ======================================================================
+      Ditemukan 7,600 gambar pada dataset micro_expr_img1_train
+    Extracting micro_expr_img1_train: 100%|██████████| 119/119 [00:17<00:00,  6.95batch/s]
+    
+    [OK] Selesai mengekstrak 7,600 sampel dalam 17.2s (443.1 img/s)
+       Shape Fitur : (7600, 2048)
+       Tersimpan di: outputs/cached_features\micro_expr_img1_train_resnet50_features.pt
+    
+    [INFO] Mengekstrak fitur resnet50 untuk dataset 'ck_plus_img2'...
+    ======================================================================
+      EKSTRAKSI FITUR CNN: CK_PLUS_IMG2 -> RESNET50
+      Target File : outputs/cached_features\ck_plus_img2_resnet50_features.pt
+      Device      : cuda
+    ======================================================================
+      [INFO] Kelas diskip di ck_plus_img2: ['contempt']
+      Ditemukan 927 gambar pada dataset ck_plus_img2
+    Extracting ck_plus_img2: 100%|██████████| 15/15 [00:01<00:00,  7.55batch/s]
+    
+    [OK] Selesai mengekstrak 927 sampel dalam 2.0s (465.9 img/s)
+       Shape Fitur : (927, 2048)
+       Tersimpan di: outputs/cached_features\ck_plus_img2_resnet50_features.pt
+    
+    [INFO] Mengekstrak fitur resnet50 untuk dataset 'fer2013_img1'...
+    ======================================================================
+      EKSTRAKSI FITUR CNN: FER2013_IMG1 -> RESNET50
+      Target File : outputs/cached_features\fer2013_img1_resnet50_features.pt
+      Device      : cuda
+    ======================================================================
+      Ditemukan 28,709 gambar pada dataset fer2013_img1
+    Extracting fer2013_img1: 100%|██████████| 449/449 [02:57<00:00,  2.54batch/s]
+    
+    [OK] Selesai mengekstrak 28,709 sampel dalam 177.2s (162.0 img/s)
+       Shape Fitur : (28709, 2048)
+       Tersimpan di: outputs/cached_features\fer2013_img1_resnet50_features.pt
+    
+    [OK] Berhasil memuat 45,733 fitur spasial (RESNET50) dari ['casme2', 'micro_expr_img1_train', 'ck_plus_img2', 'fer2013_img1']
+    
+    [Feature-SMOTE] Dataset Balancing Report:
+      [0] anger       :  4,408 asli +  5,037 sintetis ->  9,445 total
+      [1] disgust     :  4,305 asli +  5,140 sintetis ->  9,445 total
+      [2] fear        :  3,765 asli +  5,680 sintetis ->  9,445 total
+      [3] happiness   :  9,445 asli +      0 sintetis ->  9,445 total
+      [4] neutral     :  4,495 asli +  4,950 sintetis ->  9,445 total
+      [5] sadness     :  5,330 asli +  4,115 sintetis ->  9,445 total
+      [6] surprise    :  4,838 asli +  4,607 sintetis ->  9,445 total
+    ... (3 lines truncated, last line: ✅ Dataset siap! Total Train: 66,115 sampel | Total Val: 9,147 sampel)
+
+--- Cell 9 [code] ---
+  src: # Setup DataLoader
+  src: train_loader = DataLoader(
+  src:     train_dataset_balanced,
+  src:     batch_size=BATCH_SIZE,
+  src:     shuffle=True,
+  src:     num_workers=NUM_WORKERS,
+  src:     pin_memory=torch.cuda.is_available(),
+  src:     drop_last=True if len(train_dataset_balanced) > BATCH_SIZE else False,
+  ... (22 more lines)
+  >>> OUTPUT:
+    ============================================================
+                  DATALOADER STATUS & BATCH CHECK
+    ============================================================
+    Train Batches : 1,033 batches
+    Val Batches   : 143 batches
+    Batch Shape   : (64, 16, 2048)
+      [Batch=64, Frames=16, FeatDim=2048]
+    Batch Label 0 : 1 (disgust)
+    ============================================================
+
+--- Cell 10 [markdown] ---
+  src: ---
+  src: ## Step 5: Build Model ViViT Architecture
+
+--- Cell 11 [code] ---
+  src: # ============================================================
+  src: #  INISIALISASI ARSITEKTUR MODEL
+  src: # ============================================================
+  src: if USE_PRECOMPUTED_CNN:
+  src:     feat_dim = full_dataset.feature_dim if hasattr(full_dataset, 'feature_dim') else 2048
+  src:     model = CNNTemporalViViT(
+  src:         feature_dim=feat_dim,
+  src:         num_classes=NUM_CLASSES,
+  ... (30 more lines)
+  >>> OUTPUT:
+    Model: CNNTemporalViViT (Fast Precomputed CNN)
+      Feature Dim      : 2048
+      Temporal Frames  : 16
+      Total Params     : 9,605,639
+      Trainable Params : 9,605,639
+    ✅ Forward test OK! Output shape: (2, 7) (Logits)
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+
+--- Cell 13 [code] ---
+  src: # Loss & Optimizer Setup
+  src: criterion = nn.CrossEntropyLoss(label_smoothing=0.0)
+  src: optimizer = torch.optim.AdamW(
+  src:     filter(lambda p: p.requires_grad, model.parameters()),
+  src:     lr=LEARNING_RATE,
+  src:     weight_decay=WEIGHT_DECAY,
+  src: )
+  src: scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+  ... (7 more lines)
+  >>> OUTPUT:
+    Loss Function : CrossEntropyLoss
+    Optimizer     : AdamW (lr=5.0e-04, weight_decay=0.0001)
+    Scheduler     : CosineAnnealingLR (T_max=40)
+    Grad Scaler   : Enabled (CUDA AMP)
+
+--- Cell 15 [code] ---
+  src: def train_one_epoch(model, dataloader, criterion, optimizer, device, scaler=None, grad_accum_steps=1, use_amp=False):
+  src:     model.train()
+  src:     running_loss = 0.0
+  src:     all_preds, all_labels = [], []
+  src:     optimizer.zero_grad()
+  src:     for step, (inputs, labels) in enumerate(dataloader):
+  src:         inputs = inputs.to(device, non_blocking=True)
+  src:         labels = labels.to(device, non_blocking=True)
+  ... (58 more lines)
+  >>> OUTPUT:
+    ✅ Fungsi train_one_epoch & validate siap!
+
+--- Cell 17 [code] ---
+  src: timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+  src: run_name = f"vivit_{'_'.join(SELECTED_DATASETS)}_{timestamp}"
+  src: os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+  src: best_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_best.pth")
+  src: history = {
+  src:     "train_loss": [], "train_acc": [], "train_f1": [],
+  src:     "val_loss": [], "val_acc": [], "val_f1": [],
+  src:     "lr": [],
+  ... (62 more lines)
+  >>> OUTPUT:
+    Run Identifier   : vivit_casme2_micro_expr_img1_train_ck_plus_img2_fer2013_img1_20260821_024043
+    Checkpoint Target: D:\Programming\Gravity\emotion Detection\outputs\checkpoints\vivit_casme2_micro_expr_img1_train_ck_plus_img2_fer2013_img1_20260821_024043_best.pth
+    Memulai training selama 40 epochs...==========================================================================================
+    Epoch [ 1/40] | Train Loss: 1.2334 Acc: 0.5365 F1: 0.5354 | Val Loss: 1.1415 Acc: 0.5770 F1: 0.5571 | LR: 5.00e-04 | 24.7s 🔥 [BEST]
+    Epoch [ 2/40] | Train Loss: 1.0348 Acc: 0.6174 F1: 0.6172 | Val Loss: 1.1296 Acc: 0.5857 F1: 0.5715 | LR: 4.99e-04 | 24.6s 🔥 [BEST]
+    Epoch [ 3/40] | Train Loss: 0.9786 Acc: 0.6410 F1: 0.6411 | Val Loss: 1.1312 Acc: 0.6033 F1: 0.5732 | LR: 4.97e-04 | 24.8s 🔥 [BEST]
+    Epoch [ 4/40] | Train Loss: 0.9401 Acc: 0.6570 F1: 0.6570 | Val Loss: 1.1483 Acc: 0.5875 F1: 0.5645 | LR: 4.93e-04 | 25.3s 
+    Epoch [ 5/40] | Train Loss: 0.9121 Acc: 0.6673 F1: 0.6675 | Val Loss: 1.1147 Acc: 0.6150 F1: 0.5872 | LR: 4.88e-04 | 24.8s 🔥 [BEST]
+    Epoch [ 6/40] | Train Loss: 0.8925 Acc: 0.6729 F1: 0.6728 | Val Loss: 1.0676 Acc: 0.6095 F1: 0.5874 | LR: 4.81e-04 | 27.1s 🔥 [BEST]
+    Epoch [ 7/40] | Train Loss: 0.8734 Acc: 0.6804 F1: 0.6801 | Val Loss: 1.1000 Acc: 0.6095 F1: 0.5866 | LR: 4.73e-04 | 27.4s 
+    Epoch [ 8/40] | Train Loss: 0.8555 Acc: 0.6857 F1: 0.6855 | Val Loss: 1.1112 Acc: 0.6019 F1: 0.5849 | LR: 4.63e-04 | 27.7s 
+    Epoch [ 9/40] | Train Loss: 0.8361 Acc: 0.6925 F1: 0.6926 | Val Loss: 1.1542 Acc: 0.6097 F1: 0.5823 | LR: 4.52e-04 | 26.0s 
+    Epoch [10/40] | Train Loss: 0.8209 Acc: 0.6991 F1: 0.6988 | Val Loss: 1.0976 Acc: 0.6119 F1: 0.5912 | LR: 4.40e-04 | 25.7s 🔥 [BEST]
+    Epoch [11/40] | Train Loss: 0.8062 Acc: 0.7046 F1: 0.7043 | Val Loss: 1.2188 Acc: 0.6173 F1: 0.5979 | LR: 4.27e-04 | 26.3s 🔥 [BEST]
+    Epoch [12/40] | Train Loss: 0.7951 Acc: 0.7083 F1: 0.7079 | Val Loss: 1.1989 Acc: 0.6086 F1: 0.5910 | LR: 4.13e-04 | 26.5s 
+    ... (15 lines truncated, last line: ==========================================================================================)
+
+--- Cell 19 [code] ---
+  src: fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+  src: epochs_range = range(1, len(history['train_loss']) + 1)
+  src: # Loss
+  src: axes[0, 0].plot(epochs_range, history['train_loss'], 'b-', label='Train Loss', linewidth=2)
+  src: axes[0, 0].plot(epochs_range, history['val_loss'], 'r-', label='Val Loss', linewidth=2)
+  src: axes[0, 0].set_title('Loss Curve', fontsize=13, fontweight='bold')
+  src: axes[0, 0].set_xlabel('Epoch')
+  src: axes[0, 0].set_ylabel('Loss')
+  ... (34 more lines)
+  >>> OUTPUT:
+    <Figure size 1400x1000 with 4 Axes>
+    ✅ History log saved to: D:\Programming\Gravity\emotion Detection\outputs\logs\vivit_casme2_micro_expr_img1_train_ck_plus_img2_fer2013_img1_20260821_024043_history.json
+
+--- Cell 21 [code] ---
+  src: # Load Best Model Checkpoint
+  src: print(f"Loading best checkpoint: {best_path}")
+  src: checkpoint = torch.load(best_path, map_location=DEVICE, weights_only=False)
+  src: model.load_state_dict(checkpoint["model_state_dict"])
+  src: model.eval()
+  src: val_loss, val_acc, val_f1, all_preds, all_labels, all_probs = validate(
+  src:     model, val_loader, criterion, DEVICE, use_amp=USE_AMP, return_probs=True
+  src: )
+  ... (21 more lines)
+  >>> OUTPUT:
+    Loading best checkpoint: D:\Programming\Gravity\emotion Detection\outputs\checkpoints\vivit_casme2_micro_expr_img1_train_ck_plus_img2_fer2013_img1_20260821_024043_best.pth
+    =======================================================
+      HASIL EVALUASI MODEL TERBAIK (VALIDATION SET)
+    =======================================================
+      Accuracy       : 0.6173 (61.73%)
+      Macro F1-Score : 0.5979
+      Loss           : 1.2188
+      Total Sampel   : 9,147
+    =======================================================
+    --- Classification Report ---
+                  precision    recall  f1-score   support
+    
+           anger       0.44      0.47      0.45      1133
+         disgust       0.90      0.84      0.87      1129
+            fear       0.41      0.40      0.41      1013
+    ... (9 lines truncated, last line: )
+
+--- Cell 22 [code] ---
+  src: # ============================================================================
+  src: # CONFUSION MATRIX & MULTI-CLASS ROC-AUC CURVES
+  src: # ============================================================================
+  src: fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
+  src: # 1. Confusion Matrix
+  src: cm = confusion_matrix(all_labels, all_preds, labels=present_labels)
+  src: disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=target_names)
+  src: disp.plot(ax=ax1, cmap='Blues', values_format='d', xticks_rotation=35)
+  ... (27 more lines)
+  >>> OUTPUT:
+    <Figure size 1800x700 with 3 Axes>
+
+--- Cell 23 [markdown] ---
+  src: ---
+  src: ## Step 11: Export Model Siap Pakai (End-to-End CNN-ViViT) 📦
+  src: Menyimpan bobot model final sekaligus menghasilkan wrapper model **End-to-End** yang siap menerima input gambar/webcam secara langsung.
+
+--- Cell 24 [code] ---
+  src: # Save Final & End-to-End Deployment Checkpoint
+  src: final_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_final.pth")
+  src: e2e_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_end_to_end.pth")
+  src: # 1. Simpan checkpoint model ViViT
+  src: torch.save({
+  src:     "model_state_dict": model.state_dict(),
+  src:     "config": {
+  src:         "num_classes": NUM_CLASSES,
+  ... (26 more lines)
+  >>> OUTPUT:
+    ✅ End-to-End Model saved: D:\Programming\Gravity\emotion Detection\outputs\checkpoints\vivit_casme2_20260818_075959_end_to_end.pth
+    ✅ Final ViViT Checkpoint saved: D:\Programming\Gravity\emotion Detection\outputs\checkpoints\vivit_casme2_20260818_075959_final.pth
+    ============================================================
+      RINGKASAN SELESAI
+    ============================================================
+      Best Val Macro F1 : 0.9997
+      Best Checkpoint   : D:\Programming\Gravity\emotion Detection\outputs\checkpoints\vivit_casme2_20260818_075959_best.pth
+    ============================================================
+
+--- Cell 25 [code] ---
+  src: # ============================================================================
+  src: #  1. PILIH DATASET TEST & AKTIFKAN STANDARISASI FRAME (PREPROCESSING)
+  src: # ============================================================================
+  src: import os
+  src: import torch
+  src: import numpy as np
+  src: import matplotlib.pyplot as plt
+  src: from torch.utils.data import DataLoader
+  ... (39 more lines)
+  >>> OUTPUT:
+    [DATASET] Loading CK+ dari: D:\Programming\Gravity\emotion Detection\train\dataset_img2\MicroExpression\ck+\ck+
+      [INFO] Kelas diskip di ck_plus_img2: ['contempt']
+      -> 927 gambar dimuat (6 kelas)
+    [DATASET] Loading FER2013 dari: D:\Programming\Gravity\emotion Detection\train\dataset_img2\MicroExpression\fer2013\fer2013\Training
+      -> 28709 gambar dimuat (7 kelas)
+    
+    [COMBINED] Total samples: 29636
+    ✅ Test dataset loaded: 29,636 sampel dari ['ck_plus_img2', 'fer2013_img2']
+
+--- Cell 26 [code] ---
+  src: # ============================================================================
+  src: #  2. INFERENSI & EVALUASI PADA 5 KELAS AKTIF CASME2
+  src: # ============================================================================
+  src: if test_loader is not None:
+  src:     # 5 Label Kelas aktif CASME2
+  src:     CASME2_CLASSES = ["disgust", "fear", "happiness", "sadness", "surprise"]
+  src:     CASME2_INDICES = [CLASS_TO_IDX[c] for c in CASME2_CLASSES]
+  src:     # Path checkpoint yang akan diuji
+  ... (78 more lines)
+  >>> OUTPUT:
+    Loading Checkpoint: D:\Programming\Gravity\emotion Detection\outputs\checkpoints\vivit_casme2_20260818_075959_best.pth
+    d:\Programming\Python\medical\venv310\lib\site-packages\torch\nn\modules\transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+      warnings.warn(
+    🚀 Memulai inferensi terstandarisasi pada 29,636 sampel video...
+      Processed 160 / 29,636 sampel...
+      Processed 320 / 29,636 sampel...
+      Processed 480 / 29,636 sampel...
+      Processed 640 / 29,636 sampel...
+      Processed 800 / 29,636 sampel...
+      Processed 960 / 29,636 sampel...
+      Processed 1,120 / 29,636 sampel...
+      Processed 1,280 / 29,636 sampel...
+      Processed 1,440 / 29,636 sampel...
+      Processed 1,600 / 29,636 sampel...
+      Processed 1,760 / 29,636 sampel...
+      Processed 1,920 / 29,636 sampel...
+      Processed 2,080 / 29,636 sampel...
+      Processed 2,240 / 29,636 sampel...
+    ... (196 lines truncated, last line: )
+    <Figure size 800x600 with 2 Axes>
+================================================================================
+DETAILS FOR: ViViT_Training_Testing copy 2.ipynb
+================================================================================
+
+--- Cell 0 [markdown] ---
+  src: # 🧠 ViViT Micro-Expression Recognition — Training & Testing Pipeline
+  src: Notebook ini mengintegrasikan pipeline **ViViT (Video Vision Transformer)** dan **Fast Precomputed CNN-ViViT** untuk pengenalan emosi mikro:
+  src: - **CASME2** — Micro-expression dataset (7 kelas / 5 kelas aktif)
+  src: - **dataset_img1** — CK+, FER2013, Micro_Expressions
+  src: - **dataset_img2** — CK+, FER2013
+  src: - **New-Datasets** — Magnified/Cropped (CASME2, CASME3, DFME, SAMM, SMIC)
+  src: ### 🌟 Fitur Utama Pipeline:
+  src: 1. **Ultra-Fast Precomputed CNN Mode**: Ekstraksi fitur spasial via ResNet-50/18 untuk akselerasi training hingga **>300x (~2-5 detik/epoch)**.
+  ... (4 more lines)
+
+--- Cell 2 [code] ---
+  src: %load_ext autoreload
+  src: %autoreload 2
+  src: import os
+  src: import sys
+  src: from pathlib import Path
+  src: # Prevent TensorFlow DLL conflict on Windows
+  src: os.environ["USE_TF"] = "0"
+  src: os.environ["TRANSFORMERS_NO_TF"] = "1"
+  ... (50 more lines)
+
+--- Cell 5 [code] ---
+  src: # ============================================================
+  src: #  HYPERPARAMETERS & TRAINING CONFIGURATION
+  src: # ============================================================
+  src: # Mode Training
+  src: USE_PRECOMPUTED_CNN = True         # True = Ultra-Fast CNN Features, False = Raw 3D-ViViT
+  src: CNN_BACKBONE        = "resnet50"   # "resnet50", "resnet18", "efficientnet_b0", "mobilenet_v3_large"
+  src: CACHE_DIR           = "outputs/cached_features"
+  src: # Dataset yang digunakan
+  ... (33 more lines)
+
+--- Cell 6 [markdown] ---
+  src: ---
+  src: ## Step 3: Load Datasets & Feature Precomputation
+  src: Memuat dataset sesuai mode yang dipilih. Jika memilih mode **Precomputed CNN**, script akan otomatis mengekstrak representasi fitur jika cache `.pt` belum tersedia.
+
+--- Cell 7 [code] ---
+  src: # Validasi Path Dataset
+  src: print("Dataset Paths Status:")
+  src: for key in SELECTED_DATASETS:
+  src:     path = DATASET_PATHS.get(key, "NOT FOUND")
+  src:     status = "✅ OK" if os.path.isdir(str(path)) else "❌ MISSING"
+  src:     print(f"  [{status}] {key:22s}: {path}")
+  src: # ============================================================
+  src: # LOAD DATASET (PRECOMPUTED CNN vs RAW PIXEL)
+  ... (59 more lines)
+
+--- Cell 9 [code] ---
+  src: # Setup DataLoader
+  src: train_loader = DataLoader(
+  src:     train_dataset_balanced,
+  src:     batch_size=BATCH_SIZE,
+  src:     shuffle=True,
+  src:     num_workers=NUM_WORKERS,
+  src:     pin_memory=torch.cuda.is_available(),
+  src:     drop_last=True if len(train_dataset_balanced) > BATCH_SIZE else False,
+  ... (22 more lines)
+
+--- Cell 10 [markdown] ---
+  src: ---
+  src: ## Step 5: Build Model ViViT Architecture
+
+--- Cell 11 [code] ---
+  src: # ============================================================
+  src: #  INISIALISASI ARSITEKTUR MODEL
+  src: # ============================================================
+  src: if USE_PRECOMPUTED_CNN:
+  src:     feat_dim = full_dataset.feature_dim if hasattr(full_dataset, 'feature_dim') else 2048
+  src:     model = CNNTemporalViViT(
+  src:         feature_dim=feat_dim,
+  src:         num_classes=NUM_CLASSES,
+  ... (30 more lines)
+
+--- Cell 13 [code] ---
+  src: # Loss & Optimizer Setup
+  src: criterion = nn.CrossEntropyLoss(label_smoothing=0.0)
+  src: optimizer = torch.optim.AdamW(
+  src:     filter(lambda p: p.requires_grad, model.parameters()),
+  src:     lr=LEARNING_RATE,
+  src:     weight_decay=WEIGHT_DECAY,
+  src: )
+  src: scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+  ... (7 more lines)
+
+--- Cell 15 [code] ---
+  src: def train_one_epoch(model, dataloader, criterion, optimizer, device, scaler=None, grad_accum_steps=1, use_amp=False):
+  src:     model.train()
+  src:     running_loss = 0.0
+  src:     all_preds, all_labels = [], []
+  src:     optimizer.zero_grad()
+  src:     for step, (inputs, labels) in enumerate(dataloader):
+  src:         inputs = inputs.to(device, non_blocking=True)
+  src:         labels = labels.to(device, non_blocking=True)
+  ... (58 more lines)
+
+--- Cell 17 [code] ---
+  src: timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+  src: run_name = f"vivit_{'_'.join(SELECTED_DATASETS)}_{timestamp}"
+  src: os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+  src: best_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_best.pth")
+  src: history = {
+  src:     "train_loss": [], "train_acc": [], "train_f1": [],
+  src:     "val_loss": [], "val_acc": [], "val_f1": [],
+  src:     "lr": [],
+  ... (65 more lines)
+
+--- Cell 19 [code] ---
+  src: fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+  src: epochs_range = range(1, len(history['train_loss']) + 1)
+  src: # Loss
+  src: axes[0, 0].plot(epochs_range, history['train_loss'], 'b-', label='Train Loss', linewidth=2)
+  src: axes[0, 0].plot(epochs_range, history['val_loss'], 'r-', label='Val Loss', linewidth=2)
+  src: axes[0, 0].set_title('Loss Curve', fontsize=13, fontweight='bold')
+  src: axes[0, 0].set_xlabel('Epoch')
+  src: axes[0, 0].set_ylabel('Loss')
+  ... (34 more lines)
+
+--- Cell 21 [code] ---
+  src: # Load Best Model Checkpoint
+  src: print(f"Loading best checkpoint: {best_path}")
+  src: checkpoint = torch.load(best_path, map_location=DEVICE, weights_only=False)
+  src: model.load_state_dict(checkpoint["model_state_dict"])
+  src: model.eval()
+  src: val_loss, val_acc, val_f1, all_preds, all_labels, all_probs = validate(
+  src:     model, val_loader, criterion, DEVICE, use_amp=USE_AMP, return_probs=True
+  src: )
+  ... (24 more lines)
+
+--- Cell 22 [code] ---
+  src: # ============================================================================
+  src: # CONFUSION MATRIX & MULTI-CLASS ROC-AUC CURVES
+  src: # ============================================================================
+  src: fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
+  src: # 1. Confusion Matrix
+  src: cm = confusion_matrix(all_labels, all_preds, labels=present_labels)
+  src: disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=target_names)
+  src: disp.plot(ax=ax1, cmap='Blues', values_format='d', xticks_rotation=35)
+  ... (27 more lines)
+
+--- Cell 23 [markdown] ---
+  src: ---
+  src: ## Step 11: Cross-Dataset Testing & Standarisasi Frame 🧪
+  src: Menguji checkpoint model terbaik pada dataset terpisah dengan standarisasi preprocessing (CLAHE + Aspect Ratio Padding + Bicubic Resizing) dan evaluasi pada 5 label kelas aktif CASME2 (`disgust`, `fear`, `happiness`, `sadness`, `surprise`).
+
+--- Cell 24 [code] ---
+  src: # ============================================================
+  src: #  1. PILIH DATASET TEST & AKTIFKAN STANDARISASI FRAME
+  src: # ============================================================
+  src: # Contoh pilihan dataset eksternal:
+  src: # - ["ck_plus_img2", "fer2013_img2"]
+  src: # - ["dfme_testa", "dfme_testb"]
+  src: # - ["micro_expr_img1_test"]
+  src: # - ["samm"]
+  ... (38 more lines)
+
+--- Cell 25 [code] ---
+  src: # ============================================================
+  src: #  2. INFERENSI, EVALUASI 5 KELAS & UJI KECEPATAN INFERENSI (FPS)
+  src: # ============================================================
+  src: if test_loader is not None:
+  src:     # 5 Kelas aktif CASME2
+  src:     CASME2_CLASSES = ["disgust", "fear", "happiness", "sadness", "surprise"]
+  src:     CASME2_INDICES = [CLASS_TO_IDX[c] for c in CASME2_CLASSES]
+  src:     # Path checkpoint yang akan diuji
+  ... (116 more lines)
+
+--- Cell 26 [markdown] ---
+  src: ---
+  src: ## Step 12: Export Model Siap Pakai (End-to-End CNN-ViViT) 📦
+  src: Menyimpan bobot model final sekaligus menghasilkan wrapper model **End-to-End** yang siap menerima input gambar/webcam secara langsung.
+
+--- Cell 27 [code] ---
+  src: # Save Final & End-to-End Deployment Checkpoint
+  src: final_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_final.pth")
+  src: e2e_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_end_to_end.pth")
+  src: # 1. Simpan checkpoint model ViViT
+  src: torch.save({
+  src:     "model_state_dict": model.state_dict(),
+  src:     "config": {
+  src:         "num_classes": NUM_CLASSES,
+  ... (27 more lines)
+================================================================================
+DETAILS FOR: ViViT_Training_Testing - GCN.ipynb
+================================================================================
+
+--- Cell 0 [markdown] ---
+  src: # 🧠 GCN-GRU Spatio-Temporal Hybrid Model — Micro-Expression Recognition
+  src: Notebook ini mengimplementasikan model **Hybrid Spatio-Temporal Graph Convolutional Network & Bidirectional GRU (`GCNGRUClassifier`)** dari modul `core/gcn_gru_model.py` untuk pengenalan mikro-ekspresi wajah pada dataset **CASME II**.
+  src: ### 🌟 Arsitektur Model (`core/gcn_gru_model.py`):
+  src: 1. **Spatial Graph Convolution (`GCNLayer`)**:
+  src:    - 2-layer GCN ($7 \to 64 \to 64$) mengekstrak korelasi spasial antar 468 titik landmark wajah (MediaPipe Face Mesh).
+  src:    - Menggunakan aktivasi **Mish** dan **Batch Normalization** untuk propagasi gradien optimal.
+  src: 2. **Spatial Mean Pooling**:
+  src:    - Mengagregasi 468 node menjadi 1 vektor representasi spasial (dimensi 64) per frame.
+  ... (9 more lines)
+
+--- Cell 2 [code] ---
+  src: import os
+  src: import sys
+  src: from pathlib import Path
+  src: # Prevent TensorFlow DLL conflict on Windows
+  src: os.environ["USE_TF"] = "0"
+  src: os.environ["TRANSFORMERS_NO_TF"] = "1"
+  src: os.environ["USE_TORCH"] = "1"
+  src: os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+  ... (48 more lines)
+
+--- Cell 5 [code] ---
+  src: # ============================================================
+  src: #  HYPERPARAMETERS GCN-GRU CLASSIFIER
+  src: # ============================================================
+  src: SELECTED_DATASETS = ["casme2"]
+  src: # 5 Kelas Emosi Aktif CASME2 (Setelah memfilter 'others' & 'repression')
+  src: ACTIVE_CLASSES = ['disgust', 'fear', 'happiness', 'sadness', 'surprise']
+  src: NUM_CLASSES = len(ACTIVE_CLASSES)
+  src: IDX_TO_ACTIVE = {i: cls for i, cls in enumerate(ACTIVE_CLASSES)}
+  ... (34 more lines)
+
+--- Cell 6 [markdown] ---
+  src: ---
+  src: ## Step 3: Dataset 7-Channel Feature Extraction & Precomputed Cache
+
+--- Cell 8 [code] ---
+  src: # ============================================================================
+  src: # 2. PRECOMPUTED GRAPH DATASET READER (HIGH-SPEED RAM CACHE)
+  src: # ============================================================================
+  src: PRECOMPUTED_DIR = os.path.join(PROJECT_ROOT, "precomputed_graphs_7ch_real_CASME2")
+  src: class PrecomputedGraphDataset(torch.utils.data.Dataset):
+  src:     """
+  src:     Dataset graf 7-channel super cepat yang membaca file npy hasil pra-komputasi.
+  src:     """
+  ... (38 more lines)
+
+--- Cell 9 [code] ---
+  src: # ============================================================
+  src: # 3. STRATIFIED TRAIN / VAL SPLIT & SMOTE BALANCING
+  src: # ============================================================
+  src: all_labels = fast_full_dataset.labels
+  src: splitter = StratifiedShuffleSplit(n_splits=1, test_size=VAL_SPLIT, random_state=SEED)
+  src: for t_idx, v_idx in splitter.split(np.zeros(len(all_labels)), all_labels):
+  src:     train_indices = t_idx.tolist()
+  src:     val_indices = v_idx.tolist()
+  ... (16 more lines)
+
+--- Cell 10 [code] ---
+  src: # ============================================================
+  src: # 4. VISUALISASI DISTRIBUSI KELAS (BEFORE vs AFTER SMOTE)
+  src: # ============================================================
+  src: orig_counts = Counter([all_labels[i] for i in train_indices])
+  src: after_counts = Counter(train_dataset_balanced.labels) if USE_SMOTE else orig_counts
+  src: x = np.arange(NUM_CLASSES)
+  src: width = 0.35
+  src: fig, ax = plt.subplots(figsize=(10, 5))
+  ... (16 more lines)
+
+--- Cell 12 [code] ---
+  src: train_loader = DataLoader(
+  src:     train_dataset_balanced,
+  src:     batch_size=BATCH_SIZE,
+  src:     shuffle=True,
+  src:     pin_memory=True,
+  src:     drop_last=True,
+  src: )
+  src: val_loader = DataLoader(
+  ... (8 more lines)
+
+--- Cell 13 [markdown] ---
+  src: ---
+  src: ## Step 5: Inisialisasi Model GCN-GRU (`core/gcn_gru_model.py`)
+
+--- Cell 14 [code] ---
+  src: # ============================================================
+  src: #  INISIALISASI GCNGRUClassifier DARI CORE
+  src: # ============================================================
+  src: model = GCNGRUClassifier(
+  src:     num_nodes=NUM_NODES,
+  src:     in_channels=IN_CHANNELS,
+  src:     gcn_hidden=GCN_HIDDEN,
+  src:     gru_hidden=GRU_HIDDEN,
+  ... (13 more lines)
+
+--- Cell 15 [code] ---
+  src: # Sanity check: Forward pass dengan dummy tensor [Batch=2, Channels=7, Frames=16, Nodes=468]
+  src: with torch.no_grad():
+  src:     dummy_input = torch.randn(2, IN_CHANNELS, NUM_FRAMES, NUM_NODES).to(DEVICE)
+  src:     dummy_out = model(dummy_input)
+  src:     print("✅ Sanity check forward pass Sukses!")
+  src:     print(f"  Input shape : {dummy_input.shape}")
+  src:     print(f"  Output shape: {dummy_out.shape} (Logits untuk {NUM_CLASSES} kelas)")
+  src:     del dummy_input, dummy_out
+  ... (1 more lines)
+
+--- Cell 17 [code] ---
+  src: # Class Weights calculation
+  src: class_counts = torch.zeros(NUM_CLASSES)
+  src: for l in train_dataset_balanced.labels if hasattr(train_dataset_balanced, 'labels') else [all_labels[i] for i in train_indices]:
+  src:     class_counts[l] += 1
+  src: total_s = class_counts.sum()
+  src: weights = total_s / (NUM_CLASSES * class_counts.clamp(min=1))
+  src: weights = (weights / weights.mean()).to(DEVICE)
+  src: # Loss function dengan label smoothing
+  ... (11 more lines)
+
+--- Cell 19 [code] ---
+  src: @torch.no_grad()
+  src: def validate(model, loader, criterion, use_amp, return_probs=False):
+  src:     model.eval()
+  src:     running_loss = 0.0
+  src:     preds_all, labels_all, probs_all = [], [], []
+  src:     for graphs, lbls in loader:
+  src:         graphs = graphs.to(DEVICE, non_blocking=True)
+  src:         lbls = lbls.to(DEVICE, non_blocking=True)
+  ... (23 more lines)
+
+--- Cell 21 [code] ---
+  src: run_name = f"gcn_gru_casme2_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+  src: os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+  src: best_checkpoint_path = os.path.join(CHECKPOINT_DIR, f"{run_name}_best.pth")
+  src: history = {
+  src:     "train_loss": [], "train_acc": [], "train_f1": [],
+  src:     "val_loss": [], "val_acc": [], "val_f1": [], "lr": []
+  src: }
+  src: best_f1 = 0.0
+  ... (52 more lines)
+
+--- Cell 23 [code] ---
+  src: fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+  src: epochs_range = range(1, len(history["train_loss"]) + 1)
+  src: # 1. Loss
+  src: axes[0, 0].plot(epochs_range, history["train_loss"], label="Train Loss", color="#FF6B6B", lw=2)
+  src: axes[0, 0].plot(epochs_range, history["val_loss"], label="Val Loss", color="#4D96FF", lw=2)
+  src: axes[0, 0].set_title("Loss Curve", fontweight="bold")
+  src: axes[0, 0].set_xlabel("Epoch")
+  src: axes[0, 0].set_ylabel("Loss")
+  ... (27 more lines)
+
+--- Cell 24 [markdown] ---
+  src: ---
+  src: ## Step 10: Comprehensive Evaluation & Confusion Matrix
+
+--- Cell 25 [code] ---
+  src: # Load best checkpoint untuk evaluasi final
+  src: if os.path.exists(best_checkpoint_path):
+  src:     checkpoint = torch.load(best_checkpoint_path, map_location=DEVICE)
+  src:     model.load_state_dict(checkpoint["model_state_dict"])
+  src:     print(f"✅ Berhasil memuat best checkpoint dari Epoch {checkpoint['epoch']}")
+  src: _, final_acc, final_f1, y_pred, y_true = validate(model, val_loader, criterion, USE_AMP)
+  src: final_uar = recall_score(y_true, y_pred, average="macro", zero_division=0)
+  src: f1_per_class = f1_score(y_true, y_pred, average=None, zero_division=0)
+  ... (11 more lines)
+
+--- Cell 26 [code] ---
+  src: # Confusion Matrix Display
+  src: cm = confusion_matrix(y_true, y_pred)
+  src: fig, ax = plt.subplots(figsize=(8, 7))
+  src: disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=ACTIVE_CLASSES)
+  src: disp.plot(ax=ax, cmap="Blues", values_format="d", xticks_rotation=45)
+  src: ax.set_title(f"Confusion Matrix — GCN-GRU (UF1: {final_uf1:.4f} | UAR: {final_uar:.4f})", fontsize=13, fontweight="bold")
+  src: plt.tight_layout()
+  src: plt.show()
+
+--- Cell 27 [code] ---
+  src: # ============================================================================
+  src: # ROC CURVES & AUC SCORE (RECEIVER OPERATING CHARACTERISTIC - MULTI-CLASS)
+  src: # ============================================================================
+  src: from sklearn.preprocessing import label_binarize
+  src: from sklearn.metrics import roc_curve, auc, roc_auc_score
+  src: # 1. Evaluasi validation set dengan probabilitas
+  src: val_loss, final_acc, final_f1, y_pred, y_true, all_probs = validate(model, val_loader, criterion, USE_AMP, return_probs=True)
+  src: # Binarize labels untuk One-vs-Rest (OvR)
+  ... (69 more lines)
+
+--- Cell 28 [code] ---
+  src: # Export Training History to JSON
+  src: os.makedirs(LOG_DIR, exist_ok=True)
+  src: history_log_path = os.path.join(LOG_DIR, f"{run_name}_history.json")
+  src: save_log = {
+  src:     "model": "GCNGRUClassifier",
+  src:     "dataset": SELECTED_DATASETS,
+  src:     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+  src:     "metrics": {
+  ... (10 more lines)

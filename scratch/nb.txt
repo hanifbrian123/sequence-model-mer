@@ -1,0 +1,438 @@
+[markdown]
+# 🧠 ViViT Micro-Expression Recognition — Leave-One-Subject-Out (LOSO) Cross-Validation
+
+Pipeline pengujian **Leave-One-Subject-Out (LOSO) Cross-Validation** terakselerasi **Fast Precomputed CNN-ViViT** khusus untuk dataset **CASME II**.
+
+### 🌟 Perbaikan Utama Pipeline:
+1. **True 16-Frame Temporal Sequence**: Setiap klip mikro-ekspresi di-*sample* secara seragam menjadi **16 frame temporal berurutan** (bukan duplikasi frame tunggal).
+2. **Subject-Aware Isolation (Zero Data Leakage)**: Pemisahan data per-subjek manusia (`sub01` s/d `sub26`) secara ketat tanpa kebocoran antar-fold.
+3. **Konfigurasi Label Fleksibel**: Mendukung **5 Kelas Standar** (`disgust`, `fear`, `happiness`, `sadness`, `surprise`) maupun **7 Kelas Lengkap CASME II** (`disgust`, `fear`, `happiness`, `others`, `repression`, `sadness`, `surprise`).
+4. **Feature-Level SMOTE Balancing**: Penyeimbangan kelas minoritas secara on-the-fly *hanya* pada fold training.
+5. **Standar Evaluasi Benchmark MEGC**:
+   - **UF1 (Unweighte
+----------------------------------------
+[markdown]
+## Step 1: Setup Environment & Dependencies
+
+----------------------------------------
+[code]
+%load_ext autoreload
+%autoreload 2
+import os
+import sys
+import time
+import json
+import glob
+import re
+import random
+from pathlib import Path
+from datetime import datetime
+from collections import Counter, defaultdict
+from PIL import Image
+
+# Prevent TensorFlow DLL conflict on Windows
+os.environ["USE_TF"] = "0"
+os.environ["TRANSFORMERS_NO_TF"] = "1"
+os.environ["USE_TORCH"] = "1"
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+
+# Setup Dynamic Project Root Path
+current_dir = Path(os.getcwd()).resolve()
+root_dir = current_dir
+while root_dir.parent != root_dir:
+    if (root_dir / "core").exists():
+        break
+    root_dir = root_dir.parent
+if not (root_dir / "core").exists():
+    root_dir = current_dir.parent
+
+PROJECT_ROOT = str(root_dir)
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader, Subset
+from torchvision import transforms
+i
+----------------------------------------
+[markdown]
+---
+## Step 2: Konfigurasi Hyperparameters, Label & Mode LOSO
+
+Pilih opsi kelas yang ingin digunakan:
+- `EMOTION_MODE = "5-class"`: `["disgust", "fear", "happiness", "sadness", "surprise"]`
+- `EMOTION_MODE = "7-class"`: `["disgust", "fear", "happiness", "others", "repression", "sadness", "surprise"]`
+
+----------------------------------------
+[code]
+# ============================================================
+#  HYPERPARAMETERS & LOSO CONFIGURATION
+# ============================================================
+SEED = 42
+def set_seed(seed=42):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+set_seed(SEED)
+
+# 1. Label Configuration
+# Pilihan EMOTION_MODE:
+# - "5-class"     : ["disgust", "fear", "happiness", "sadness", "surprise"]
+# - "5-class-megc": ["disgust", "happiness", "others", "repression", "surprise"] (Standar Benchmark MEGC - Sampel Seimbang)
+# - "7-class"     : ["disgust", "fear", "happiness", "others", "repression", "sadness", "surprise"]
+EMOTION_MODE = "5-class"
+
+if EMOTION_MODE == "5-class":
+    CLASSES = ["disgust", "fear", "happiness", "sadness", "surprise"]
+elif EMOTION_MODE == "5-class-megc":
+    CLASSES = ["disgust", "happiness", "others", "repression", "surpris
+----------------------------------------
+[markdown]
+---
+## Step 3: Pembangunan Sekuens Video 16-Frame & Subject Mapping
+
+Di tahap ini:
+1. Membaca folder `train/CASME2/{emotion}` dan mengelompokkan frame-frame menjadi **klip video mikro-ekspresi utuh**.
+2. Mengambil **16 frame temporal** secara seragam sepanjang durasi ekspresi untuk setiap klip.
+3. Memetakan setiap klip ke **Subject ID (`sub01` s/d `sub26`)** menggunakan tabel metadata resmi CASME II.
+4. Mengekstrak representasi fitur CNN untuk setiap sekuens (Shape: `[N_clips, 16, feature_dim]`).
+
+----------------------------------------
+[code]
+# ============================================================
+#  BUILD 16-FRAME SEQUENCE DATASET FROM CASME2
+# ============================================================
+CASME2_DIR = os.path.join(PROJECT_ROOT, "train", "CASME2")
+EXCEL_PATH = os.path.join(PROJECT_ROOT, "train/New-Datasets/Onset_Apex_Files/CASME2/CASME2-coding-20140508.xlsx")
+
+# 1. Load Excel Metadata CASME II jika ada
+excel_sequences_by_emotion = defaultdict(list)
+if os.path.exists(EXCEL_PATH):
+    df_excel = pd.read_excel(EXCEL_PATH)
+    for _, row in df_excel.iterrows():
+        emo = str(row["Estimated Emotion"]).strip().lower()
+        sub_num = int(row["Subject"])
+        excel_sequences_by_emotion[emo].append(f"sub{sub_num:02d}")
+    print(f"✅ Excel CASME II Coding dimuat: {len(df_excel)} sekuens teranotasi")
+else:
+    print("⚠️ Excel metadata tidak ditemukan, fallback subject grouping per-klip")
+
+# 2. Group frames by Clip ID
+def discover_casme2_sequences(casme2_dir, target_classes, num_frames=16):
+    sequence
+----------------------------------------
+[markdown]
+---
+## Step 3b: Visualisasi Distribusi Sekuens Video per Subjek & Kelas 📊
+
+----------------------------------------
+[code]
+# ============================================================
+#  VISUALISASI DISTRIBUSI SEKUEN VIDEO (16-FRAME KLIP)
+# ============================================================
+sub_clip_counts = Counter([s["subject_id"] for s in sequences_meta])
+emo_clip_counts = Counter([s["emotion"] for s in sequences_meta])
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 5))
+
+# 1. Plot Subjek (Jumlah Klip Video)
+sorted_subs = sorted(sub_clip_counts.keys())
+clip_vals = [sub_clip_counts[s] for s in sorted_subs]
+ax1.bar(sorted_subs, clip_vals, color="#4D96FF", edgecolor="black", alpha=0.85)
+ax1.set_title("Distribusi Klip Video Mikro-Ekspresi per Subjek (CASME II)", fontsize=12, fontweight="bold")
+ax1.set_xlabel("Subject ID")
+ax1.set_ylabel("Jumlah Klip Video (16-Frame Sequence)")
+ax1.tick_params(axis="x", rotation=45)
+ax1.grid(axis="y", linestyle="--", alpha=0.3)
+
+# 2. Plot Kelas (Jumlah Klip Video)
+cls_clip_vals = [emo_clip_counts.get(c, 0) for c in CLASSES]
+ax2.bar(CLASSES, cls_clip_vals, colo
+----------------------------------------
+[markdown]
+---
+## Step 4: Ekstraksi Fitur Spasial CNN (16 Frame per Sekuens)
+
+Ekstraksi representasi fitur spasial ResNet-50 untuk setiap 16 frame pada semua klip mikro-ekspresi. Fitur disimpan ke file cache `.pt` agar training transformer LOSO dapat berjalan super cepat (~1-2 menit untuk 26 fold).
+
+----------------------------------------
+[code]
+# ============================================================
+#  PRECOMPUTE CNN FEATURES FOR 16-FRAME SEQUENCES
+# ============================================================
+os.makedirs(CACHE_DIR, exist_ok=True)
+cache_file = os.path.join(CACHE_DIR, f"casme2_sequences_{EMOTION_MODE}_{CNN_BACKBONE}_{NUM_FRAMES}f.pt")
+
+def get_feature_extractor(backbone_name="resnet50"):
+    if backbone_name == "resnet50":
+        weights = models.ResNet50_Weights.DEFAULT
+        model = models.resnet50(weights=weights)
+        feat_dim = model.fc.in_features
+        model.fc = nn.Identity()
+    elif backbone_name == "resnet18":
+        weights = models.ResNet18_Weights.DEFAULT
+        model = models.resnet18(weights=weights)
+        feat_dim = model.fc.in_features
+        model.fc = nn.Identity()
+    model = model.to(DEVICE)
+    model.eval()
+    return model, feat_dim
+
+transform_extract = transforms.Compose([
+    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+    transforms.ToTensor(),
+    transforms.Nor
+----------------------------------------
+[markdown]
+---
+## Step 5: Dataset Classes & Sequence-Level SMOTE
+
+----------------------------------------
+[code]
+class SequenceCachedDataset(Dataset):
+    """Dataset fitur temporal sequence [16, feat_dim] per klip mikro-ekspresi."""
+    def __init__(self, features, labels, subject_ids):
+        self.features = features.float() # [N, 16, feat_dim]
+        self.labels = labels.long()
+        self.subject_ids = subject_ids
+        
+    def __len__(self):
+        return len(self.labels)
+        
+    def __getitem__(self, idx):
+        return self.features[idx], self.labels[idx]
+
+class SequenceSMOTEBalancedDataset(Dataset):
+    """Penyeimbangan kelas pada level sekuens video 16-frame."""
+    def __init__(self, subset, num_classes, jitter_std=0.02):
+        self.num_classes = num_classes
+        self.jitter_std = jitter_std
+        
+        # Kumpulkan sampel per kelas dari subset
+        self.class_samples = defaultdict(list)
+        for idx in range(len(subset)):
+            feat, lbl = subset[idx]
+            lbl_val = lbl.item() if isinstance(lbl, torch.Tensor) else lbl
+            self.class_sampl
+----------------------------------------
+[markdown]
+---
+## Step 6: Model Factory & Helper Functions
+
+----------------------------------------
+[code]
+def create_fold_model():
+    """Membuat instance CNNTemporalViViT baru di setiap fold LOSO."""
+    model = CNNTemporalViViT(
+        feature_dim=feat_dim,
+        num_classes=NUM_CLASSES,
+        num_frames=NUM_FRAMES,
+        d_model=512,
+        nhead=8,
+        num_layers=4,
+        dropout=DROPOUT,
+    ).to(DEVICE)
+    return model
+
+def train_one_epoch(model, dataloader, criterion, optimizer, scaler=None, grad_accum_steps=1, use_amp=False):
+    model.train()
+    running_loss = 0.0
+    all_preds, all_labels = [], []
+    optimizer.zero_grad()
+
+    for step, (inputs, labels) in enumerate(dataloader):
+        inputs = inputs.to(DEVICE, non_blocking=True)
+        labels = labels.to(DEVICE, non_blocking=True)
+
+        if use_amp and scaler is not None:
+            with autocast(device_type="cuda" if "cuda" in str(DEVICE) else "cpu"):
+                outputs = model(inputs)
+                loss = criterion(outputs, labels) / grad_accum_steps
+            scaler.scale(loss).backward()
+
+    
+----------------------------------------
+[markdown]
+---
+## Step 7: Leave-One-Subject-Out (LOSO) Training Loop 🚀
+
+Menjalankan pengujian 26 Fold LOSO secara terisolasi:
+1. Di setiap fold, seluruh sekuens video milik subjek target dikeluarkan sebagai **Test Set Murni**.
+2. Sekuens dari sisa 25 subjek dilatih dan diseimbangkan menggunakan SMOTE.
+3. Dilakukan evaluasi metrik objektif tanpa kebocoran data (*zero leakage*).
+
+----------------------------------------
+[code]
+# Tentukan Subjek yang Dievaluasi
+test_subjects_list = all_subjects if LOSO_MODE == "all" else [s for s in SELECTED_TEST_SUBJECTS if s in all_subjects]
+
+print(f"\nMemulai LOSO Cross-Validation ({len(test_subjects_list)} Fold Subjek)...")
+print("=" * 85)
+
+loso_results = {
+    "subject": [],
+    "test_clips": [],
+    "accuracy": [],
+    "macro_f1": [],
+    "uf1": [],
+    "uar": [],
+    "time_sec": [],
+}
+all_global_preds = []
+all_global_labels = []
+all_global_probs = []
+
+start_total_time = time.time()
+
+for fold_idx, test_sub in enumerate(test_subjects_list):
+    fold_start = time.time()
+    
+    # 1. Pisahkan indeks Train vs Test berdasarkan Subject ID sejati
+    train_indices = [i for i, sid in enumerate(full_dataset.subject_ids) if sid != test_sub]
+    test_indices = [i for i, sid in enumerate(full_dataset.subject_ids) if sid == test_sub]
+    
+    if len(test_indices) == 0:
+        continue
+        
+    train_sub = Subset(full_dataset, train_indices)
+    test_sub_ds = Subset(full_datase
+----------------------------------------
+[markdown]
+---
+## Step 7.1: Pengujian Merata (Balanced Evaluation: 2 Klip Video per Label Kelas) ⚖️
+
+Pengujian khusus dengan **dataset uji seimbang (Balanced Test Set)** di mana setiap label kelas memiliki **tepat 2 klip video** yang diuji secara adil:
+1. Memisahkan 2 klip video dari setiap kelas emosi (`disgust`, `fear`, `happiness`, `sadness`, `surprise`) sebagai Test Set.
+2. Melatih model pada sisa klip video training dengan penyeimbangan SMOTE.
+3. Menguji dan menampilkan metrik performa, tabel detail prediksi per klip, serta visualisasi grafik evaluasi.
+
+----------------------------------------
+[code]
+# ============================================================
+#  PENGUJIAN MERATA: TEPAT 2 KLIP VIDEO PER LABEL KELAS
+# ============================================================
+print("=" * 75)
+print("  MEMULAI PENGUJIAN MERATA (BALANCED EVALUATION: 2 KLIP / KELAS)")
+print("=" * 75)
+
+# 1. Kumpulkan indeks per kelas
+class_to_indices = defaultdict(list)
+for idx in range(len(full_dataset)):
+    _, lbl = full_dataset[idx]
+    lbl_val = lbl.item() if isinstance(lbl, torch.Tensor) else lbl
+    class_to_indices[lbl_val].append(idx)
+
+balanced_test_indices = []
+balanced_train_indices = []
+CLIPS_PER_CLASS_TEST = 2
+
+random.seed(SEED)
+for c in range(NUM_CLASSES):
+    idxs = class_to_indices.get(c, [])
+    if len(idxs) == 0:
+        continue
+    shuffled_idxs = idxs.copy()
+    random.shuffle(shuffled_idxs)
+    
+    n_test = min(CLIPS_PER_CLASS_TEST, len(shuffled_idxs))
+    balanced_test_indices.extend(shuffled_idxs[:n_test])
+    balanced_train_indices.extend(shuffled_idxs[n_test:])
+
+b_train_sub
+----------------------------------------
+[markdown]
+---
+## Step 8: Standar Benchmark Metrics (MEGC Guidelines) 📊
+
+----------------------------------------
+[code]
+# ============================================================
+#  PERHITUNGAN METRIK BENCHMARK GLOBAL
+# ============================================================
+y_true = np.array(all_global_labels)
+y_pred = np.array(all_global_preds)
+
+global_acc = accuracy_score(y_true, y_pred)
+global_macro_f1 = f1_score(y_true, y_pred, average="macro", zero_division=0)
+global_weighted_f1 = f1_score(y_true, y_pred, average="weighted", zero_division=0)
+global_uar = recall_score(y_true, y_pred, average="macro", zero_division=0)
+
+present_classes = sorted(list(set(y_true) | set(y_pred)))
+f1_per_class = f1_score(y_true, y_pred, average=None, labels=present_classes, zero_division=0)
+global_uf1 = np.mean(f1_per_class) if len(f1_per_class) > 0 else 0.0
+
+print("=" * 65)
+print("  HASIL EVALUASI GLOBAL LEAVE-ONE-SUBJECT-OUT (LOSO)")
+print("=" * 65)
+print(f"  Total Klip Teruji       : {len(y_true):,d} klip video mikro-ekspresi")
+print(f"  Total Subjek Dievaluasi : {len(loso_results['subject'])}")
+print(f"  🎯 O
+----------------------------------------
+[markdown]
+---
+## Step 9: Global Confusion Matrix, ROC Curves & Per-Subject Breakdown
+
+----------------------------------------
+[code]
+# ============================================================
+#  GLOBAL CONFUSION MATRIX, ROC CURVES & PER-SUBJECT BAR CHART
+# ============================================================
+from sklearn.preprocessing import label_binarize
+from sklearn.metrics import roc_curve, auc
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
+
+# 1. Confusion Matrix
+cm = confusion_matrix(y_true, y_pred, labels=present_classes)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=target_names)
+disp.plot(ax=ax1, cmap="Blues", values_format="d", xticks_rotation=35)
+ax1.set_title(f"Confusion Matrix LOSO — Acc: {global_acc*100:.1f}% | UF1: {global_uf1:.4f}", fontsize=12, fontweight="bold")
+
+# 2. Per-Subject Bar Chart
+df_results = pd.DataFrame(loso_results)
+x = np.arange(len(df_results))
+width = 0.35
+
+ax2.bar(x - width/2, df_results["accuracy"], width, label="Accuracy", color="#4D96FF", alpha=0.85)
+ax2.bar(x + width/2, df_results["macro_f1"], width, label="Macro F1", color="#6BCB77", alph
+----------------------------------------
+[markdown]
+---
+## Step 10: Simpan Laporan Hasil LOSO 📦
+
+----------------------------------------
+[code]
+# ============================================================
+#  EXPORT HASIL LOSO KE JSON & CSV
+# ============================================================
+os.makedirs(LOG_DIR, exist_ok=True)
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+output_json_path = os.path.join(LOG_DIR, f"vivit_loso_casme2_{EMOTION_MODE}_{CNN_BACKBONE}_{timestamp}.json")
+output_csv_path  = os.path.join(LOG_DIR, f"vivit_loso_casme2_{EMOTION_MODE}_{CNN_BACKBONE}_{timestamp}.csv")
+
+# Simpan CSV Tabel
+df_results.to_csv(output_csv_path, index=False)
+
+# Simpan JSON Report
+save_data = {
+    "dataset": "CASME2",
+    "emotion_mode": EMOTION_MODE,
+    "classes": CLASSES,
+    "backbone": CNN_BACKBONE,
+    "timestamp": timestamp,
+    "total_time_minutes": total_loso_time / 60,
+    "metrics": {
+        "accuracy": float(global_acc),
+        "macro_f1": float(global_macro_f1),
+        "weighted_f1": float(global_weighted_f1),
+        "uf1": float(global_uf1),
+        "uar": float(global_uar),
+        "total_clips
+----------------------------------------

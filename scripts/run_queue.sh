@@ -13,7 +13,9 @@
 set -u
 cd "$(dirname "$0")/.." || exit 1
 
-if [ -f "/c/Users/OWNER/miniconda3/envs/facesleuth/python.exe" ]; then
+if [ -f "/mnt/c/Users/OWNER/miniconda3/envs/facesleuth/python.exe" ]; then
+  DEFAULT_PY="/mnt/c/Users/OWNER/miniconda3/envs/facesleuth/python.exe"
+elif [ -f "/c/Users/OWNER/miniconda3/envs/facesleuth/python.exe" ]; then
   DEFAULT_PY="/c/Users/OWNER/miniconda3/envs/facesleuth/python.exe"
 elif [ -f "C:/Users/OWNER/miniconda3/envs/facesleuth/python.exe" ]; then
   DEFAULT_PY="C:/Users/OWNER/miniconda3/envs/facesleuth/python.exe"

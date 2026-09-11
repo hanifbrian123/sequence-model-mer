@@ -21,9 +21,9 @@ else
   DEFAULT_PY="python"
 fi
 
-PY="${CASME_PYTHON:-$DEFAULT_PY}"
+PY="$DEFAULT_PY"
 export PYTHONPATH="$(pwd)/src${PYTHONPATH:+:$PYTHONPATH}"
-mkdir -p logs
+mkdir -p logs logs/runs
 QLOG="logs/queue_$(date +%Y%m%d_%H%M%S).log"
 log(){ echo "[$(date +%H:%M:%S)] $*" | tee -a "$QLOG"; }
 
@@ -50,7 +50,7 @@ done
 log "=== ANTREAN CASME II: ${stems[*]} ==="
 
 for stem in "${stems[@]}"; do
-  out="runs/${stem}"
+  out="runs/${stem}_v2_dev_loso_all_p5"
   
   if [ -z "${FORCE:-}" ] && [ -f "${out}/summary.json" ] && grep -q '"complete": true' "${out}/summary.json" 2>/dev/null; then
     log "LEWATI ${stem} (sudah selesai; gunakan FORCE=1 untuk menjalankan ulang)"
@@ -58,7 +58,7 @@ for stem in "${stems[@]}"; do
   fi
 
   log "MULAI  ${stem}"
-  $PY -m casme.training.run_protocol_v2 --config "configs/${stem}.json" --role dev --tag p5 \
+  $PY -m casme.training.run_protocol_v2 --config "configs/${stem}.json" --role dev --split loso_all --break_audit_seal --tag p5 \
       > "logs/runs/${stem}_stdout.log" 2>&1 || true
 
   if [ -f "${out}/summary.json" ] && grep -q '"complete": true' "${out}/summary.json" 2>/dev/null; then

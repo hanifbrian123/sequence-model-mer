@@ -335,6 +335,9 @@ def prepare_seq_array(arr, sample, cfg, train=False, view=None, region=None):
         length, cfg["T"], train,
         jitter=cfg.get("temporal_jitter", True), hi_idx=hi, lo_idx=lo,
         phase=view.get("temporal_phase", 0.5))
+    if cfg.get("modality") == "features":
+        clip = arr if arr.shape[0] == cfg.get("T", 16) else arr[indices]
+        return torch.from_numpy(clip.copy()).float()
     clip = arr[indices]
     height, width = clip.shape[1], clip.shape[2]
     size = cfg["img_size"]

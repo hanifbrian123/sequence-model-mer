@@ -18,5 +18,6 @@ experiments/**/fold_checkpoints/
 logs/
 !logs/summaries/CONSOLIDATION.txt
 
-# Other Repository
-fer/logs/
+# Separate Git Repository
+fer/
+

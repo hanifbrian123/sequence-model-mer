@@ -69,6 +69,11 @@ Gate promosi kandidat: **paired subject-bootstrap 10.000 iterasi**, minimum effe
 
 ## 4. Semua Run Sekilas (Master Progression Table)
 
+> [!IMPORTANT]
+> **Alur Narasi & Master Progression Table Terkurasi untuk Paper:**
+> Untuk keperluan penulisan artikel ilmiah (*research paper*), telah dikurasi alur narasi 6 babak dengan 22 run kunci yang dilengkapi tautan artefak visual lengkap (Confusion Matrix, ROC Curve, Kurva Training, Per-Fold CSV, dan Log) pada dokumen:
+> 👉 **[CASME II Experimental Progression & Research Narrative](../docs/paper_progression_narrative.md)**
+
 Daftar lengkap seluruh **200 run** eksperimen yang tercatat di `runs/` dan `results/results.csv`, diurutkan secara numerik dari `000_` s.d. selesai:
 
 | Run | Protokol | Split | Backbone | UF1 | UAR | ACC | Epochs | Waktu Selesai |

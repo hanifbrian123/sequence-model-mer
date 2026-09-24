@@ -39,6 +39,7 @@ casmeII-new-from-sequence-model/
 │   └── LAPORAN.md               # Dokumen laporan terpadu yang digenerate otomatis dari results.csv
 │
 ├── docs/                        # Dokumentasi teknis mendalam dan publikasi
+│   ├── paper_progression_narrative.md        # Alur narasi progresif terkurasi & Master Progression Table untuk paper
 │   ├── laporan_eksperimen_terbaik_casme2.md  # Laporan komprehensif model-model terbaik (analisis detail & kurva)
 │   ├── architecture_r3d_multitask_au.png     # Diagram arsitektur visual resmi model juara (300 DPI)
 │   ├── INFERENCE_GUIDE.md                    # Panduan inferensi video offline dan penggunaan checkpoint
@@ -111,7 +112,9 @@ Evaluasi model diuji menggunakan protokol resmi **Leave-One-Subject-Out (LOSO) 2
 | [`182`](runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5) | R3D-18 + Facial Region Focus Attention | **LOSO 26** (246 klip) | **69,51%** | **0,7121** | **0,7271** | **91,58%** | **0,8964** | [Matrix](runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/confusion_matrix.png) • [ROC](runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/roc_curve.png) • [Kurva](runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/curve_training.png) • [Log](runs/182_r3d_focus_region_full_s42_v2_dev_loso_all_p5/run.log) |
 | [`203`](runs/203_expD_flow_strain_v2_dev_loso_all_p5) | R3D-18 + Flow & Strain Tensor ($\varepsilon_{xx}, \varepsilon_{yy}$) | **LOSO 26** (246 klip) | **68,29%** | **0,6938** | **0,7046** | **91,36%** | **0,8923** | [Matrix](runs/203_expD_flow_strain_v2_dev_loso_all_p5/confusion_matrix.png) • [ROC](runs/203_expD_flow_strain_v2_dev_loso_all_p5/roc_curve.png) • [Kurva](runs/203_expD_flow_strain_v2_dev_loso_all_p5/curve_training.png) • [Log](runs/203_expD_flow_strain_v2_dev_loso_all_p5/run.log) |
 
-> 📖 **Laporan Komprehensif Lengkap**: Analisis per-kelas, kurva dinamika pelatihan per-epoch, perbandingan dengan arsitektur eksternal (ViViT & GCN-GRU), serta pembahasan matematis tersedia di dokumen [docs/laporan_eksperimen_terbaik_casme2.md](docs/laporan_eksperimen_terbaik_casme2.md).
+> 📖 **Dokumentasi & Narasi Publikasi Paper**:
+> - **Alur Narasi 6 Babak & Master Progression Table untuk Paper**: [docs/paper_progression_narrative.md](docs/paper_progression_narrative.md)
+> - **Laporan Komprehensif Model Terbaik & Kurva Per-Epoch**: [docs/laporan_eksperimen_terbaik_casme2.md](docs/laporan_eksperimen_terbaik_casme2.md)
 
 ---
 

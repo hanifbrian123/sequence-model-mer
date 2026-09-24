@@ -1,0 +1,12 @@
+{
+  "run_id": "096_fusion_deployable_50full_50auto47",
+  "name": "deployable_50full_50auto47",
+  "type": "probability_fusion",
+  "components": {},
+  "protocol": "fusion_evaluation",
+  "metrics": {
+    "accuracy": null,
+    "macro_f1": null,
+    "macro_recall": null
+  }
+}

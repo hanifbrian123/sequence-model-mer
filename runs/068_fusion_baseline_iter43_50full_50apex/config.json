@@ -1,0 +1,12 @@
+{
+  "run_id": "068_fusion_baseline_iter43_50full_50apex",
+  "name": "baseline_iter43_50full_50apex",
+  "type": "probability_fusion",
+  "components": {},
+  "protocol": "fusion_evaluation",
+  "metrics": {
+    "accuracy": null,
+    "macro_f1": null,
+    "macro_recall": null
+  }
+}

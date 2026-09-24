@@ -42,6 +42,41 @@ def narrative(section: str) -> str:
     return match.group(1).strip() if match else ""
 
 
+import glob
+
+def build_run_artifacts_link(run_name: str, root_dir: str) -> str:
+    """Build compact markdown links to visual artifacts, configs, and logs for a given run."""
+    run_dir = os.path.join(root_dir, "runs", run_name)
+    if not os.path.exists(run_dir):
+        return "—"
+
+    links = []
+    # 1. Config
+    prefix = run_name.split("_")[0]
+    cfg_candidates = glob.glob(os.path.join(root_dir, "configs", f"{prefix}_*.json"))
+    if cfg_candidates:
+        cfg_name = os.path.basename(cfg_candidates[0])
+        links.append(f"[Config](../configs/{cfg_name})")
+    elif os.path.exists(os.path.join(run_dir, "config.json")):
+        links.append(f"[Config](../runs/{run_name}/config.json)")
+
+    # 2. Visuals & Logs
+    if os.path.exists(os.path.join(run_dir, "confusion_matrix.png")):
+        links.append(f"[CM](../runs/{run_name}/confusion_matrix.png)")
+    if os.path.exists(os.path.join(run_dir, "roc_curve.png")):
+        links.append(f"[ROC](../runs/{run_name}/roc_curve.png)")
+    if os.path.exists(os.path.join(run_dir, "curve_training.png")):
+        links.append(f"[Curves](../runs/{run_name}/curve_training.png)")
+    if os.path.exists(os.path.join(run_dir, "per_fold.csv")):
+        links.append(f"[Folds](../runs/{run_name}/per_fold.csv)")
+    elif os.path.exists(os.path.join(run_dir, "predictions.csv")):
+        links.append(f"[Preds](../runs/{run_name}/predictions.csv)")
+    if os.path.exists(os.path.join(run_dir, "run.log")):
+        links.append(f"[Log](../runs/{run_name}/run.log)")
+
+    return " • ".join(links) if links else f"[Folder](../runs/{run_name})"
+
+
 def generate_report(verbose: bool = True) -> str:
     """Generate reports/LAPORAN.md from results.csv and narrative blocks."""
     os.makedirs(REPORTS_DIR, exist_ok=True)
@@ -84,27 +119,34 @@ def generate_report(verbose: bool = True) -> str:
         "",
         "## 3. Ringkasan Model Acuan vs Champion",
         "",
-        "| Kategori Model | Run ID | Protokol / Split | UF1 | UAR | ACC | Status Evaluasi | Catatan Implementasi |",
-        "|---|---|---|---|---|---|---|---|",
-        "| **R3D-18 Baseline** | `061_r3d_v2_dev_p5` | Grouped 4-fold | 0,6816 | 0,7120 | 0,6823 | Acuan Dev | TV-L1 onset-referenced flow, 128x128 |",
-        "| **Champion Oracle** | `068_fusion_baseline_iter43_50full_50apex` | Grouped 4-fold | 0,7104 | 0,7345 | 0,7083 | Oracle Ref | Fusi 50:50 full + apex beranotasi dataset |",
-        "| **Champion Deployable** | `096_fusion_deployable_50full_50auto47` | Grouped 4-fold | **0,7021** | **0,7418** | **0,6979** | **CHAMPION APP** | Fusi 50:50 full + auto-apex (label-free) |",
-        "| **Baseline R3D-18 (LOSO 26)** | `017_r3d` | LOSO 26 | 0,7145 | 0,7207 | 0,6870 | Benchmark | Evaluasi 26 subjek literatur |",
-        "| **Region Attention s42** | `163_r3d_regionattn_full_s42_v2_dev_loso_dev_p5` | LOSO 21 | 0,7283 | 0,7350 | 0,7188 | Lolos Gate | Segmentasi wajah statis (P=80,1%) |",
+        "| Kategori Model | Run ID | Protokol / Split | UF1 | UAR | ACC | Status Evaluasi | Detail & Artefak | Catatan Implementasi |",
+        "|---|---|---|---|---|---|---|---|---|",
+        f"| **R3D-18 Baseline** | [`061_r3d_v2_dev_p5`](../runs/061_r3d_v2_dev_p5) | Grouped 4-fold | 0,6816 | 0,7120 | 0,6823 | Acuan Dev | {build_run_artifacts_link('061_r3d_v2_dev_p5', ROOT)} | TV-L1 onset-referenced flow, 128x128 |",
+        f"| **Champion Oracle** | [`068_fusion_baseline_iter43_50full_50apex`](../runs/068_fusion_baseline_iter43_50full_50apex) | Grouped 4-fold | 0,7104 | 0,7345 | 0,7083 | Oracle Ref | {build_run_artifacts_link('068_fusion_baseline_iter43_50full_50apex', ROOT)} | Fusi 50:50 full + apex beranotasi dataset |",
+        f"| **Champion Deployable** | [`096_fusion_deployable_50full_50auto47`](../runs/096_fusion_deployable_50full_50auto47) | Grouped 4-fold | **0,7021** | **0,7418** | **0,6979** | **CHAMPION APP** | {build_run_artifacts_link('096_fusion_deployable_50full_50auto47', ROOT)} | Fusi 50:50 full + auto-apex (label-free) |",
+        f"| **Baseline R3D-18 (LOSO 26)** | [`017_r3d`](../runs/017_r3d) | LOSO 26 | 0,7145 | 0,7207 | 0,6870 | Benchmark | {build_run_artifacts_link('017_r3d', ROOT)} | Evaluasi 26 subjek literatur |",
+        f"| **Region Attention s42** | [`163_r3d_regionattn_full_s42_v2_dev_loso_dev_p5`](../runs/163_r3d_regionattn_full_s42_v2_dev_loso_dev_p5) | LOSO 21 | 0,7283 | 0,7350 | 0,7188 | Lolos Gate | {build_run_artifacts_link('163_r3d_regionattn_full_s42_v2_dev_loso_dev_p5', ROOT)} | Segmentasi wajah statis (P=80,1%) |",
+        f"| **Champion R3D-18 AU (LOSO 26)** | [`188_r3d_au05_full_s42_v2_dev_loso_all_p5`](../runs/188_r3d_au05_full_s42_v2_dev_loso_all_p5) | LOSO 26 | **0,7211** | **0,7378** | **0,6992** | **CHAMPION UTAMA** | {build_run_artifacts_link('188_r3d_au05_full_s42_v2_dev_loso_all_p5', ROOT)} | R3D-18 + 11-AU Multi-Task ($\\lambda=0.5$) |",
         "",
         "---",
         "",
         "## 4. Semua Run Sekilas (Master Progression Table)",
         "",
+        "> [!IMPORTANT]",
+        "> **Alur Narasi & Master Progression Table Terkurasi untuk Paper:**",
+        "> Untuk keperluan penulisan artikel ilmiah (*research paper*), telah dikurasi alur narasi 6 babak dengan 22 run kunci yang dilengkapi analisis mendalam pada dokumen:",
+        "> 👉 **[CASME II Experimental Progression & Research Narrative](../docs/paper_progression_narrative.md)**",
+        "",
         f"Daftar lengkap seluruh **{len(df)} run** eksperimen yang tercatat di `runs/` dan `results/results.csv`, diurutkan secara numerik dari `000_` s.d. selesai:",
         "",
-        "| Run | Protokol | Split | Backbone | UF1 | UAR | ACC | Epochs | Waktu Selesai |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| Run | Protokol | Split | Backbone | UF1 | UAR | ACC | Epochs | Waktu Selesai | Tautan Detail & Artefak |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
 
     # Populate all runs in master table
     for _, r in df.iterrows():
-        r_name = f"`{r.get('run', '')}`"
+        raw_name = str(r.get("run", ""))
+        run_link = f"[`{raw_name}`](../runs/{raw_name})" if os.path.exists(os.path.join(ROOT, "runs", raw_name)) else f"`{raw_name}`"
         proto = str(r.get("protocol", "—"))
         split = str(r.get("split", "—"))
         bb = str(r.get("backbone", "—"))
@@ -124,7 +166,8 @@ def generate_report(verbose: bool = True) -> str:
         t = str(r.get("time", "—"))[:10]
         if t == "—" or t == "nan":
             t = "tersimpan"
-        lines.append(f"| {r_name} | {proto} | {split} | {bb} | {uf1} | {uar} | {acc} | {ep} | {t} |")
+        art_links = build_run_artifacts_link(raw_name, ROOT)
+        lines.append(f"| {run_link} | {proto} | {split} | {bb} | {uf1} | {uar} | {acc} | {ep} | {t} | {art_links} |")
 
     lines.extend([
         "",
